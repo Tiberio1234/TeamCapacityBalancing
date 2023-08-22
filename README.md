@@ -1,1 +1,1 @@
-# Team-Capacity-Balancing-
+# TeamCapacityBalancing
