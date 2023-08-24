@@ -9,7 +9,9 @@
 			 x:CompileBindings="True"
 			 >
 
-
+	<UserControl.DataContext>
+		<vm:ResourceViewModel/>
+	</UserControl.DataContext>
 
 	<Grid RowDefinitions="Auto Auto Auto Auto Auto Auto Auto Auto"  ColumnDefinitions="Auto Auto" Margin="10">
 		<TextBlock Grid.Row="0" 
@@ -29,111 +31,21 @@
 				   ></TextBlock>
 		</StackPanel>
 		
-		<ItemsRepeater Items="{Binding }">
+		<ItemsRepeater Grid.Row="2" Items="{Binding DaysPerWeeks}">
 			<ItemsRepeater.ItemTemplate>
 				<DataTemplate>
 					<Border Margin="0,10,0,0"
 						Padding="5">
-						<!--<TextBlock Text="{Binding }"/>-->
+						<StackPanel Orientation="Horizontal">
+						<TextBlock Text="{Binding}" Margin="0,15"/>
+						
+						<TextBox Margin="10,10"  Width="20" VerticalAlignment="Top" Height="20">
+						</TextBox>
+						</StackPanel>
 					</Border>
 				</DataTemplate>
 			</ItemsRepeater.ItemTemplate>
 		</ItemsRepeater>
-		
-		<!--<StackPanel Grid.Row="2" Orientation="Horizontal">
-			<TextBlock
-				  Text="Monday"
-				  Margin="0,10,10,0"
-				  ></TextBlock>
-
-			<TextBox Margin="0,10" Width="20" VerticalAlignment="Top" Height="20">
-			</TextBox>
-		</StackPanel>
-
-		<StackPanel Grid.Row="3" Orientation="Horizontal">
-			<TextBlock
-				  Text="Tuesday"
-				  Margin="0,10,10,0"
-				  ></TextBlock>
-
-			<TextBox Margin="0,10" Width="20" VerticalAlignment="Top" Height="20">
-			</TextBox>
-		</StackPanel>
-
-		<StackPanel Grid.Row="4" Orientation="Horizontal">
-			<TextBlock
-				  Text="Wednesday"
-				  Margin="0,10,10,0"
-				  ></TextBlock>
-
-			<TextBox Margin="0,10" Width="20" VerticalAlignment="Top" Height="20">
-			</TextBox>
-		</StackPanel>
-
-		<StackPanel Grid.Row="5" Orientation="Horizontal">
-			<TextBlock
-				  Text="Thursday"
-				  Margin="0,10,10,0"
-				  ></TextBlock>
-
-			<TextBox Margin="0,10" Width="20" VerticalAlignment="Top" Height="20">
-			</TextBox>
-		</StackPanel>
-
-		<StackPanel Grid.Row="6" Orientation="Horizontal">
-			<TextBlock
-				  Text="Friday"
-				  Margin="0,10,10,0"
-				  ></TextBlock>
-
-			<TextBox Margin="0,10" Width="20" VerticalAlignment="Top" Height="20">
-			</TextBox>
-		</StackPanel>-->
-		
-		<!--<StackPanel Grid.Row="2">
-			<TextBlock
-				  Text="Monday"
-				  Margin="5"
-				  Height="30"
-				  
-				  ></TextBlock>
-
-			<TextBlock 
-				  Text="Tuesday"
-				  Margin="5"
-				  ></TextBlock>
-			<TextBlock
-				  Text="Wednesday"
-				  Margin="5,10"
-				  ></TextBlock>
-			<TextBlock
-				  Text="Thursday"
-				  Margin="5,20"
-				  ></TextBlock>
-			<TextBlock
-				Text="Friday"
-				Margin="5,20"
-				></TextBlock>
-		</StackPanel>
-
-		<StackPanel Grid.Row="2" Grid.Column="1">
-			<TextBox Margin="0,10" Width="20" Height="10"  HorizontalAlignment="Left">
-				
-			</TextBox>
-			<TextBox Margin="0,10" Width="20" HorizontalAlignment="Left">
-
-			</TextBox>
-			<TextBox Margin="0,10" Width="20" HorizontalAlignment="Left">
-
-			</TextBox>
-			<TextBox Margin="0,10" Width="20" HorizontalAlignment="Left">
-
-			</TextBox>
-			<TextBox Margin="0,10" Width="20" HorizontalAlignment="Left">
-
-			</TextBox>
-		</StackPanel>-->
-		
 		
 		
 	</Grid>
