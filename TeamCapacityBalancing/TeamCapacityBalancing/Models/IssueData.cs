@@ -1,4 +1,4 @@
-﻿namespace TeamCapacityBalancing.Models
+namespace TeamCapacityBalancing.Models
 {
     public class IssueData
     {
@@ -19,5 +19,6 @@
         {
             Name = name;
         }
+
     }
 }
