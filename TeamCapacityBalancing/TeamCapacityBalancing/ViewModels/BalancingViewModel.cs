@@ -22,4 +22,6 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     public List<IssueData> Storyes { get; set; } = new() { new("Story 1"), new("Story 2"), new ("Story 3") };
 
+    public List<string> Users { get; set; } = new() { "Ana", "Maria" };
+
 }

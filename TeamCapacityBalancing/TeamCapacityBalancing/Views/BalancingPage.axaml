@@ -14,6 +14,7 @@
 		<vm:BalancingViewModel/>
 	</UserControl.DataContext>
 
+
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -32,6 +33,9 @@
 			</Button>
 			<Button Width="40" Height="40" Background="Transparent">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Calendar"/>
+			</Button>
+			<Button Width="40" Height="40" Background="Transparent">
+				<icons:MaterialIcon Width="40" Height="40" Kind="People"/>
 			</Button>
 
 			<ToggleButton Height="40" Background="Turquoise"
@@ -80,24 +84,21 @@
 				</SplitView.Pane>
 
 
+
 				<Grid>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="*"/>
 						<RowDefinition Height="*"/>
-						<RowDefinition Height="*"/>
+						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 
-					<DataGrid Grid.Row="0">
-						<DataGrid.Columns>
-							<DataGridTextColumn Header="First Name"
-												Width="2*" />
-							<DataGridTextColumn Header="Last Name"
-												Width="2*" />
-							<DataGridTextColumn Header="Department"
-												Width="*" />
-						</DataGrid.Columns>
-					</DataGrid>
-					
+					<StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Center">
+						<TextBlock Text="Balancing" Margin="15" Background="Transparent"/>
+						<Button Width="20" Height="20" Background="Transparent">
+							<icons:MaterialIcon Width="20" Height="20" Kind="Show"/>
+						</Button>
+					</StackPanel>
+
 				</Grid>
 
 			</SplitView>
