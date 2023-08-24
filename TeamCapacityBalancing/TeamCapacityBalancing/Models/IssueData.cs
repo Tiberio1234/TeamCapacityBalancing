@@ -13,4 +13,8 @@ public class IssueData
     public string Name { get; init; }
     public string Release { get; init; }
     public string Sprint { get; init; }
+    public IssueData(string name)
+    {
+        Name = name;
+    }
 }

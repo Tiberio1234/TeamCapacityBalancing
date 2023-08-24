@@ -20,5 +20,5 @@ public sealed partial class BalancingViewModel : ObservableObject
 
 
 
-    public List<Epic> Epics { get; } = new() { new("Epic 1"), new("Epic 2") };
+    public List<IssueData> Epics { get; } = new() { new("Epic 1"), new("Epic 2") };
 }
