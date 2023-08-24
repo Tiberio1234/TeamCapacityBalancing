@@ -8,7 +8,11 @@
              x:Class="TeamCapacityBalancing.Views.BalancingPage"
 			 x:DataType="vm:BalancingViewModel"
 			 x:CompileBindings="True">
-	
+
+	<Design.DataContext>
+		<vm:BalancingViewModel/>
+	</Design.DataContext>
+
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -39,23 +43,20 @@
 
 		<StackPanel Grid.Row="1" Orientation="Horizontal">
 
-			<SplitView IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="{Binding Mode}" OpenPaneLength="200" CompactPaneLength="55">
-				<SplitView.Pane>
-					<StackPanel Margin="10">
-						<Panel>
-							<ToggleButton Name="MenuToggle" ToolTip.Tip="Toogle Menu" IsChecked="{Binding IsPaneOpen}">
-								<icons:MaterialIcon Kind="Menu"></icons:MaterialIcon>
-							</ToggleButton>
-							<TextBlock Text="Epics" IsVisible="{Binding IsPaneOpen}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-						</Panel>
+			<!--<TextBlock Text="Text"></TextBlock>-->
 
-					</StackPanel>
-				</SplitView.Pane>
-
-				<TextBlock Text="Stories"/>
-			</SplitView>
+			<ItemsRepeater Items="{Binding Epics}">
+				<ItemsRepeater.ItemTemplate>
+					<DataTemplate>
+						<Border Margin="0,10,0,0"
+							Padding="5">
+							<TextBlock Text="{Binding Name}"/>
+						</Border>
+					</DataTemplate>
+				</ItemsRepeater.ItemTemplate>
+			</ItemsRepeater>
 
 		</StackPanel>
 	</Grid>
-	
+
 </UserControl>
