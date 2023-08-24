@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TeamCapacityBalancing.ViewModels;
 
-enum DaysPerWeek
+public enum DaysPerWeek
 {
     Monday,
     Tuesday,
@@ -16,16 +16,8 @@ enum DaysPerWeek
     Friday,
 }
 
-public partial class ResourceViewModel : ObservableObject
+public sealed partial class ResourceViewModel : ObservableObject
 {
-    private List<string> Days { get; set; } = new List<string>()
-    {
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday"
-    };
 
-
+    public List<DaysPerWeek> DaysPerWeeks { get; } = new List<DaysPerWeek>(Enum.GetValues(typeof(DaysPerWeek)) as DaysPerWeek[]);
 }

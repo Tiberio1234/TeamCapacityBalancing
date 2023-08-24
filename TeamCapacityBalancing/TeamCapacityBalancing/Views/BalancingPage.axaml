@@ -9,9 +9,9 @@
 			 x:DataType="vm:BalancingViewModel"
 			 x:CompileBindings="True">
 
-	<Design.DataContext>
+	<UserControl.DataContext>
 		<vm:BalancingViewModel/>
-	</Design.DataContext>
+	</UserControl.DataContext>
 
 	<Grid>
 		<Grid.RowDefinitions>
