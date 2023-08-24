@@ -18,5 +18,8 @@ public sealed partial class BalancingViewModel : ObservableObject
     [ObservableProperty]
     private SplitViewDisplayMode _mode = SplitViewDisplayMode.CompactInline;
 
-    public List<Epic> Epics { get; set; } = new() { new("Epic 1"), new("Epic 2") };
+    public List<IssueData> Epics { get; set; } = new() { new("Epic 1"), new("Epic 2"), new ("Epic 3") };
+
+    public List<IssueData> Storyes { get; set; } = new() { new("Story 1"), new("Story 2"), new ("Story 3") };
+
 }

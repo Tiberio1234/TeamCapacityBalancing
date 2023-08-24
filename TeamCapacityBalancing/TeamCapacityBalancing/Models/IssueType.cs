@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace TeamCapacityBalancing.Models;
 
-public class Epic : IssueData
+public enum IssueType
 {
-    public Epic(string name) 
-    {
-        Name = name;
-    }
+    Epic,
+    Story,
+    Task,
 }
