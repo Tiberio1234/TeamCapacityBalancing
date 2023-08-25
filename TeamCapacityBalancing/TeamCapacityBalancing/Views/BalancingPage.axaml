@@ -1,0 +1,108 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:TeamCapacityBalancing.ViewModels"
+			 xmlns:models="using:TeamCapacityBalancing.Models"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TeamCapacityBalancing.Views.BalancingPage"
+			 x:DataType="vm:BalancingViewModel"
+			 x:CompileBindings="True">
+
+	<UserControl.DataContext>
+		<vm:BalancingViewModel/>
+	</UserControl.DataContext>
+
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Row="0" Orientation="Horizontal"
+					HorizontalAlignment="Left" VerticalAlignment="Center"
+					Margin="5">
+			<ComboBox Width="300" Margin="5"/>
+			<Button Width="40" Height="40" Background="Transparent">
+				<icons:MaterialIcon Width="40" Height="40" Kind="Refresh"/>
+			</Button>
+			<Button Width="40" Height="40" Background="Transparent">
+				<icons:MaterialIcon Width="40" Height="40" Kind="ContentSave"/>
+			</Button>
+			<Button Width="40" Height="40" Background="Transparent">
+				<icons:MaterialIcon Width="40" Height="40" Kind="Calendar"/>
+			</Button>
+			<Button Width="40" Height="40" Background="Transparent">
+				<icons:MaterialIcon Width="40" Height="40" Kind="People"/>
+			</Button>
+
+			<ToggleButton Height="40" Background="Turquoise"
+						  HorizontalContentAlignment="Center"
+						  VerticalContentAlignment="Center"
+						  Content="Short-term">
+			</ToggleButton>
+
+		</StackPanel>
+
+		<StackPanel Grid.Row="1" Orientation="Horizontal">
+
+			<SplitView IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="{Binding Mode}" OpenPaneLength="200" CompactPaneLength="55">
+				<SplitView.Pane>
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="7*"/>
+							<RowDefinition Height="Auto"/>
+						</Grid.RowDefinitions>
+
+						<StackPanel Grid.Row="0" Margin="10" VerticalAlignment="Top">
+							<Panel>
+								<ToggleButton Name="MenuToggle" ToolTip.Tip="Toogle Menu" IsChecked="{Binding IsPaneOpen}" Background="Turquoise">
+									<icons:MaterialIcon Kind="Menu"></icons:MaterialIcon>
+								</ToggleButton>
+								<TextBlock Text="Epics" IsVisible="{Binding IsPaneOpen}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+							</Panel>
+
+							<ItemsRepeater Items="{Binding Epics}">
+								<ItemsRepeater.ItemTemplate>
+									<DataTemplate>
+										<Border Margin="0,10,0,0" Padding="5">
+											<TextBlock Text="{Binding Name}" IsVisible="{Binding #MenuToggle.IsChecked}"/>
+										</Border>
+									</DataTemplate>
+								</ItemsRepeater.ItemTemplate>
+							</ItemsRepeater>
+						</StackPanel>
+
+						<Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0" Margin="10,0,10,0" IsVisible="{Binding #MenuToggle.IsChecked}"/>
+
+						<StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Bottom">
+							<CheckBox Content="Filter" Margin="10" IsVisible="{Binding #MenuToggle.IsChecked}"/>
+						</StackPanel>
+					</Grid>
+				</SplitView.Pane>
+
+
+
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="*"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+
+					<StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Center">
+						<TextBlock Text="Balancing" Margin="15" Background="Transparent"/>
+						<Button Width="20" Height="20" Background="Transparent">
+							<icons:MaterialIcon Width="20" Height="20" Kind="Show"/>
+						</Button>
+					</StackPanel>
+
+				</Grid>
+
+			</SplitView>
+		</StackPanel>
+	</Grid>
+
+</UserControl>
