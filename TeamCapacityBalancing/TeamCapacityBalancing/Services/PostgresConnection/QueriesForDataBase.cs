@@ -37,5 +37,34 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             }
             return users;
         }
+
+        public static List<IssueData> GetStoriesByEpic(int epicId)
+        {
+            List<IssueData> stories = new List<IssueData>();
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(DataBaseConnection.GetInstance().GetConnectionString()))
+                {
+                    connection.Open();
+                    using (var cmd = new NpgsqlCommand($"SELECT * FROM jiraissue AS ji JOIN issuelink AS il ON ji.id = il.destination WHERE il.linktype = 10201 and il.source = {epicId}"
+                        , connection))
+
+                    using (var reader = cmd.ExecuteReader())
+                        while (reader.Read())
+                        {
+                            int id = reader.GetInt32(reader.GetOrdinal("id"));
+                            string name = reader.GetString(reader.GetOrdinal("summary"));
+                            
+                        }
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return stories;
+        }
     }
 }
