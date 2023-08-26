@@ -1,22 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using TeamCapacityBalancing.Models;
 
 namespace TeamCapacityBalancing.Services.Postgres_connection
 {
-    internal class DataBaseConnection
+    public class DataBaseConnection
     {
         private static DataBaseConnection _instance;
         private static readonly object _lock = new object();
 
         private const string Host = "localhost";
-        private const string User = "postgres";
+        private const string User = "Test";
         private const string DBname = "jira";
-        private const string Password = "ciocanitoarea";
+        private const string Password = "123";
         private const string Port = "5432";
 
         private string connectionString = String.Format(

@@ -4,6 +4,7 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using TeamCapacityBalancing.Services.Postgres_connection;
+using TeamCapacityBalancing.Services.ServicesAbstractions;
 using TeamCapacityBalancing.ViewModels;
 using TeamCapacityBalancing.Views;
 
@@ -28,7 +29,7 @@ namespace TeamCapacityBalancing
                     DataContext = new MainWindowViewModel(),
                 };
 
-                QueriesForDataBase.GetAllUsers();
+                IDataProvider p = new QueriesForDataBase();
             }
 
             base.OnFrameworkInitializationCompleted();
