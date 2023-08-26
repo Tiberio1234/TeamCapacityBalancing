@@ -9,12 +9,16 @@ namespace TeamCapacityBalancing.Models;
 public class IssueData
 {
     //TO DO: asignee: user
-    public int Id { get; init; }
-    public string Name { get; init; }
-    public string Release { get; init; }
-    public string Sprint { get; init; }
-    public IssueData(string name)
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Release { get; set; }
+    public string Sprint { get; set; }
+
+
+    public IssueData(string name,string release, string sprint)
     {
         Name = name;
+        Release = release;
+        Sprint = sprint;
     }
 }
