@@ -91,51 +91,184 @@
 				<DataGrid Grid.Row="0" ColumnWidth="*" Items="{Binding MyUserAssociation}" AutoGenerateColumns="False"
 					   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
 
+					<!--ramona aproape merge-->
 					<!--<DataGrid.Columns>
-						<DataGridTemplateColumn>
+						<DataGridTemplateColumn Width="Auto">
+							<DataGridTemplateColumn.Header>
+								<ListBox Items="{Binding MyUserAssociation}">
+									<ListBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Horizontal"/>
+										</ItemsPanelTemplate>
+									</ListBox.ItemsPanel>
+									<ListBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding UserAndDays.User.DisplayName}"/>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+							</DataGridTemplateColumn.Header>
+
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding UserAndDays.Item1.DisplayName}"/>
+
+									<StackPanel Orientation="Horizontal">
+										<ListBox Items="{Binding UserAndDays.Days}">
+											<ListBox.ItemsPanel>
+												<ItemsPanelTemplate>
+													<StackPanel Orientation="Horizontal"/>
+												</ItemsPanelTemplate>
+											</ListBox.ItemsPanel>
+											<ListBox.ItemTemplate>
+												<DataTemplate x:DataType="models:UserDays">
+													<TextBox Text="{Binding}" Margin="0 0 0 0"/>
+												</DataTemplate>
+											</ListBox.ItemTemplate>
+										</ListBox>
+									</StackPanel>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+							
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>-->
+					
+							
+					
+
+					<!--<DataGrid.Columns>
+						<DataGridTemplateColumn>
+							<DataGridTemplateColumn.Header>
+								<ListBox Items="{Binding MyUserAssociation}">
+									<ListBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Horizontal"/>
+										</ItemsPanelTemplate>
+									</ListBox.ItemsPanel>
+									<ListBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding UserAndDays.User.DisplayName}"/>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+							</DataGridTemplateColumn.Header>
+
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:Sprint">
+									-->
+					<!--<TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+					<!--
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>-->
+
+
+					<!--<DataGrid.Columns>
+						<DataGridTemplateColumn>
+							<DataGridTemplateColumn.Header>
+								<ListBox Items="{Binding MyUserAssociation}">
+									<ListBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Horizontal"/>
+										</ItemsPanelTemplate>
+									</ListBox.ItemsPanel>
+									<ListBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding UserAndDays.User.DisplayName}"/>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+							</DataGridTemplateColumn.Header>
+							
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:Sprint">
+									-->
+					<!--<TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+					<!--
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
 					</DataGrid.Columns>-->
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn Header="Story">
+						<DataGridTemplateColumn Header="Story" Width="Auto">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding StoryData.Name}"/>
+									<TextBlock Text="{Binding StoryData.Name}" HorizontalAlignment="Center"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn Header="ShortTerm">
+						<DataGridTemplateColumn Header="ShortTerm"  Width="Auto">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<CheckBox IsChecked="{Binding ShortTerm}"/>
+									<CheckBox IsChecked="{Binding ShortTerm}" HorizontalAlignment="Center"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn Header="Remaining">
+						<DataGridTemplateColumn Header="Remaining"  Width="Auto">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding Remaining}" HorizontalAlignment="Center"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
 					</DataGrid.Columns>
 
+					<!--rares-->
 					<DataGrid.Columns>
-						<DataGridTemplateColumn Header="Coverage">
+						<DataGridTemplateColumn Width="Auto">
+							<DataGridTemplateColumn.Header>
+								<ListBox Items="{Binding TeamMembers.Users}">
+									<ListBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Horizontal"/>
+										</ItemsPanelTemplate>
+									</ListBox.ItemsPanel>
+									<ListBox.ItemTemplate>
+										<DataTemplate x:DataType="models:User">
+											<TextBlock Text="{Binding DisplayName}" Width="100"/>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+							</DataGridTemplateColumn.Header>
+
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Coverage}"/>
+									<!--<TextBlock Text="{Binding UserAndDays.Days[0]}"/>-->
+									<StackPanel Orientation="Horizontal">
+
+										<ListBox Items="{Binding Times}" Margin="11, 0, 0, 0">
+											<ListBox.ItemsPanel>
+												<ItemsPanelTemplate>
+													<StackPanel Orientation="Horizontal"/>
+												</ItemsPanelTemplate>
+											</ListBox.ItemsPanel>
+											<ListBox.ItemTemplate>
+												<DataTemplate x:DataType="models:UserDays">
+													<TextBox Text="{Binding Days}" Width="100"/>
+												</DataTemplate>
+											</ListBox.ItemTemplate>
+										</ListBox>
+									</StackPanel>
+
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Coverage" Width="Auto">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock Text="{Binding Coverage}" HorizontalAlignment="Center"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -171,6 +304,48 @@
 									<TextBlock Text="{Binding Remaining}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Width="Auto">
+							<DataGridTemplateColumn.Header>
+								<ListBox Items="{Binding TeamMembers.Users}">
+									<ListBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Horizontal"/>
+										</ItemsPanelTemplate>
+									</ListBox.ItemsPanel>
+									<ListBox.ItemTemplate>
+										<DataTemplate x:DataType="models:User">
+											<TextBlock Text="{Binding DisplayName}" Width="100"/>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+							</DataGridTemplateColumn.Header>
+
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<!--<TextBlock Text="{Binding UserAndDays.Days[0]}"/>-->
+									<StackPanel Orientation="Horizontal">
+
+										<ListBox Items="{Binding Times}" Margin="11, 0, 0, 0">
+											<ListBox.ItemsPanel>
+												<ItemsPanelTemplate>
+													<StackPanel Orientation="Horizontal"/>
+												</ItemsPanelTemplate>
+											</ListBox.ItemsPanel>
+											<ListBox.ItemTemplate>
+												<DataTemplate x:DataType="models:UserDays">
+													<TextBox Text="{Binding Days}" Width="100"/>
+												</DataTemplate>
+											</ListBox.ItemTemplate>
+										</ListBox>
+									</StackPanel>
+
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+
 						</DataGridTemplateColumn>
 					</DataGrid.Columns>
 

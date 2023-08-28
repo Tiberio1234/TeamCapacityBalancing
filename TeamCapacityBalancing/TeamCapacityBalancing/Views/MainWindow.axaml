@@ -11,5 +11,6 @@
         Title="TeamCapacityBalancing">
 
 	<views:BalancingPage/>
-
+	<!--<views:SprintSelectionPage></views:SprintSelectionPage>-->
+	
 </Window>

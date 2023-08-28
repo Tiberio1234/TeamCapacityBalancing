@@ -1,0 +1,83 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:TeamCapacityBalancing.ViewModels"
+			 xmlns:models="using:TeamCapacityBalancing.Models"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TeamCapacityBalancing.Views.SprintSelectionPage"
+			 x:DataType="vm:SprintSelectionViewModel"
+			 x:CompileBindings="True"
+			 >
+
+	<UserControl.DataContext>
+		<vm:SprintSelectionViewModel/>
+	</UserControl.DataContext>
+
+
+	<Grid Margin="25">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Row="0" Orientation="Horizontal">
+			<TextBox Width="50" Margin="5 5 5 5" Watermark="Number of sprints" Text="{Binding NumberOfSprints}"/>
+			<Separator Width="20"/>
+			<Button Content="Select" Background="Turquoise" Command="{Binding GenerateSprintsCommand}"/>
+			<Separator Width="20"/>
+			<ToggleSwitch/>
+		</StackPanel>
+		<DataGrid Grid.Row="1" ColumnWidth="*" Items="{Binding Sprints}" AutoGenerateColumns="False"
+		GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+
+			<DataGrid.Columns>
+				<DataGridTemplateColumn>
+					<DataGridTemplateColumn.Header>
+						<TextBlock Text="Sprints" TextAlignment="Center"/>
+					</DataGridTemplateColumn.Header>
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate x:DataType="models:Sprint">
+							<TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+			</DataGrid.Columns>
+
+			<DataGrid.Columns>
+				<DataGridTemplateColumn>
+					<DataGridTemplateColumn.Header>
+						<TextBlock Text="Number of Weeks" TextAlignment="Center"/>
+					</DataGridTemplateColumn.Header>
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate x:DataType="models:Sprint">
+							<TextBox BorderBrush="Transparent" Text="{Binding NumberOfWeeks}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+			</DataGrid.Columns>
+
+			<DataGrid.Columns>
+				<DataGridTemplateColumn>
+					<DataGridTemplateColumn.Header>
+						<TextBlock Text="Short-Term" TextAlignment="Center"/>
+					</DataGridTemplateColumn.Header>
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate x:DataType="models:Sprint">
+							<CheckBox IsChecked="{Binding IsInShortTerm}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+		<StackPanel Grid.Row="2" Height="100" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+			<DatePicker Width="700" Height="40"/>
+			<Button Width="40" Height="40" Background="Transparent">
+				<icons:MaterialIcon Width="40" Height="40" Kind="ArrowForward"/>
+			</Button>
+		</StackPanel>
+	</Grid>
+
+</UserControl>

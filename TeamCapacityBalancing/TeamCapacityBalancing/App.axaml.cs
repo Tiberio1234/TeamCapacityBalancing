@@ -25,10 +25,8 @@ namespace TeamCapacityBalancing
                 ExpressionObserver.DataValidators.RemoveAll(x => x is DataAnnotationsValidationPlugin);
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(),
+                    DataContext = new MainWindow(),
                 };
-
-                QueriesForDataBase.GetAllUsers();
             }
 
             base.OnFrameworkInitializationCompleted();
