@@ -41,6 +41,7 @@
 				<icons:MaterialIcon Width="40" Height="40" Kind="People"/>
 			</Button>
 
+
 			<ToggleButton Height="40" Background="Turquoise"
 						  HorizontalContentAlignment="Center"
 						  VerticalContentAlignment="Center"
@@ -119,12 +120,12 @@
 					</StackPanel>-->
 
 					<StackPanel Grid.Row="1">
+						<TextBlock Text="Your Team"></TextBlock>
 						<ItemsRepeater Items="{Binding Team}">
 							<ItemsRepeater.ItemTemplate>
 								<DataTemplate>
 									<StackPanel>
 										<TextBlock Text="{Binding Name}">
-											
 										</TextBlock>
 									</StackPanel>
 								</DataTemplate>

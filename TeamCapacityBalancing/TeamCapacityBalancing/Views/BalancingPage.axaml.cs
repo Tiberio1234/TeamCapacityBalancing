@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using System;
+using TeamCapacityBalancing.ViewModels;
 
 namespace TeamCapacityBalancing.Views
 {

@@ -57,7 +57,10 @@ public sealed partial class TeamViewModel:ObservableObject
     [RelayCommand]
     public void BackToPage() 
     {
+        _navigationService.Team = YourTeam;
         _navigationService.CurrentPageType = typeof(BalancingPage);
-
+     
     }
+
+ 
 }

@@ -7,6 +7,7 @@
 			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TeamCapacityBalancing.Views.TeamPage"
+			 x:Name="TeamPageControl"
 			 x:DataType="vm:TeamViewModel"
 			 x:CompileBindings="True"
 			 >
@@ -19,13 +20,16 @@
 
 
 	<Grid RowDefinitions="Auto Auto" ColumnDefinitions="Auto * * *" Margin="20">
+
 		<Button Grid.Column="0"
+				Grid.Row="1"
+				VerticalAlignment="Top"
 				Background="Turquoise"
 				Command="{Binding BackToPageCommand}"
+				Margin="0,0,10,0"
 				>
 			<icons:MaterialIcon Kind="Undo"></icons:MaterialIcon>
 		</Button>
-		
 		<StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch">
 			<TextBlock Text="Choose a Team" FontWeight="Bold" FontSize="18"></TextBlock>
 			<ItemsRepeater Items="{Binding AllUser}">

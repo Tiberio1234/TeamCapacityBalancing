@@ -19,7 +19,9 @@ public sealed partial class BalancingViewModel : ObservableObject
     private readonly NavigationService _navigationService;
     public List<PageData> Pages { get; }
 
-    public List<User> Team { get; set; }
+    [ObservableProperty]
+    public List<User> _team;
+
     public BalancingViewModel()
     {
         
@@ -30,9 +32,8 @@ public sealed partial class BalancingViewModel : ObservableObject
         _pageService = pageService;
         _navigationService = navigationService;
         Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList();
-        Team = new();
-        Team = _navigationService.team;
-       
+
+        
     }
 
     [ObservableProperty]
@@ -45,12 +46,32 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     public List<IssueData> Storyes { get; set; } = new();
 
-    
+
+   public void SetTeam() 
+    {
+        Team = new();
+        if (_navigationService.Team is not null)
+            for (int i = 0; i < _navigationService.Team.Count; i++)
+            {
+                Team.Add(_navigationService.Team[i]);
+            }
+    }
+
+
 
     [RelayCommand]
     public void OpenTeamPage()  
     {
+        Team = new();
+        if (_navigationService.Team is not null)
+            for (int i = 0; i < _navigationService.Team.Count; i++)
+            {
+                Team.Add(_navigationService.Team[i]);
+            }
         _navigationService.CurrentPageType = typeof(TeamPage);
     }
+
+  
+
 }
       

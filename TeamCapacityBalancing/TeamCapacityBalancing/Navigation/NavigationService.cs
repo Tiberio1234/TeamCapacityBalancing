@@ -16,7 +16,7 @@ public sealed partial class NavigationService : ObservableObject
 
     public event Action<Type>? CurrentPageChanged;
 
-    public List<User> team;
+    public List<User> Team { get; set; }
 
     public Type? CurrentPageType
     {
