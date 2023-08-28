@@ -14,20 +14,9 @@
 		<vm:BalancingViewModel/>
 	</UserControl.DataContext>
 
-	<!--<DataGrid Margin="20" ItemsSource="{Binding MyUserAssociation}"
-		  GridLinesVisibility="All"
-		  BorderThickness="1" BorderBrush="Gray">
-		<DataGrid.Columns>
-			<DataGridTextColumn Header="Story" Binding="{Binding StoryData.Name}"/>
-			<DataGridCheckBoxColumn Header="Short-term" Binding="{Binding ShortTerm}"/>
-			<DataGridTextColumn Header="Remaining" Binding="{Binding Remaining}"/>
-			<DataGridTextColumn Header="Coverage" Binding="{Binding Coverage}"/>
-		</DataGrid.Columns>
-	</DataGrid>-->
-
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="1*"/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="8*"/>
 		</Grid.RowDefinitions>
 		<StackPanel Grid.Row="0" Orientation="Horizontal">
@@ -44,26 +33,30 @@
 			<Button Width="40" Height="40" Background="Transparent">
 				<icons:MaterialIcon Width="40" Height="40" Kind="People"/>
 			</Button>
+			<ToggleButton  Width="40" Height="40" Background="Transparent" IsChecked="{Binding IsBalancing}">
+				<icons:MaterialIcon Width="40" Height="40" Kind="Summation"/>
+			</ToggleButton>
 
 			<ToggleButton Height="40" Background="Turquoise"
 						  HorizontalContentAlignment="Center"
 						  VerticalContentAlignment="Center"
 						  Content="Short-term"
+						  IsChecked="{Binding IsShortTermVisible}"
 						  >
 			</ToggleButton>
 
 		</StackPanel>
-		<SplitView Grid.Row="1" Background="AntiqueWhite" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="{Binding Mode}">
+		<SplitView Grid.Row="1" OpenPaneLength="200" CompactPaneLength="35" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="{Binding Mode}">
 			<SplitView.Pane>
 				<Grid>
 					<Grid.RowDefinitions>
-						<RowDefinition Height="7*"/>
 						<RowDefinition Height="*"/>
+						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 
-					<StackPanel Grid.Row="0" Margin="10">
+					<StackPanel Grid.Row="0">
 						<Panel>
-							<ToggleButton Name="MenuToggle" ToolTip.Tip="Toogle Menu" IsChecked="{Binding IsPaneOpen}" Background="Turquoise">
+							<ToggleButton Name="MenuToggle" IsChecked="{Binding IsPaneOpen}" Background="Turquoise">
 								<icons:MaterialIcon Kind="Menu"></icons:MaterialIcon>
 							</ToggleButton>
 							<TextBlock Text="Epics" IsVisible="{Binding IsPaneOpen}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -87,15 +80,201 @@
 					</StackPanel>
 				</Grid>
 			</SplitView.Pane>
-			<Grid Background="Yellow" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+			<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 				<Grid.RowDefinitions>
-					<RowDefinition Height="*"/>
+					<RowDefinition Height="3*"/>
+					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
 
+				<DataGrid Grid.Row="0" ColumnWidth="*" Items="{Binding MyUserAssociation}" AutoGenerateColumns="False"
+					   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+
+					<!--<DataGrid.Columns>
+						<DataGridTemplateColumn>
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock Text="{Binding UserAndDays.Item1.DisplayName}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>-->
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Story">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock Text="{Binding StoryData.Name}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="ShortTerm">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<CheckBox IsChecked="{Binding ShortTerm}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Remaining">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock Text="{Binding Remaining}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Coverage">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock Text="{Binding Coverage}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+				</DataGrid>
+				<DataGrid Grid.Row="1" Height="150" ColumnWidth="*" IsVisible="{Binding IsShortTermVisible}" Items="{Binding MyUserAssociation}" AutoGenerateColumns="False" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Story">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock Text="{Binding StoryData.Name}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="ShortTerm">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<CheckBox IsChecked="{Binding ShortTerm}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Remaining">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock Text="{Binding Remaining}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Coverage">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock Text="{Binding Coverage}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+				</DataGrid>
+				<DataGrid Grid.Row="2" IsVisible="{Binding IsBalancing}" ColumnWidth="*" Items="{Binding Totals}" AutoGenerateColumns="False"
+						  GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray"
+						  HeadersVisibility="None">
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Story">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock Text="{Binding StoryData.Name}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="ShortTerm">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<CheckBox IsVisible="False" IsChecked="{Binding ShortTerm}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Remaining">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock IsVisible="False" Text="{Binding Remaining}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Coverage">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock IsVisible="False" Text="{Binding Coverage}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+				</DataGrid>
+				<DataGrid Grid.Row="3" ColumnWidth="*" Items="{Binding Balancing}" AutoGenerateColumns="False"
+			  GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray"
+			  HeadersVisibility="None">
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Story">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock Text="{Binding StoryData.Name}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="ShortTerm">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<CheckBox IsVisible="False" IsChecked="{Binding ShortTerm}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Remaining">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock IsVisible="False" Text="{Binding Remaining}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Coverage">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock IsVisible="False" Text="{Binding Coverage}"/>
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+				</DataGrid>
+
 			</Grid>
-				
+
 		</SplitView>
 	</Grid>
 

@@ -8,7 +8,6 @@ public class IssueData
         Story,
         Task,
     }
-    //TO DO: asignee: user
     public int Id { get; set; }
     public float Remaining { get; set; }
     public string Name { get; set; }
