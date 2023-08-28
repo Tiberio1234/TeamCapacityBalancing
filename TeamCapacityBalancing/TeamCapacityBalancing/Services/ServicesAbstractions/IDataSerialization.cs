@@ -9,7 +9,12 @@ namespace TeamCapacityBalancing.Services.ServicesAbstractions
 {
     interface IDataSerialization
     {
-        public void SerializeData(List<UserStoryDataSerialization> userStoryDataSerializations, string filename);
-        List<UserStoryDataSerialization> DeserializeData(string filename);
+        public void SerializeUserStoryData(List<UserStoryDataSerialization> userStoryDataSerializations, string filename);
+        public List<UserStoryDataSerialization> DeserializeUserStoryData(string filename);
+
+        public void SerializeTeamData(List<User> userDataSerializations, string filename);
+
+        public List<User> DeserializeTeamData(string filename);
+
     }
 }
