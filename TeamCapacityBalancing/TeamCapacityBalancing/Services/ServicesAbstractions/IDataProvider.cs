@@ -5,9 +5,9 @@ namespace TeamCapacityBalancing.Services.ServicesAbstractions
 {
     public interface IDataProvider
     {
-        public List<IssueData> GetAllEpics(string teamLeaderUsername);
-        public List<IssueData> GetAllStories(string teamLeaderUsername);
+        public List<IssueData> GetAllEpicsByTeamLeader(string teamLeaderUsername);
+        public List<IssueData> GetAllStoriesByTeamLeader(string teamLeaderUsername);
         public List<User> GetAllUsers();
-        public List<IssueData> GetStoriesByEpic(string epicId);
+        public List<IssueData> GetStoriesByEpic(int epicId);
     }
 }
