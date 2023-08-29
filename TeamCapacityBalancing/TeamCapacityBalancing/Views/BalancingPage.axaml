@@ -30,7 +30,7 @@
 			<Button Width="40" Height="40" Background="Transparent">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Calendar"/>
 			</Button>
-			<Button Width="40" Height="40" Background="Transparent">
+			<Button Width="40" Height="40" Background="Transparent" Command="{Binding OpenTeamPageCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="People"/>
 			</Button>
 			<ToggleButton  Width="40" Height="40" Background="Transparent" IsChecked="{Binding IsBalancing}">
@@ -125,7 +125,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[0].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[0].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -135,7 +135,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[1].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[1].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -145,7 +145,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[2].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[2].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -155,7 +155,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[3].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[3].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -165,7 +165,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[4].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[4].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -175,7 +175,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[5].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[5].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -185,7 +185,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[6].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[6].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -195,7 +195,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[7].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[7].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -205,7 +205,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[8].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[8].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -215,7 +215,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[9].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[9].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -225,7 +225,7 @@
 						<DataGridTemplateColumn Header="Coverage">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Coverage}"/>
+									<TextBox Text="{Binding Coverage}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -268,7 +268,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[0].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[0].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -278,7 +278,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[1].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[1].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -288,7 +288,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[2].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[2].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -298,7 +298,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[3].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[3].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -308,7 +308,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[4].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[4].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -318,7 +318,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[5].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[5].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -328,7 +328,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[6].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[6].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -338,7 +338,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[7].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[7].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -348,7 +348,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[8].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[8].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -358,7 +358,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[9].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[9].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBox Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -413,7 +413,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[0].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[0].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding  UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -423,7 +423,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[1].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[1].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -433,7 +433,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[2].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[2].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -443,7 +443,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[3].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[3].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -453,7 +453,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[4].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[4].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -463,7 +463,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[5].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[5].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -473,7 +473,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[6].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[6].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -483,7 +483,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[7].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[7].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -493,7 +493,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[8].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[8].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -503,7 +503,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[9].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[9].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -558,7 +558,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[0].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[0].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -568,7 +568,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[1].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[1].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -578,7 +578,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[2].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[2].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -588,7 +588,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[3].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[3].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -598,7 +598,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[4].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[4].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -608,7 +608,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[5].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[5].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -618,7 +618,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[6].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[6].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -628,7 +628,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[7].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[7].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -638,7 +638,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[8].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[8].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -648,7 +648,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[9].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[9].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding UserAndDays.Days}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>

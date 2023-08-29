@@ -26,7 +26,8 @@ using System.Threading.Tasks;
 
         public User(string username)
         {
-            Username = username;
+            //Username = username;
+            DisplayName = username;
         }
     }
 }

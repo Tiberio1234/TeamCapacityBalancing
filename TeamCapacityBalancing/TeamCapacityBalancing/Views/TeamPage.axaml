@@ -38,7 +38,7 @@
 						<StackPanel Orientation="Horizontal" >
 							<CheckBox IsChecked="{Binding HasTeam}">
 							</CheckBox>
-							<TextBlock Text="{Binding Name}" Margin="0,10"></TextBlock>
+							<TextBlock Text="{Binding DisplayName}" Margin="0,10"></TextBlock>
 						</StackPanel>
 					</DataTemplate>
 				</ItemsRepeater.ItemTemplate>
@@ -61,7 +61,7 @@
 				<ItemsRepeater.ItemTemplate>
 					<DataTemplate>
 						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="{Binding Name}" Margin="10"></TextBlock>
+							<TextBlock Text="{Binding DisplayName}" Margin="10"></TextBlock>
 						</StackPanel>
 					</DataTemplate>
 				</ItemsRepeater.ItemTemplate>

@@ -9,8 +9,7 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="TeamCapacityBalancing">
-
-	<views:BalancingPage/>
-
+	
 	<UserControl Content="{Binding Content}"></UserControl>
+	
 </Window>
