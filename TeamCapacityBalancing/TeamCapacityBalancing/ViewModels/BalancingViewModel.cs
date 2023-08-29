@@ -24,11 +24,11 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     //services
     private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
+    private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
     public List<PageData> Pages { get; }
 
     [ObservableProperty]
     public List<User> _team;
-    public List<IssueData> _epics;
     public ObservableCollection<IssueData> Epics { get; set; } = new ObservableCollection<IssueData>();
     
 
@@ -37,12 +37,11 @@ public sealed partial class BalancingViewModel : ObservableObject
         
     }
 
-    public BalancingViewModel(PageService pageService,NavigationService navigationService)
+    public BalancingViewModel(PageService pageService,NavigationService navigationService, )
     {
         _pageService = pageService;
         _navigationService = navigationService;
-        _queriesForDataBase = new QueriesForDataBase();
-        Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList(); 
+        Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList();
     }
 
     [ObservableProperty]
