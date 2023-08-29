@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,11 +9,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TeamCapacityBalancing.Models;
+using TeamCapacityBalancing.Navigation;
+using TeamCapacityBalancing.Views;
 
 namespace TeamCapacityBalancing.ViewModels;
 
 public sealed partial class BalancingViewModel : ObservableObject
 {
+    private readonly PageService _pageService;
+    private readonly NavigationService _navigationService;
+    public List<PageData> Pages { get; }
+
+    [ObservableProperty]
+    public List<User> _team;
+
+    public BalancingViewModel()
+    {
+        
+    }
+
+    public BalancingViewModel(PageService pageService,NavigationService navigationService)
+    {
+        _pageService = pageService;
+        _navigationService = navigationService;
+        Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList(); 
+    }
+
     [ObservableProperty]
     private bool _isShortTermVisible = true;
 
@@ -41,19 +63,30 @@ public sealed partial class BalancingViewModel : ObservableObject
                 new UserStoryAssociation(new IssueData("Story 9"), true, 6.5f, new UserAssociation(new User("user5", "User Nine", 5), new List < float > { 2.5f, 1.5f, 2.5f }, false), 70.0f),
                 new UserStoryAssociation(new IssueData("Story 10"), true, 6.5f, new UserAssociation(new User("user5", "User Ten", 5), new List < float > { 2.5f, 1.5f, 2.5f }, false), 70.0f),
             };
-
-    public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>
-            {
-                new UserStoryAssociation(new IssueData("Total work open story"), true, 5.0f, new UserAssociation(new User("user1", "User One", 1), new List<float> { 1.5f, 2.0f, 1.0f }, true), 80.0f),
-                new UserStoryAssociation(new IssueData("Total work"), true, 5.0f, new UserAssociation(new User("user1", "User One", 1), new List<float> { 1.5f, 2.0f, 1.0f }, true), 80.0f),
-                new UserStoryAssociation(new IssueData("Total capacity"), true, 5.0f, new UserAssociation(new User("user1", "User One", 1), new List<float> { 1.5f, 2.0f, 1.0f }, true), 80.0f),
-            };
-
-    public ObservableCollection<UserStoryAssociation> Balancing { get; set; } = new ObservableCollection<UserStoryAssociation>
+            
+      public ObservableCollection<UserStoryAssociation> Balancing { get; set; } = new ObservableCollection<UserStoryAssociation>
             {
                 new UserStoryAssociation(new IssueData("Balancing"), true, 5.0f, new UserAssociation(new User("user1", "User One", 1), new List<float> { 1.5f, 2.0f, 1.0f }, true), 80.0f),
             };
 
+    [RelayCommand]
+    public void OpenTeamPage()  
+    {
+        Team = new();
+        if (_navigationService.Team is not null)
+            for (int i = 0; i < _navigationService.Team.Count; i++)
+            {
+                Team.Add(_navigationService.Team[i]);
+            }
+        _navigationService.CurrentPageType = typeof(TeamPage);
+    }
+
+    public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>
+              {
+                new UserStoryAssociation(new IssueData("Total work open story"), true, 5.0f, new UserAssociation(new User("user1", "User One", 1), new List<float> { 1.5f, 2.0f, 1.0f }, true), 80.0f),
+                new UserStoryAssociation(new IssueData("Total work"), true, 5.0f, new UserAssociation(new User("user1", "User One", 1), new List<float> { 1.5f, 2.0f, 1.0f }, true), 80.0f),
+                new UserStoryAssociation(new IssueData("Total capacity"), true, 5.0f, new UserAssociation(new User("user1", "User One", 1), new List<float> { 1.5f, 2.0f, 1.0f }, true), 80.0f),
+            };
 
     public ObservableCollection<IssueData> Epics { get; set; } = new() { new("Epic 1"), new("Epic 2"), new("Epic 3") };
     public ObservableCollection<IssueData> Storyes { get; set; } = new() { new("Story 1"), new("Story 2"), new("Story 3") };
@@ -62,9 +95,6 @@ public sealed partial class BalancingViewModel : ObservableObject
             {
                 new User("user1", "User One", 1),
                 new User("user2", "User Two", 2),
-                new User("user2.2", "User Two", 2),
-                new User("user2.2", "User Two", 2),
-                new User("user2.2", "User Two", 2),
-                new User("user3", "User Three", 3)
+                new User("user3", "User Three", 3),
             });
 }

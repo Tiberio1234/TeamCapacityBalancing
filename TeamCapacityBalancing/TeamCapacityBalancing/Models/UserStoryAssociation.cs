@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ public class UserStoryAssociation
         StoryData = storyData;
         ShortTerm = shortTerm;
         Remaining = remaining;
-        UserAndDays = userAndDays;
         Coverage = coverage;
+        Times = times;
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace TeamCapacityBalancing.Models;
 
+
 public sealed partial class UserAssociation : ObservableObject
 {
     public User User { get; set; }

@@ -2,10 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:v="using:TeamCapacityBalancing.Views"
 			 xmlns:vm="using:TeamCapacityBalancing.ViewModels"
 			 xmlns:models="using:TeamCapacityBalancing.Models"
              xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:s="using:TeamCapacityBalancing.Navigation"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TeamCapacityBalancing.Views.BalancingPage"
 			 x:DataType="vm:BalancingViewModel"
 			 x:CompileBindings="True"
@@ -30,7 +32,8 @@
 			<Button Width="40" Height="40" Background="Transparent">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Calendar"/>
 			</Button>
-			<Button Width="40" Height="40" Background="Transparent">
+
+			<Button Width="40" Height="40" Background="Transparent" Command="{Binding OpenTeamPageCommand}" >
 				<icons:MaterialIcon Width="40" Height="40" Kind="People"/>
 			</Button>
 			<ToggleButton  Width="40" Height="40" Background="Transparent" IsChecked="{Binding IsBalancing}">
@@ -53,7 +56,7 @@
 						<RowDefinition Height="*"/>
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
-
+          
 					<StackPanel Grid.Row="0">
 						<Panel>
 							<ToggleButton Name="MenuToggle" IsChecked="{Binding IsPaneOpen}" Background="Turquoise">
@@ -90,22 +93,17 @@
 
 				<DataGrid Grid.Row="0" ColumnWidth="*" Items="{Binding MyUserAssociation}" AutoGenerateColumns="False"
 					   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
-
 					<DataGrid.Columns>
 						<DataGridTemplateColumn Header="Story">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding StoryData.Name}" HorizontalAlignment="Center"/>
-								</DataTemplate>
-							</DataGridTemplateColumn.CellTemplate>
-						</DataGridTemplateColumn>
-					</DataGrid.Columns>
 
-					<DataGrid.Columns>
 						<DataGridTemplateColumn Header="ShortTerm">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<CheckBox IsChecked="{Binding ShortTerm}" HorizontalAlignment="Center"/>
+
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -116,6 +114,7 @@
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding Remaining}" HorizontalAlignment="Center"/>
+
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -215,17 +214,61 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[9].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[9].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Remaining}"/>
+									<TextBlock Text="{Binding Remaining}" HorizontalAlignment="Center"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
 					</DataGrid.Columns>
 
+					<!--rares-->
 					<DataGrid.Columns>
-						<DataGridTemplateColumn Header="Coverage">
+						<DataGridTemplateColumn Width="Auto">
+							<DataGridTemplateColumn.Header>
+								<ListBox Items="{Binding TeamMembers.Users}">
+									<ListBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel Orientation="Horizontal"/>
+										</ItemsPanelTemplate>
+									</ListBox.ItemsPanel>
+									<ListBox.ItemTemplate>
+										<DataTemplate x:DataType="models:User">
+											<TextBlock Text="{Binding DisplayName}" Width="100"/>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+							</DataGridTemplateColumn.Header>
+
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Coverage}"/>
+									<!--<TextBlock Text="{Binding UserAndDays.Days[0]}"/>-->
+									<StackPanel Orientation="Horizontal">
+
+										<ListBox Items="{Binding Times}" Margin="11, 0, 0, 0">
+											<ListBox.ItemsPanel>
+												<ItemsPanelTemplate>
+													<StackPanel Orientation="Horizontal"/>
+												</ItemsPanelTemplate>
+											</ListBox.ItemsPanel>
+											<ListBox.ItemTemplate>
+												<DataTemplate x:DataType="models:UserDays">
+													<TextBox Text="{Binding Days}" Width="100"/>
+												</DataTemplate>
+											</ListBox.ItemTemplate>
+										</ListBox>
+									</StackPanel>
+
+								</DataTemplate>
+							</DataGridTemplateColumn.CellTemplate>
+
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+
+
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Coverage" Width="Auto">
+							<DataGridTemplateColumn.CellTemplate>
+								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<TextBlock Text="{Binding Coverage}" HorizontalAlignment="Center"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -361,6 +404,7 @@
 									<TextBlock Text="{Binding Remaining}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
+
 						</DataGridTemplateColumn>
 					</DataGrid.Columns>
 
