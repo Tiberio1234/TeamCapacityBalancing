@@ -11,6 +11,6 @@
         Title="TeamCapacityBalancing">
 
 	<views:BalancingPage/>
-	<!--<views:SprintSelectionPage></views:SprintSelectionPage>-->
-	
+
+	<UserControl Content="{Binding Content}"></UserControl>
 </Window>

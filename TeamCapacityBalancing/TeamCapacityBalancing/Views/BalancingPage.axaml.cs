@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using System;
 using TeamCapacityBalancing.ViewModels;
 
 namespace TeamCapacityBalancing.Views

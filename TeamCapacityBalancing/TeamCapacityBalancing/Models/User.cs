@@ -1,18 +1,27 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace TeamCapacityBalancing.Models;
-
-public class User
+﻿namespace TeamCapacityBalancing.Models
 {
-
-    public string Username { get; set; }
-    public string DisplayName { get; set; }
-    public int Id { get; set; }
-
-    public User(string username, string displayName, int id)
+    public class User
     {
-        Username = username;
-        DisplayName = displayName;
-        Id = id;
+        public string Username { get; set; }
+      
+        public string DisplayName { get; set; }
+      
+        public bool HasTeam { get; set; }
+      
+        public int Id { get; set; }
+      
+        public User(string username, string displayName, int id)
+        {
+            Username = username;
+            DisplayName = displayName;
+            Id = id;
+        }
     }
 }

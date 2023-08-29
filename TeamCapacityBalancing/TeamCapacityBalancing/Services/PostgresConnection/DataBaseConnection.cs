@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using TeamCapacityBalancing.Models;
 
 namespace TeamCapacityBalancing.Services.Postgres_connection
 {
-    internal class DataBaseConnection
+    public class DataBaseConnection
     {
         private static DataBaseConnection _instance;
         private static readonly object _lock = new object();
