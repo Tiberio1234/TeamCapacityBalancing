@@ -1,38 +1,41 @@
-namespace TeamCapacityBalancing.Models
+namespace TeamCapacityBalancing.Models;
+
+public class IssueData
 {
-    public class IssueData
+    public enum IssueType
     {
-        public enum IssueType
-        {
-            Epic,
-            Story,
-            Task,
-        }
-        //TO DO: asignee: user
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public IssueType Type { get; set; }
+        Epic,
+        Story,
+        Task,
+    }
+    public int Id { get; set; }
+    public string Asignee { get; set; }
+    public float Remaining { get; set; }
+    public string Name { get; set; }
+    public string Release { get; set; }
+    public string Sprint { get; set; }
+    public bool Status { get; set; }
+    public IssueType Type { get; set; }
 
-        public string Assignee { get; set; }
-        
-        public int IssueNumber { get; set; }
+    public IssueData(string name, float remaining, string release, string sprint, bool status, IssueType type)
+    {
+        Name = name;
+        Remaining = remaining;
+        Release = release;
+        Sprint = sprint;
+        Status = status;
+        Type = type;
+    }
 
-        public int IssueId { get; set; }
+    public IssueData(int id, string summary, string assignee)
+    {
+        Id = id;
+        Name = summary;
+        Asignee = assignee;
+    }
 
-        public IssueData(int id, string name, IssueType type, string assignee, int issueNumber, int issueId)
-        {
-            Id = id;
-            Name = name;
-            Type = type;
-            Assignee = assignee;
-            IssueNumber = issueNumber;
-            IssueId = issueId;
-        }
-
-        public IssueData(string name)
-        {
-            Name = name;
-        }
-
+    public IssueData(string name)
+    {
+        Name = name;
     }
 }
