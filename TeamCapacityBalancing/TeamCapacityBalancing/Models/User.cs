@@ -16,11 +16,24 @@ using System.Threading.Tasks;
         public bool HasTeam { get; set; }
       
         public int Id { get; set; }
+
+        public User()
+        {
+
+        }
       
         public User(string username, string displayName, int id)
         {
             Username = username;
             DisplayName = displayName;
+            Id = id;
+        }
+
+        public User(string username, string displayName, bool hasTeam, int id)
+        {
+            Username = username;
+            DisplayName = displayName;
+            HasTeam = hasTeam;
             Id = id;
         }
 

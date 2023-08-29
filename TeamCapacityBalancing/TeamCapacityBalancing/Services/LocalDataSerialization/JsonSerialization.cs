@@ -46,17 +46,26 @@ namespace TeamCapacityBalancing.Services.LocalDataSerialization
 {
     public class JsonSerialization : IDataSerialization
     {
-        private const string UserStoryFilePath = "../../../LocalFiles/UserStoryData/";
-        private const string UserFilePath = "../../../LocalFiles/TeamData/";
+        public const string UserStoryFilePath = "../../../LocalFiles/UserStoryData/";
+        public const string UserFilePath = "../../../LocalFiles/TeamData/";
 
         public List<User> DeserializeTeamData(string filename)
         {
-            return JsonConvert.DeserializeObject<List<User>>(File.ReadAllText(UserFilePath + filename));
+            if(File.Exists(UserFilePath + filename))
+            {
+                return JsonConvert.DeserializeObject<List<User>>(File.ReadAllText(UserFilePath + filename));
+            }
+            return new List<User>();
+
         }
 
         public List<UserStoryDataSerialization> DeserializeUserStoryData(string filename)
         {
-            return JsonConvert.DeserializeObject<List<UserStoryDataSerialization>>(File.ReadAllText(UserStoryFilePath + filename));
+            if (File.Exists(UserFilePath + filename))
+            {
+                return JsonConvert.DeserializeObject<List<UserStoryDataSerialization>>(File.ReadAllText(UserStoryFilePath + filename));
+            }
+            return new List<UserStoryDataSerialization>();
         }
 
         public void SerializeTeamData(List<User> userDataSerializations, string filename)

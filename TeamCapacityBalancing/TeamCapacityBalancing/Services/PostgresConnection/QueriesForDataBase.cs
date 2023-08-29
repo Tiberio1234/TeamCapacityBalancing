@@ -16,7 +16,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
         private const string StoryIssueType = "10001";
         private const string LinkType = "10201";
 
-        List<User> IDataProvider.GetAllUsers()
+        public List<User> GetAllUsers()
         {
             List<User> users = new List<User>();
 
@@ -47,7 +47,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             return users;
         }
 
-        List<IssueData> IDataProvider.GetStoriesByEpic(int epicId)
+        public List<IssueData> GetStoriesByEpic(int epicId)
         {
             List<IssueData> stories = new List<IssueData>();
 
@@ -86,7 +86,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             return stories;
         }
 
-        List<IssueData> IDataProvider.GetAllStoriesByTeamLeader(string teamLeaderUsername)
+        public List<IssueData> GetAllStoriesByTeamLeader(string teamLeaderUsername)
         {
             List<IssueData> stories = new List<IssueData>();
 
