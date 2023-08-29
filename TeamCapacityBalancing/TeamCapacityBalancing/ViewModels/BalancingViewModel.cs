@@ -10,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamCapacityBalancing.Models;
 using TeamCapacityBalancing.Navigation;
+using TeamCapacityBalancing.Services.LocalDataSerialization;
+using TeamCapacityBalancing.Services.Postgres_connection;
+using TeamCapacityBalancing.Services.ServicesAbstractions;
 using TeamCapacityBalancing.Views;
 
 namespace TeamCapacityBalancing.ViewModels;
@@ -18,10 +21,16 @@ public sealed partial class BalancingViewModel : ObservableObject
 {
     private readonly PageService _pageService;
     private readonly NavigationService _navigationService;
+
+    //services
+    private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
     public List<PageData> Pages { get; }
 
     [ObservableProperty]
     public List<User> _team;
+    public List<IssueData> _epics;
+    public ObservableCollection<IssueData> Epics { get; set; } = new ObservableCollection<IssueData>();
+    
 
     public BalancingViewModel()
     {
@@ -32,6 +41,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         _pageService = pageService;
         _navigationService = navigationService;
+        _queriesForDataBase = new QueriesForDataBase();
         Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList(); 
     }
 
@@ -88,7 +98,6 @@ public sealed partial class BalancingViewModel : ObservableObject
                 new UserStoryAssociation(new IssueData("Total capacity"), true, 5.0f, new UserAssociation(new User("user1", "User One", 1), new List<float> { 1.5f, 2.0f, 1.0f }, true), 80.0f),
             };
 
-    public ObservableCollection<IssueData> Epics { get; set; } = new() { new("Epic 1"), new("Epic 2"), new("Epic 3") };
     public ObservableCollection<IssueData> Storyes { get; set; } = new() { new("Story 1"), new("Story 2"), new("Story 3") };
 
     public Team TeamMembers { get; set; } = new Team(new List<User>
