@@ -18,6 +18,7 @@
 		<vm:BalancingViewModel/>
 	</UserControl.DataContext>
 
+
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -37,10 +38,10 @@
 			<Button Width="40" Height="40" Background="Transparent">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Calendar"/>
 			</Button>
+
 			<Button Width="40" Height="40" Background="Transparent" Command="{Binding OpenTeamPageCommand}" >
 				<icons:MaterialIcon Width="40" Height="40" Kind="People"/>
 			</Button>
-
 
 			<ToggleButton Height="40" Background="Turquoise"
 						  HorizontalContentAlignment="Center"
@@ -88,11 +89,12 @@
 				</SplitView.Pane>
 
 
+
 				<Grid>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="*"/>
 						<RowDefinition Height="*"/>
-						<RowDefinition Height="*"/>
+						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 
 					<!--<DataGrid Grid.Row="0">
@@ -119,7 +121,6 @@
 						</ItemsRepeater>
 					</StackPanel>-->
 
-					
 				</Grid>
 
 			</SplitView>

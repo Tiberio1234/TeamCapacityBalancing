@@ -5,16 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TeamCapacityBalancing.Models;
-
-public partial class User
+﻿namespace TeamCapacityBalancing.Models
 {
-    public string Name { get; set;}
-    public string UserName { get; set;}
-    
-    public bool HasTeam { get; set; }
-    public User(string name) 
-    { 
-        Name= name;
+    public class User
+    {
+        public string Username { get; set; }
+      
+        public string DisplayName { get; set; }
+      
+        public bool HasTeam { get; set; }
+      
+        public int Id { get; set; }
+      
+        public User(string username, string displayName, int id)
+        {
+            Username = username;
+            DisplayName = displayName;
+            Id = id;
+        }
     }
 }

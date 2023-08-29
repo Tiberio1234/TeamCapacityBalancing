@@ -73,5 +73,7 @@ public sealed partial class BalancingViewModel : ObservableObject
 
   
 
+    public List<string> Users { get; set; } = new() { "Ana", "Maria" };
+
 }
       
