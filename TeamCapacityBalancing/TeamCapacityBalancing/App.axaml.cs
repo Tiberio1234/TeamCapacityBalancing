@@ -59,7 +59,7 @@ namespace TeamCapacityBalancing
                 list = p.GetAllEpicsByTeamLeader("JIRAUSER10101");
                 list = p.GetAllStoriesByTeamLeader("JIRAUSER10101");
                 list = p.GetStoriesByEpic(10030);
-                QueriesForDataBase.GetAllUsers();
+                
 
                 
 
