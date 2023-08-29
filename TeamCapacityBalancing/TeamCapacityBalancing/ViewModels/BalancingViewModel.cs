@@ -29,6 +29,9 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     [ObservableProperty]
     public List<User> _team;
+
+    [ObservableProperty]
+    public List<User> _allUsers;
     public ObservableCollection<IssueData> Epics { get; set; } = new ObservableCollection<IssueData>();
     
 
@@ -36,12 +39,12 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         
     }
-
-    public BalancingViewModel(PageService pageService,NavigationService navigationService, )
+    public BalancingViewModel(PageService pageService,NavigationService navigationService)
     {
         _pageService = pageService;
         _navigationService = navigationService;
         Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList();
+        AllUsers = _queriesForDataBase.GetAllUsers();
     }
 
     [ObservableProperty]
