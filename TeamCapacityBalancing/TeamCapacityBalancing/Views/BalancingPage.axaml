@@ -119,19 +119,6 @@
 						</ItemsRepeater>
 					</StackPanel>-->
 
-					<StackPanel Grid.Row="1">
-						<TextBlock Text="Your Team"></TextBlock>
-						<ItemsRepeater Items="{Binding Team}">
-							<ItemsRepeater.ItemTemplate>
-								<DataTemplate>
-									<StackPanel>
-										<TextBlock Text="{Binding Name}">
-										</TextBlock>
-									</StackPanel>
-								</DataTemplate>
-						</ItemsRepeater.ItemTemplate>
-							</ItemsRepeater>
-					</StackPanel>
 					
 				</Grid>
 
