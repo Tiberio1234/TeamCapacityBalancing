@@ -39,7 +39,6 @@ using System.Threading.Tasks;
 
         public User(string username)
         {
-            //Username = username;
             DisplayName = username;
         }
     }

@@ -12,6 +12,8 @@ namespace TeamCapacityBalancing.Models
         public int StoryId { get; set; }
    
         public bool ShortTerm { get; set; }
+
+        public float Remaining { get; set; }  
        
         public List<Tuple<User,float>> UsersCapacity { get; set; } = new List<Tuple<User, float>>();
 
