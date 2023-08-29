@@ -23,5 +23,10 @@ using System.Threading.Tasks;
             DisplayName = displayName;
             Id = id;
         }
+
+        public User(string username)
+        {
+            Username = username;
+        }
     }
 }

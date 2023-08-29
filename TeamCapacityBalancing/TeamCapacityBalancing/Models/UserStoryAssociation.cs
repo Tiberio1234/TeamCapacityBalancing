@@ -20,6 +20,5 @@ public class UserStoryAssociation
         ShortTerm = shortTerm;
         Remaining = remaining;
         Coverage = coverage;
-        Times = times;
     }
 }

@@ -9,6 +9,7 @@ public class IssueData
         Task,
     }
     public int Id { get; set; }
+    public string Asignee { get; set; }
     public float Remaining { get; set; }
     public string Name { get; set; }
     public string Release { get; set; }
@@ -24,6 +25,13 @@ public class IssueData
         Sprint = sprint;
         Status = status;
         Type = type;
+    }
+
+    public IssueData(int id, string summary, string assignee)
+    {
+        Id = id;
+        Name = summary;
+        Asignee = assignee;
     }
 
     public IssueData(string name)

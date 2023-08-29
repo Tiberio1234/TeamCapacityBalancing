@@ -73,7 +73,8 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                         string assignee = reader.GetString(reader.GetOrdinal("assignee"));
                         int issueNumber = reader.GetInt32(reader.GetOrdinal("issuenum"));
                         int projectId = reader.GetInt32(reader.GetOrdinal("project"));
-                        stories.Add(new IssueData(id, name, IssueData.IssueType.Story, assignee, issueNumber, projectId));
+                        stories.Add(new IssueData(id, name, assignee));
+                        //stories.Add(new IssueData(id, name, IssueData.IssueType.Story, assignee, issueNumber, projectId));
                     }
                 }
             }
