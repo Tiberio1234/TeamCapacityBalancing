@@ -2,15 +2,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:v="using:TeamCapacityBalancing.Views"
 			 xmlns:vm="using:TeamCapacityBalancing.ViewModels"
 			 xmlns:models="using:TeamCapacityBalancing.Models"
              xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:s="using:TeamCapacityBalancing.Navigation"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TeamCapacityBalancing.Views.BalancingPage"
 			 x:DataType="vm:BalancingViewModel"
 			 x:CompileBindings="True">
 
-	<UserControl.DataContext>
+
+	
+     <UserControl.DataContext>
 		<vm:BalancingViewModel/>
 	</UserControl.DataContext>
 
@@ -34,7 +38,8 @@
 			<Button Width="40" Height="40" Background="Transparent">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Calendar"/>
 			</Button>
-			<Button Width="40" Height="40" Background="Transparent">
+
+			<Button Width="40" Height="40" Background="Transparent" Command="{Binding OpenTeamPageCommand}" >
 				<icons:MaterialIcon Width="40" Height="40" Kind="People"/>
 			</Button>
 
@@ -92,12 +97,29 @@
 						<RowDefinition Height="Auto"/>
 					</Grid.RowDefinitions>
 
-					<StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Center">
-						<TextBlock Text="Balancing" Margin="15" Background="Transparent"/>
-						<Button Width="20" Height="20" Background="Transparent">
-							<icons:MaterialIcon Width="20" Height="20" Kind="Show"/>
-						</Button>
-					</StackPanel>
+					<!--<DataGrid Grid.Row="0">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="First Name"
+												Width="2*" />
+							<DataGridTextColumn Header="Last Name"
+												Width="2*" />
+							<DataGridTextColumn Header="Department"
+												Width="*" />
+						</DataGrid.Columns>
+					</DataGrid>-->
+
+					<!--<StackPanel Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch">
+						<TextBlock Text="Your Team" FontWeight="Bold" FontSize="18"></TextBlock>
+						<ItemsRepeater Items="{Binding }">
+							<ItemsRepeater.ItemTemplate>
+								<DataTemplate>
+									<StackPanel Orientation="Horizontal">
+										<TextBlock Text="{Binding Name}" Margin="10"></TextBlock>
+									</StackPanel>
+								</DataTemplate>
+							</ItemsRepeater.ItemTemplate>
+						</ItemsRepeater>
+					</StackPanel>-->
 
 				</Grid>
 

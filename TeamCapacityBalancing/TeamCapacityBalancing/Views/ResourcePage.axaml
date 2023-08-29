@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:TeamCapacityBalancing.ViewModels"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TeamCapacityBalancing.Views.ResourcePage"
+			 x:DataType="vm:ResourceViewModel"
+			 x:CompileBindings="True"
+			 >
+
+	<UserControl.DataContext>
+		<vm:ResourceViewModel/>
+	</UserControl.DataContext>
+
+	<Grid RowDefinitions="Auto Auto Auto"  ColumnDefinitions="Auto Auto" Margin="10">
+		<TextBlock Grid.Row="0" 
+				   Text="Resources" 
+				   FontSize="18" 
+				   FontWeight="Bold"
+				   Padding="0,0,0,20"
+				   ></TextBlock>
+		<StackPanel  Grid.Row="1" Orientation="Horizontal">
+       <TextBlock Grid.Row="1"
+				  Text="Full Name"
+				  Margin="0,0,10,0"
+				  ></TextBlock>
+		<TextBlock Grid.Column="1"
+				   Grid.Row="1"
+				   Text="Antonio"
+				   ></TextBlock>
+		</StackPanel>
+
+		<StackPanel  Grid.Row="2" Orientation="Horizontal">
+			<TextBlock Grid.Row="1"
+					   Text="Id"
+					   Margin="0,0,10,0"
+				  ></TextBlock>
+			<TextBlock Grid.Column="1"
+					   Grid.Row="1"
+					   Text="#msdfhj"
+				   ></TextBlock>
+		</StackPanel>
+		
+		<ItemsRepeater Grid.Row="3" Items="{Binding DaysPerWeeks}">
+			<ItemsRepeater.ItemTemplate>
+				<DataTemplate>
+					<Border Margin="0,10,0,0">
+						<StackPanel Orientation="Horizontal">
+						<TextBlock Text="{Binding}" Margin="0,15"/>
+						<TextBox Margin="10,10"  Width="20" VerticalAlignment="Top" Height="20">
+						</TextBox>
+						</StackPanel>
+					</Border>
+				</DataTemplate>
+			</ItemsRepeater.ItemTemplate>
+		</ItemsRepeater>
+		
+		
+	</Grid>
+	
+</UserControl>

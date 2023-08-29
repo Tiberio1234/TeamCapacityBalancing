@@ -10,9 +10,11 @@ namespace TeamCapacityBalancing.Models
         }
         //TO DO: asignee: user
         public int Id { get; set; }
+      
         public string Name { get; set; }
+      
         public IssueType Type { get; set; }
-
+      
         public string Assignee { get; set; }
         
         public int IssueNumber { get; set; }
@@ -33,6 +35,5 @@ namespace TeamCapacityBalancing.Models
         {
             Name = name;
         }
-
     }
 }
