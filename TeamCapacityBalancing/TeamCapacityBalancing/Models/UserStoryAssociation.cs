@@ -19,6 +19,7 @@ public class UserStoryAssociation
         StoryData = storyData;
         ShortTerm = shortTerm;
         Remaining = remaining;
+        UserAndDays = userAndDays;
         Coverage = coverage;
     }
 }

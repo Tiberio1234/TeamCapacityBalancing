@@ -125,7 +125,7 @@
 						<DataGridTemplateColumn Header="{Binding MyUserAssociation[0].UserAndDays.User.DisplayName}" IsVisible="{Binding MyUserAssociation[0].UserAndDays.IsShow}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding UserAndDays.Days}"/>
+									<TextBox Text="{Binding UserAndDays.Days[0]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
