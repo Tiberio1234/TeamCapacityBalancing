@@ -12,9 +12,9 @@ public class UserStoryAssociation
     public IssueData StoryData { get; set; }
     public bool ShortTerm { get; set; }
     public float Remaining { get; set; }
-    public List<UserDays> Times { get; set; }
+    public UserAssociation UserAndDays { get; set; }
     public float Coverage { get; set; }
-    public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, float coverage, List<UserDays> times)
+    public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, UserAssociation userAndDays, float coverage)
     {
         StoryData = storyData;
         ShortTerm = shortTerm;
