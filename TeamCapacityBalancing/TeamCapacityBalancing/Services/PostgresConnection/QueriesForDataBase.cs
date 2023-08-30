@@ -124,7 +124,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             return stories;
         }
 
-        public List<IssueData> GetAllEpicsByTeamLeader(string teamLeaderUsername)
+        public List<IssueData> GetAllEpicsByTeamLeader(User teamLeader)
         {
             List<IssueData> epics = new List<IssueData>();
 
@@ -143,7 +143,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                         WHERE {IssuelinkTable}.destination IN
                         (SELECT {JiraissueTable}.id
                         FROM {JiraissueTable}
-                        WHERE {JiraissueTable}.assignee = 'JIRAUSER10101'
+                        WHERE {JiraissueTable}.assignee = 'JIRAUSER{teamLeader.Id}'
                         AND {JiraissueTable}.issuetype = '{StoryIssueType}'
                         AND {JiraissueTable}.summary LIKE '%#%'
 )

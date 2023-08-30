@@ -69,9 +69,12 @@ public sealed partial class BalancingViewModel : ObservableObject
             {
                 _selectedUser = value;
                 List<IssueData> epics;
-                epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser.Username);
-                Epics = new ObservableCollection<IssueData>(epics);
-                OnPropertyChanged("Epics");
+                epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
+                if (epics != null)
+                {
+                    Epics = new ObservableCollection<IssueData>(epics);
+                    OnPropertyChanged("Epics");
+                }
                 OnPropertyChanged(nameof(SelectedUser));
             }
         }
