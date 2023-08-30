@@ -165,7 +165,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             return stories;
         }
 
-        public List<IssueData> GetAllEpicsByTeamLeader(string teamLeaderUsername)
+        public List<IssueData> GetAllEpicsByTeamLeader(User teamLeader)
         {
             List<IssueData> epics = new List<IssueData>();
 
@@ -175,18 +175,21 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                 {
                     connection.Open();
 
-                    var cmd = new NpgsqlCommand($"SELECT {JiraissueTable}.id, {JiraissueTable}.assignee, {JiraissueTable}.issuenum, {JiraissueTable}.project, {JiraissueTable}.summary " +
-                        $"FROM {JiraissueTable} " +
-                        $"WHERE {JiraissueTable}.id IN " +
-                            $"( SELECT {IssuelinkTable}.source " +
-                            $"FROM {IssuelinkTable} " +
-                            $"WHERE {IssuelinkTable}.destination IN " +
-                                $"( SELECT {JiraissueTable}.id " +
-                                $"FROM {JiraissueTable} " +
-                                $"WHERE {JiraissueTable}.assignee = '{teamLeaderUsername}' " +
-                                $"AND {JiraissueTable}.issuetype = '{StoryIssueType}'" +
-                                ")" +
-                              ")", connection);
+                    var cmd = new NpgsqlCommand($@"
+                        SELECT {JiraissueTable}.id, {JiraissueTable}.assignee, {JiraissueTable}.issuenum, {JiraissueTable}.project, {JiraissueTable}.summary
+                        FROM {JiraissueTable}
+                        WHERE {JiraissueTable}.id IN
+                        (SELECT {IssuelinkTable}.source
+                        FROM {IssuelinkTable}
+                        WHERE {IssuelinkTable}.destination IN
+                        (SELECT {JiraissueTable}.id
+                        FROM {JiraissueTable}
+                        WHERE {JiraissueTable}.assignee = 'JIRAUSER{teamLeader.Id}'
+                        AND {JiraissueTable}.issuetype = '{StoryIssueType}'
+                        AND {JiraissueTable}.summary LIKE '%#%'
+)
+                        
+        )", connection);
 
                     var reader = cmd.ExecuteReader();
 

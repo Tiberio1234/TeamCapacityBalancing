@@ -33,12 +33,12 @@ public sealed partial class BalancingViewModel : ObservableObject
     private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
     public List<PageData> Pages { get; }
 
- 
+
 
     [ObservableProperty]
     public List<User> _allUsers;
     public ObservableCollection<IssueData> Epics { get; set; } = new ObservableCollection<IssueData>();
-    
+
 
     public BalancingViewModel()
     {
@@ -69,6 +69,8 @@ public sealed partial class BalancingViewModel : ObservableObject
             PopulateByDefault();
         }
     }
+        AllUsers = _queriesForDataBase.GetAllUsers();
+    }
 
     [ObservableProperty]
     private bool _isShortTermVisible = true;
@@ -81,6 +83,27 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _sumsOpen = true;
+
+    private User _selectedUser;
+    public User SelectedUser
+    {
+        get { return _selectedUser; }
+        set
+        {
+            if (_selectedUser != value)
+            {
+                _selectedUser = value;
+                List<IssueData> epics;
+                epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
+                if (epics != null)
+                {
+                    Epics = new ObservableCollection<IssueData>(epics);
+                    OnPropertyChanged("Epics");
+                }
+                OnPropertyChanged(nameof(SelectedUser));
+            }
+        }
+    }
 
     [ObservableProperty]
     private SplitViewDisplayMode _mode = SplitViewDisplayMode.CompactInline;
@@ -171,6 +194,8 @@ public sealed partial class BalancingViewModel : ObservableObject
             userStoryDataSerializations.Add(new UserStoryDataSerialization(userStoryAssociation.StoryData, userStoryAssociation.ShortTerm, userStoryAssociation.Remaining, capacityList));
         }
         _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, teamLeaderName);
+
+        _navigationService.CurrentPageType = typeof(TeamPage);
     }
 
     public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>
@@ -197,4 +222,19 @@ public sealed partial class BalancingViewModel : ObservableObject
 
 
     public List<User> TeamMembers { get; set; } = new List<User>();
+
+
+    public Team TeamMembers { get; set; } = new Team(new List<User>
+            {
+                new User("user1", "User One", 1),
+                new User("user2", "User Two", 2),
+                new User("user3", "User Three", 3),
+                new User("user4", "User Four", 3),
+                new User("user5", "User Five", 3),
+                new User("user6", "User Six", 3),
+                new User("user7", "User Seven", 3),
+                new User("user8", "User Eight", 3),
+                new User("user9", "User Nine", 3),
+                new User("user10", "User Ten", 3),
+            });
 }

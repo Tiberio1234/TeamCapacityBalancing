@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="using:TeamCapacityBalancing.ViewModels"
+			 xmlns:behaviors="clr-namespace:Avalonia.Controls.Behaviors;assembly=Avalonia.Controls.Behaviors"
 			 xmlns:models="using:TeamCapacityBalancing.Models"
              xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -20,14 +21,12 @@
 			<RowDefinition Height="8*"/>
 		</Grid.RowDefinitions>
 		<StackPanel Grid.Row="0" Orientation="Horizontal">
-			<ComboBox Width="300" Margin="5">
-				<ItemsControl Items="{Binding AllUsers}">
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding DisplayName}" />
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>
+			<ComboBox Width="300" Margin="5" SelectedItem="{Binding SelectedUser}" Items="{Binding AllUsers}" >
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding DisplayName}" />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
 			</ComboBox>
 
 			<Button Width="40" Height="40" Background="Transparent">
@@ -189,7 +188,7 @@
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
 					</DataGrid.Columns>
-					
+
 					<DataGrid.Columns>
 						<DataGridTemplateColumn Header="{Binding TeamMembers[6].DisplayName}" IsVisible="{Binding TeamMembers[6].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
