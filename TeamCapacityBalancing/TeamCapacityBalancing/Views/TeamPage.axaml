@@ -2,72 +2,86 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:models="using:TeamCapacityBalancing.Models"
 			 xmlns:vm="using:TeamCapacityBalancing.ViewModels"
+			 xmlns:models="using:TeamCapacityBalancing.Models"
 			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="TeamCapacityBalancing.Views.TeamPage"
-			 x:Name="TeamPageControl"
 			 x:DataType="vm:TeamViewModel"
 			 x:CompileBindings="True"
 			 >
-	<Design.DataContext>
-		<vm:TeamViewModel/>
-	</Design.DataContext>
+
 	<UserControl.DataContext>
 		<vm:TeamViewModel/>
 	</UserControl.DataContext>
-
-
-	<Grid RowDefinitions="Auto Auto" ColumnDefinitions="Auto * * *" Margin="20">
-
-		<Button Grid.Column="0"
-				Grid.Row="1"
-				VerticalAlignment="Top"
-				Background="Turquoise"
-				Command="{Binding BackToPageCommand}"
-				Margin="0,0,10,0"
-				>
-			<icons:MaterialIcon Kind="Undo"></icons:MaterialIcon>
-		</Button>
-		<StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch">
-			<TextBlock Text="Choose a Team" FontWeight="Bold" FontSize="18"></TextBlock>
-			<ItemsRepeater Items="{Binding AllUser}">
-				<ItemsRepeater.ItemTemplate>
-					<DataTemplate>
-						<StackPanel Orientation="Horizontal" >
-							<CheckBox IsChecked="{Binding HasTeam}">
-							</CheckBox>
-							<TextBlock Text="{Binding DisplayName}" Margin="0,10"></TextBlock>
-						</StackPanel>
-					</DataTemplate>
-				</ItemsRepeater.ItemTemplate>
-			</ItemsRepeater>
-		</StackPanel>
-
-		<Button Grid.Row="2" 
-				Grid.Column="2" 
-				Command="{Binding CreateTeamCommand}"
-				HorizontalAlignment="Left"
-				Background="Turquoise"
-				>
-			<icons:MaterialIcon Kind="Forward"></icons:MaterialIcon>
-		</Button>
-
-		
-		<StackPanel Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch">
-			<TextBlock Text="Your Team" FontWeight="Bold" FontSize="18"></TextBlock>
-			<ItemsRepeater Items="{Binding YourTeam}">
-				<ItemsRepeater.ItemTemplate>
-					<DataTemplate x:DataType="models:User">
-						<StackPanel Orientation="Horizontal">
-							<Button Content="{Binding DisplayName}" CommandParameter="{Binding Id}" Margin="5" Command="{ReflectionBinding #TeamPageControl.DataContext.ResourcePageCommand}"></Button>
-						</StackPanel>
-					</DataTemplate>
-				</ItemsRepeater.ItemTemplate>
-			</ItemsRepeater>
-		</StackPanel>
-		
-	</Grid>
 	
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Grid.Row="0">
+			<TextBlock Text="Selection Team" FontSize="25"/>
+		</StackPanel>
+
+
+		<Grid Grid.Row="1" Margin="15 0 15 0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<Grid Grid.Column="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<StackPanel HorizontalAlignment="Center" Grid.Row="0">
+					<TextBlock Text="All Users"/>
+				</StackPanel>
+
+				<ListBox Items="" Grid.Row="1" Margin="5" >
+					
+				</ListBox>
+			</Grid>
+
+			<StackPanel Grid.Column="1" VerticalAlignment="Center">
+				<Button Width="40" Height="40" Background="Transparent">
+					<icons:MaterialIcon Width="40" Height="40" Kind="ArrowLeft"/>
+				</Button>
+				<Button Width="40" Height="40" Background="Transparent">
+					<icons:MaterialIcon Width="40" Height="40" Kind="ArrowRight"/>
+				</Button>
+				<Button Width="40" Height="40" Background="Transparent">
+					<icons:MaterialIcon Width="40" Height="40" Kind="NextTitle"/>
+				</Button>
+				<Button Width="40" Height="40" Background="Transparent">
+					<icons:MaterialIcon Width="40" Height="40" Kind="TitleBackward"/>
+				</Button>
+			</StackPanel>
+
+			<Grid Grid.Column="2">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<StackPanel HorizontalAlignment="Center" Grid.Row="0">
+					<TextBlock Text="My Team"/>
+				</StackPanel>
+
+				<ListBox Items="" Grid.Row="1" Margin="5" >
+
+				</ListBox>
+			</Grid>
+		</Grid>
+
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10 10 80 30" Grid.Row="2">
+			<Button Content="Resource Page" Background="Transparent"/>
+		</StackPanel>
+	</Grid>
 </UserControl>
