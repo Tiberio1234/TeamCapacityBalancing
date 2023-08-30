@@ -30,14 +30,13 @@ public sealed partial class BalancingViewModel : ObservableObject
     [ObservableProperty]
     public List<User> _team;
     public ObservableCollection<IssueData> Epics { get; set; } = new ObservableCollection<IssueData>();
-    
 
     public BalancingViewModel()
     {
         
     }
 
-    public BalancingViewModel(PageService pageService,NavigationService navigationService, )
+    public BalancingViewModel(PageService pageService,NavigationService navigationService)
     {
         _pageService = pageService;
         _navigationService = navigationService;
@@ -81,12 +80,6 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void OpenTeamPage()  
     {
-        Team = new();
-        if (_navigationService.Team is not null)
-            for (int i = 0; i < _navigationService.Team.Count; i++)
-            {
-                Team.Add(_navigationService.Team[i]);
-            }
         _navigationService.CurrentPageType = typeof(TeamPage);
     }
 

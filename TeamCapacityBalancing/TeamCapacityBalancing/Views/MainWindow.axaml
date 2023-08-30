@@ -10,7 +10,7 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="TeamCapacityBalancing">
 	
-	<!--<UserControl Content="{Binding Content}"></UserControl>-->
-	<views:TeamPage></views:TeamPage>
+	<UserControl Content="{Binding Content}"></UserControl>
+	<!--<views:TeamPage></views:TeamPage>-->
 	
 </Window>

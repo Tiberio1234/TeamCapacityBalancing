@@ -27,7 +27,7 @@
 				  ></TextBlock>
 		<TextBlock Grid.Column="1"
 				   Grid.Row="1"
-				   Text="Antonio"
+				   Text="{Binding User.Username}"
 				   ></TextBlock>
 		</StackPanel>
 

@@ -59,9 +59,9 @@
 			<TextBlock Text="Your Team" FontWeight="Bold" FontSize="18"></TextBlock>
 			<ItemsRepeater Items="{Binding YourTeam}">
 				<ItemsRepeater.ItemTemplate>
-					<DataTemplate>
+					<DataTemplate x:DataType="models:User">
 						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="{Binding DisplayName}" Margin="10"></TextBlock>
+							<Button Content="{Binding DisplayName}" CommandParameter="{Binding Id}" Margin="5" Command="{ReflectionBinding #TeamPageControl.DataContext.ResourcePageCommand}"></Button>
 						</StackPanel>
 					</DataTemplate>
 				</ItemsRepeater.ItemTemplate>
