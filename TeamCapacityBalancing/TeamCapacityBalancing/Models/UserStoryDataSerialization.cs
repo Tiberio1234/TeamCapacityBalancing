@@ -9,7 +9,7 @@ namespace TeamCapacityBalancing.Models
 {
     public class UserStoryDataSerialization
     {
-        public int StoryId { get; set; }
+        public IssueData Story { get; set; }
    
         public bool ShortTerm { get; set; }
 
