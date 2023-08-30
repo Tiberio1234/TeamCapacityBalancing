@@ -12,7 +12,4 @@
 
 	<UserControl Content="{Binding Content}"></UserControl>
 	
-	
-
-	
 </Window>

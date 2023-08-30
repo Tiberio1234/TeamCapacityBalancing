@@ -38,8 +38,6 @@ public sealed partial class BalancingViewModel : ObservableObject
     [ObservableProperty]
     public List<User> _allUsers;
     public ObservableCollection<IssueData> Epics { get; set; } = new ObservableCollection<IssueData>();
-
-
     public BalancingViewModel()
     {
         GetTeamUsers();
