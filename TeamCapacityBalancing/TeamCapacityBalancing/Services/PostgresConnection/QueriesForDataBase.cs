@@ -134,18 +134,21 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                 {
                     connection.Open();
 
-                    var cmd = new NpgsqlCommand($"SELECT {JiraissueTable}.id, {JiraissueTable}.assignee, {JiraissueTable}.issuenum, {JiraissueTable}.project, {JiraissueTable}.summary " +
-                        $"FROM {JiraissueTable} " +
-                        $"WHERE {JiraissueTable}.id IN " +
-                            $"( SELECT {IssuelinkTable}.source " +
-                            $"FROM {IssuelinkTable} " +
-                            $"WHERE {IssuelinkTable}.destination IN " +
-                                $"( SELECT {JiraissueTable}.id " +
-                                $"FROM {JiraissueTable} " +
-                                $"WHERE {JiraissueTable}.assignee = '{teamLeaderUsername}' " +
-                                $"AND {JiraissueTable}.issuetype = '{StoryIssueType}'" +
-                                ")" +
-                              ")", connection);
+                    var cmd = new NpgsqlCommand($@"
+                        SELECT {JiraissueTable}.id, {JiraissueTable}.assignee, {JiraissueTable}.issuenum, {JiraissueTable}.project, {JiraissueTable}.summary
+                        FROM {JiraissueTable}
+                        WHERE {JiraissueTable}.id IN
+                        (SELECT {IssuelinkTable}.source
+                        FROM {IssuelinkTable}
+                        WHERE {IssuelinkTable}.destination IN
+                        (SELECT {JiraissueTable}.id
+                        FROM {JiraissueTable}
+                        WHERE {JiraissueTable}.assignee = 'JIRAUSER10101'
+                        AND {JiraissueTable}.issuetype = '{StoryIssueType}'
+                        AND {JiraissueTable}.summary LIKE '%#%'
+)
+                        
+        )", connection);
 
                     var reader = cmd.ExecuteReader();
 

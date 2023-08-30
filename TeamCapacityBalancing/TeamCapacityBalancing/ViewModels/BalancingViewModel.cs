@@ -27,12 +27,12 @@ public sealed partial class BalancingViewModel : ObservableObject
     private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
     public List<PageData> Pages { get; }
 
- 
+
 
     [ObservableProperty]
     public List<User> _allUsers;
     public ObservableCollection<IssueData> Epics { get; set; } = new ObservableCollection<IssueData>();
-    
+
 
     public BalancingViewModel()
     {
@@ -44,6 +44,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         _pageService = pageService;
         _navigationService = navigationService;
         Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList();
+        AllUsers = _queriesForDataBase.GetAllUsers();
     }
 
     [ObservableProperty]
@@ -57,6 +58,24 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _sumsOpen = true;
+
+    private User _selectedUser;
+    public User SelectedUser
+    {
+        get { return _selectedUser; }
+        set
+        {
+            if (_selectedUser != value)
+            {
+                _selectedUser = value;
+                List<IssueData> epics;
+                epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser.Username);
+                Epics = new ObservableCollection<IssueData>(epics);
+                OnPropertyChanged("Epics");
+                OnPropertyChanged(nameof(SelectedUser));
+            }
+        }
+    }
 
     [ObservableProperty]
     private SplitViewDisplayMode _mode = SplitViewDisplayMode.CompactInline;
@@ -90,7 +109,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void OpenTeamPage()
     {
-     
+
         _navigationService.CurrentPageType = typeof(TeamPage);
     }
 
@@ -116,7 +135,7 @@ public sealed partial class BalancingViewModel : ObservableObject
             ),
     };
 
-   
+
 
     public Team TeamMembers { get; set; } = new Team(new List<User>
             {
