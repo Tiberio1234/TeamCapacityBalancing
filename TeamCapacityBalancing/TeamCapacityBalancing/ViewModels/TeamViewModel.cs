@@ -1,12 +1,9 @@
-﻿using Avalonia.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reactive.Linq;
 using TeamCapacityBalancing.Models;
 using TeamCapacityBalancing.Navigation;
 using TeamCapacityBalancing.Services.LocalDataSerialization;
@@ -16,7 +13,7 @@ using TeamCapacityBalancing.Views;
 
 namespace TeamCapacityBalancing.ViewModels;
 
-public sealed partial class TeamViewModel:ObservableObject
+public sealed partial class TeamViewModel : ObservableObject
 {
     private ServiceCollection _serviceCollection;
     private readonly PageService _pageService;
@@ -30,16 +27,6 @@ public sealed partial class TeamViewModel:ObservableObject
 
     public TeamViewModel()
     {
-        YourTeam = _jsonSerialization.DeserializeTeamData(teamLeaderName);
-        AllUser = _queriesForDataBase.GetAllUsers();
-        foreach (var user in YourTeam)
-        {
-            var existingUser = AllUser.FirstOrDefault(u => user.Id == u.Id);
-            if (existingUser != null)
-            {
-                existingUser.HasTeam = true;
-            }
-        }
     }
 
     public TeamViewModel(ServiceCollection serviceCollection, PageService pageService, NavigationService navigationService)
@@ -48,61 +35,164 @@ public sealed partial class TeamViewModel:ObservableObject
         _pageService = pageService;
         _navigationService = navigationService;
         Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList();
-        YourTeam = _jsonSerialization.DeserializeTeamData(teamLeaderName);
-        AllUser = _queriesForDataBase.GetAllUsers();
+        PopulateUsersLists();
+    }
+
+    private void PopulateUsersLists()
+    {
+        YourTeam = new ObservableCollection<User>(_jsonSerialization.DeserializeTeamData(teamLeaderName));
+        AllUsers = new ObservableCollection<User>(_queriesForDataBase.GetAllUsers());
         foreach (var user in YourTeam)
         {
-            var existingUser = AllUser.FirstOrDefault(u => user.Id == u.Id);
-            if (existingUser != null)
+            var u = AllUsers.FirstOrDefault(u => u.Id == user.Id);
+            if (u != null)
             {
-                existingUser.HasTeam = true;
+                AllUsers.Remove(u);
             }
         }
+        CheckButtonsVisibility();
     }
 
     [ObservableProperty]
-    private List<User> _allUser = new();
+    private bool _addAllFromTeamEnable;
 
     [ObservableProperty]
-    public List<User> _yourTeam;
+    private bool _resourcePageVisibility;
 
-    [RelayCommand]
-    public void CreateTeam() 
-    {   
-        YourTeam = new();
-       
-        for (int i = 0; i < AllUser.Count; i++) 
+    [ObservableProperty]
+    private bool _removeAllFromTeamEnable;
+
+    [ObservableProperty]
+    private bool _addToTeamEnabledVisibility;
+
+    [ObservableProperty]
+    private bool _removeFromTeamVisibility;
+
+    [ObservableProperty]
+    private ObservableCollection<User> _allUsers = new();
+
+    [ObservableProperty]
+    private ObservableCollection<User> _yourTeam;
+
+    private User _selectedUser;
+    public User SelectedUser
+    {
+        get { return _selectedUser; }
+        set
         {
-            if (AllUser[i].HasTeam) 
+            if (value == null)
             {
-                if (!YourTeam.Contains(AllUser[i]))
+                RemoveFromTeamVisibility = false;
+                AddToTeamEnabledVisibility = false;
+                ResourcePageVisibility = false;
+            }
+            else if(_selectedUser != value)
+            {
+                if (YourTeam.Contains(value))
                 {
-                    YourTeam.Add(AllUser[i]);
+                    RemoveFromTeamVisibility = true;
+                    AddToTeamEnabledVisibility = false;
+                    ResourcePageVisibility = true;
+                }
+                else
+                {
+                    RemoveFromTeamVisibility = false;
+                    AddToTeamEnabledVisibility = true;
+                    ResourcePageVisibility = false;
                 }
             }
+            _selectedUser = value;
+            OnPropertyChanged(nameof(SelectedUser));
         }
+    }
 
-        
-        _jsonSerialization.SerializeTeamData(YourTeam,teamLeaderName);
+    private void CheckButtonsVisibility()
+    {
+        if (YourTeam.Count() == 0)
+        {
+            RemoveAllFromTeamEnable = false;
+        }
+        else
+        {
+            RemoveAllFromTeamEnable = true;
+        }
+        if (AllUsers.Count() == 0)
+        {
+            AddAllFromTeamEnable = false;
+        }
+        else
+        {
+            AddAllFromTeamEnable = true;
+        }
     }
 
     [RelayCommand]
-    public void ResourcePage(int Id)
+    public void AddAllToTeam()
+    {
+        YourTeam = new ObservableCollection<User>(AllUsers.Concat(YourTeam));
+        AllUsers = new();
+        foreach (var user in YourTeam)
+        {
+            user.HasTeam = true;
+        }
+        CheckButtonsVisibility();
+        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), teamLeaderName);
+    }
+
+    [RelayCommand]
+    public void RemoveAllFromTeam()
+    {
+        AllUsers = new ObservableCollection<User>(_queriesForDataBase.GetAllUsers());
+        YourTeam = new();
+        CheckButtonsVisibility();
+        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), teamLeaderName);
+    }
+
+    [RelayCommand]
+    public void RemoveFromTeam()
+    {
+        var existingUser = YourTeam.FirstOrDefault(u => u.Id == SelectedUser.Id);
+        if (existingUser != null)
+        {
+            AllUsers.Add(existingUser);
+            existingUser.HasTeam = false;
+            YourTeam.Remove(existingUser);
+        }
+        CheckButtonsVisibility();
+        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), teamLeaderName);
+    }
+
+    [RelayCommand]
+    public void AddToTeam()
+    {
+        var existingUser = AllUsers.FirstOrDefault(u => u.Id == SelectedUser.Id);
+        if (existingUser != null)
+        {
+            YourTeam.Add(existingUser);
+            existingUser.HasTeam = true;
+            AllUsers.Remove(existingUser);
+        }
+        CheckButtonsVisibility();
+        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), teamLeaderName);
+    }
+
+    [RelayCommand]
+    public void ResourcePage()
     {
         var vm = _serviceCollection.GetService(typeof(ResourceViewModel));
         if (vm != null)
         {
-            ((ResourceViewModel)vm).GetUsersData(Id);
+            ((ResourceViewModel)vm).SetUser(SelectedUser);
         }
         _navigationService.CurrentPageType = typeof(ResourcePage);
     }
 
     [RelayCommand]
-    public void BackToPage() 
+    public void BackToPage()
     {
         _navigationService.CurrentPageType = typeof(BalancingPage);
-     
+
     }
 
- 
+
 }

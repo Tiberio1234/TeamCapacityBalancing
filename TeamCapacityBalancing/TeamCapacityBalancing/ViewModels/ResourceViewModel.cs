@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using TeamCapacityBalancing.Navigation;
 using TeamCapacityBalancing.Services.LocalDataSerialization;
 using TeamCapacityBalancing.Services.Postgres_connection;
 using TeamCapacityBalancing.Services.ServicesAbstractions;
+using TeamCapacityBalancing.Views;
 
 namespace TeamCapacityBalancing.ViewModels;
 
@@ -40,17 +42,16 @@ public sealed partial class ResourceViewModel : ObservableObject
         _navigationService = navigationService;
     }
 
-    public void GetUsersData(int id)
+    public void SetUser(User user)
     {
-        var aux = _queriesForDataBase.GetAllUsers().FirstOrDefault(u => u.Id == id);
-        if (aux != null)
-        {
-            User = aux;
-        }
-        else
-        {
-            throw new Exception("User not found");
-        }
+        User = user;
     }
+
+    [RelayCommand]
+    public void OpenBalacingPage()
+    {
+        _navigationService.CurrentPageType = typeof(BalancingPage);
+    }
+
     public List<DaysPerWeek> DaysPerWeeks { get; } = new List<DaysPerWeek>(Enum.GetValues(typeof(DaysPerWeek)) as DaysPerWeek[]);
 }

@@ -44,22 +44,26 @@
 					<TextBlock Text="All Users"/>
 				</StackPanel>
 
-				<ListBox Items="" Grid.Row="1" Margin="5" >
-					
+				<ListBox Items="{Binding AllUsers}" SelectedItem="{Binding SelectedUser}" Grid.Row="1" Margin="5" >
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding DisplayName}" />
+						</DataTemplate>
+					</ListBox.ItemTemplate>
 				</ListBox>
 			</Grid>
 
 			<StackPanel Grid.Column="1" VerticalAlignment="Center">
-				<Button Width="40" Height="40" Background="Transparent">
+				<Button Width="40" Height="40" Background="Transparent" Command="{Binding RemoveFromTeamCommand}" IsEnabled="{Binding RemoveFromTeamVisibility}">
 					<icons:MaterialIcon Width="40" Height="40" Kind="ArrowLeft"/>
 				</Button>
-				<Button Width="40" Height="40" Background="Transparent">
+				<Button Width="40" Height="40" Background="Transparent" Command="{Binding AddToTeamCommand}" IsEnabled="{Binding AddToTeamEnabledVisibility}">
 					<icons:MaterialIcon Width="40" Height="40" Kind="ArrowRight"/>
 				</Button>
-				<Button Width="40" Height="40" Background="Transparent">
+				<Button Width="40" Height="40" Background="Transparent" Command="{Binding AddAllToTeamCommand}" IsEnabled="{Binding AddAllFromTeamEnable}">
 					<icons:MaterialIcon Width="40" Height="40" Kind="NextTitle"/>
 				</Button>
-				<Button Width="40" Height="40" Background="Transparent">
+				<Button Width="40" Height="40" Background="Transparent" Command="{Binding RemoveAllFromTeamCommand}" IsEnabled="{Binding RemoveAllFromTeamEnable}">
 					<icons:MaterialIcon Width="40" Height="40" Kind="TitleBackward"/>
 				</Button>
 			</StackPanel>
@@ -74,14 +78,17 @@
 					<TextBlock Text="My Team"/>
 				</StackPanel>
 
-				<ListBox Items="" Grid.Row="1" Margin="5" >
-
+				<ListBox Items="{Binding YourTeam}" SelectedItem="{Binding SelectedUser}" Grid.Row="1" Margin="5">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding DisplayName}" />
+						</DataTemplate>
+					</ListBox.ItemTemplate>
 				</ListBox>
 			</Grid>
 		</Grid>
 
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10 10 80 30" Grid.Row="2">
-			<Button Content="Resource Page" Background="Transparent"/>
-		</StackPanel>
+			<Button Content="Resource Page" IsEnabled="{Binding ResourcePageVisibility}" Command="{Binding ResourcePageCommand}"/></StackPanel>
 	</Grid>
 </UserControl>
