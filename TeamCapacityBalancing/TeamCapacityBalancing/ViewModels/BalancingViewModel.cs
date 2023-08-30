@@ -189,7 +189,7 @@ public sealed partial class BalancingViewModel : ObservableObject
             {
                 for (int i = 0; i < MaxNumberOfUsers; i++)
                 {
-                    capacityList.Add(new Tuple<User, float>(TeamMembers[i], MyUserAssociation[j].Days[i]));
+                    capacityList.Add(new Tuple<User, float>(TeamMembers[i], MyUserAssociation[j].Days[i].Value));
                 }
             }
             userStoryDataSerializations.Add(new UserStoryDataSerialization(userStoryAssociation.StoryData, userStoryAssociation.ShortTerm, userStoryAssociation.Remaining, capacityList));

@@ -134,7 +134,7 @@
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<!--<TextBox Text="{Binding Days[0]}"/>-->
-									<NumericUpDown Text="{Binding Days[0], Mode=TwoWay}"></NumericUpDown>
+									<NumericUpDown Text="{Binding Days[0].Value, Mode=TwoWay}"></NumericUpDown>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
