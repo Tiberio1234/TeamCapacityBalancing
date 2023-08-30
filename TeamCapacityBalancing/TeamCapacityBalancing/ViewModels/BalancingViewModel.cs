@@ -51,6 +51,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             PopulateByDefault();
         }
+        AllUsers = _queriesForDataBase.GetAllUsers();
     }
 
     public BalancingViewModel(PageService pageService, NavigationService navigationService)
@@ -68,9 +69,9 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             PopulateByDefault();
         }
-    }
         AllUsers = _queriesForDataBase.GetAllUsers();
     }
+       
 
     [ObservableProperty]
     private bool _isShortTermVisible = true;
@@ -220,21 +221,9 @@ public sealed partial class BalancingViewModel : ObservableObject
             ),
     };
 
+        public List<User> TeamMembers { get; set; } = new List<User>();
+    };
 
-    public List<User> TeamMembers { get; set; } = new List<User>();
 
+   
 
-    public Team TeamMembers { get; set; } = new Team(new List<User>
-            {
-                new User("user1", "User One", 1),
-                new User("user2", "User Two", 2),
-                new User("user3", "User Three", 3),
-                new User("user4", "User Four", 3),
-                new User("user5", "User Five", 3),
-                new User("user6", "User Six", 3),
-                new User("user7", "User Seven", 3),
-                new User("user8", "User Eight", 3),
-                new User("user9", "User Nine", 3),
-                new User("user10", "User Ten", 3),
-            });
-}
