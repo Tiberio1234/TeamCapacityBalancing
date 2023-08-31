@@ -30,7 +30,7 @@
 				</ComboBox.ItemTemplate>
 			</ComboBox>
 
-			<Button Width="40" Height="40" Background="Transparent">
+			<Button Width="40" Height="40" Background="Transparent" Command="{Binding RefreshClickedCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Refresh"/>
 			</Button>
 			<Button Width="40" Height="40" Background="Transparent" Command="{Binding SerializeOnSaveCommand}">
@@ -532,7 +532,7 @@
 				</DataGrid>
 
 				<DataGrid Grid.Row="3" ColumnWidth="*" Items="{Binding Balancing}" AutoGenerateColumns="False" IsVisible="{Binding FinalBalancing}"
-			  GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray"
+			  GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray" 
 			  HeadersVisibility="None">
 
 					<DataGrid.Columns>

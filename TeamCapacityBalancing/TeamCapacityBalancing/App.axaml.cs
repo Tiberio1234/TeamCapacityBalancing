@@ -7,8 +7,6 @@ using TeamCapacityBalancing.Navigation;
 using System.Collections.Generic;
 using TeamCapacityBalancing.Models;
 using System;
-using System.Collections.Generic;
-using TeamCapacityBalancing.Models;
 using TeamCapacityBalancing.Services.LocalDataSerialization;
 using TeamCapacityBalancing.Services.Postgres_connection;
 using TeamCapacityBalancing.Services.ServicesAbstractions;

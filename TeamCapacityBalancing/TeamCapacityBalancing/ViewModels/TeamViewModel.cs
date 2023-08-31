@@ -15,15 +15,15 @@ namespace TeamCapacityBalancing.ViewModels;
 
 public sealed partial class TeamViewModel : ObservableObject
 {
-    private ServiceCollection _serviceCollection;
-    private readonly PageService _pageService;
-    private readonly NavigationService _navigationService;
+    private ServiceCollection? _serviceCollection;
+    private readonly PageService? _pageService;
+    private readonly NavigationService? _navigationService;
     private string teamLeaderName = "teamLeader";   //injected in constructor
 
     //Services
     private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
     private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
-    public List<PageData> Pages { get; }
+    public List<PageData>? Pages { get; }
 
     public TeamViewModel()
     {
@@ -74,8 +74,8 @@ public sealed partial class TeamViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<User> _yourTeam;
 
-    private User _selectedUserYourTeam;
-    public User SelectedUserYourTeam
+    private User? _selectedUserYourTeam;
+    public User? SelectedUserYourTeam
     {
         get { return _selectedUserYourTeam; }
         set
@@ -97,8 +97,8 @@ public sealed partial class TeamViewModel : ObservableObject
         }
     }
 
-    private User _selectedUserAllUsers;
-    public User SelectedUserAllUsers
+    private User? _selectedUserAllUsers;
+    public User? SelectedUserAllUsers
     {
         get { return _selectedUserAllUsers; }
         set
@@ -166,42 +166,58 @@ public sealed partial class TeamViewModel : ObservableObject
     [RelayCommand]
     public void RemoveFromTeam()
     {
-        var existingUser = YourTeam.FirstOrDefault(u => u.Id == SelectedUserYourTeam.Id);
-        if (existingUser != null)
+        if (SelectedUserYourTeam != null)
         {
-            AllUsers.Add(existingUser);
-            existingUser.HasTeam = false;
-            YourTeam.Remove(existingUser);
+            var existingUser = YourTeam.FirstOrDefault(u => u.Id == SelectedUserYourTeam.Id);
+
+
+            if (existingUser != null)
+            {
+                AllUsers.Add(existingUser);
+                existingUser.HasTeam = false;
+                YourTeam.Remove(existingUser);
+            }
+            CheckButtonsVisibility();
+            _jsonSerialization.SerializeTeamData(YourTeam.ToList(), teamLeaderName);
         }
-        CheckButtonsVisibility();
-        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), teamLeaderName);
     }
 
     [RelayCommand]
     public void AddToTeam()
     {
-        var existingUser = AllUsers.FirstOrDefault(u => u.Id == SelectedUserAllUsers.Id);
-        if (existingUser != null)
+        if (SelectedUserAllUsers != null)
         {
-            YourTeam.Add(existingUser);
-            existingUser.HasTeam = true;
-            AllUsers.Remove(existingUser);
+            var existingUser = AllUsers.FirstOrDefault(u => u.Id == SelectedUserAllUsers.Id);
+            if (existingUser != null)
+            {
+                YourTeam.Add(existingUser);
+                existingUser.HasTeam = true;
+                AllUsers.Remove(existingUser);
+            }
         }
-        CheckButtonsVisibility();
-        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), teamLeaderName);
+            CheckButtonsVisibility();
+            _jsonSerialization.SerializeTeamData(YourTeam.ToList(), teamLeaderName);
+        
     }
 
     [RelayCommand]
     public void ResourcePage()
     {
-        var vm = _serviceCollection.GetService(typeof(ResourceViewModel));
-        if (vm != null)
+        if (_serviceCollection != null)
         {
-            ((ResourceViewModel)vm).SetUser(SelectedUserYourTeam);
+            var vm = _serviceCollection.GetService(typeof(ResourceViewModel));
+            if (vm != null && SelectedUserYourTeam != null)
+            {
+                ((ResourceViewModel)vm).SetUser(SelectedUserYourTeam);
+            }
         }
-        _navigationService.CurrentPageType = typeof(ResourcePage);
-        SelectedUserYourTeam = null;
-        SelectedUserAllUsers = null;
+        if (_navigationService != null)
+        {
+            _navigationService.CurrentPageType = typeof(ResourcePage);
+        }
+            SelectedUserYourTeam = null;
+            SelectedUserAllUsers = null;
+        
     }
 
     [RelayCommand]
