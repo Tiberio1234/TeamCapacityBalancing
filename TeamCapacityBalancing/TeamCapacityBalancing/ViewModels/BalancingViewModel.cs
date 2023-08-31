@@ -26,7 +26,9 @@ public sealed partial class BalancingViewModel : ObservableObject
     private string teamLeaderName = "teamLeader";   //injected in constructor
     private const int MaxNumberOfUsers = 10; 
     private int EpicId = 10100;
-    private List<IssueData> stories = new List<IssueData>();
+   
+
+
 
     //services
     private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
@@ -72,16 +74,22 @@ public sealed partial class BalancingViewModel : ObservableObject
        
 
     [ObservableProperty]
-    private bool _isShortTermVisible = true;
+    private bool _isShortTermVisible = false;
 
     [ObservableProperty]
-    private bool _isBalancing = true;
+    private bool _isBalancing = false;
 
     [ObservableProperty]
     private bool _isPaneOpen = true;
 
     [ObservableProperty]
     private bool _sumsOpen = true;
+
+    [ObservableProperty]
+    private bool _finalBalancing = false;
+
+    [ObservableProperty]
+    private bool _IsEpicClicked = false;
 
     private User _selectedUser;
     public User SelectedUser
@@ -106,6 +114,7 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     [ObservableProperty]
     private SplitViewDisplayMode _mode = SplitViewDisplayMode.CompactInline;
+
 
     public ObservableCollection<UserStoryAssociation> MyUserAssociation { get; set; } = new ObservableCollection<UserStoryAssociation>();
     
@@ -154,6 +163,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             capacityList.Add(0);
         }
+        List<IssueData> stories = new List<IssueData>();
         stories = _queriesForDataBase.GetStoriesByEpic(EpicId);
         
 
@@ -170,31 +180,22 @@ public sealed partial class BalancingViewModel : ObservableObject
     }
 
     [RelayCommand]
-
-    public void Verificare()
-    {
-        //facem
-    }
-
-    [RelayCommand]
     public void SerializeOnSave()
     {
         List<UserStoryDataSerialization> userStoryDataSerializations = new List<UserStoryDataSerialization>();
-        foreach(UserStoryAssociation userStoryAssociation in MyUserAssociation)
-        {
-            List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
-            for (int j = 0; j < stories.Count; j++)
+        
+
+            for (int j = 0; j < MyUserAssociation.Count; j++)
             {
+                List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
                 for (int i = 0; i < MaxNumberOfUsers; i++)
                 {
                     capacityList.Add(new Tuple<User, float>(TeamMembers[i], MyUserAssociation[j].Days[i].Value));
                 }
+                userStoryDataSerializations.Add(new UserStoryDataSerialization(MyUserAssociation[j].StoryData, MyUserAssociation[j].ShortTerm, MyUserAssociation[j].Remaining, capacityList));
             }
-            userStoryDataSerializations.Add(new UserStoryDataSerialization(userStoryAssociation.StoryData, userStoryAssociation.ShortTerm, userStoryAssociation.Remaining, capacityList));
-        }
+            
         _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, teamLeaderName);
-
-        _navigationService.CurrentPageType = typeof(TeamPage);
     }
 
     public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>

@@ -10,9 +10,16 @@ using TeamCapacityBalancing.Services;
 
 namespace TeamCapacityBalancing.Models;
 
-public class Wrapper<T>
+public class Wrapper<T> : Utility
 {
-    public T Value { get; set; } = default;
+    public T _myFloat;
+    public T Value { get => _myFloat;
+        set
+        {
+            _myFloat = value;
+            NotifyPropertyChanged();
+        }
+    }
     public Wrapper()
     {
     }
