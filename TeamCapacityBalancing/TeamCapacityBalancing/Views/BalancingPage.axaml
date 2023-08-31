@@ -32,7 +32,7 @@
 			<Button Width="40" Height="40" Background="Transparent">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Refresh"/>
 			</Button>
-			<Button Width="40" Height="40" Background="Transparent" Command="{Binding VerificareCommand}">
+			<Button Width="40" Height="40" Background="Transparent">
 				<icons:MaterialIcon Width="40" Height="40" Kind="ContentSave"/>
 			</Button>
 			<Button Width="40" Height="40" Background="Transparent">
@@ -40,6 +40,9 @@
 			</Button>
 			<Button Width="40" Height="40" Background="Transparent" Command="{Binding OpenTeamPageCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="People"/>
+			</Button>
+			<Button  Width="40" Height="40" Background="Transparent" Command="{Binding CalculateCoverageCommand}">
+				<icons:MaterialIcon Width="40" Height="40" Kind="Percent"/>
 			</Button>
 			<ToggleButton  Width="40" Height="40" Background="Transparent" IsChecked="{Binding IsBalancing}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Summation"/>
@@ -232,7 +235,7 @@
 						<DataGridTemplateColumn Header="Coverage">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Coverage}"/>
+									<TextBlock Text="{Binding Coverage.Value}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -374,7 +377,7 @@
 						<DataGridTemplateColumn Header="Coverage">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock Text="{Binding Coverage}"/>
+									<TextBlock Text="{Binding Coverage.Value}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -518,7 +521,7 @@
 						<DataGridTemplateColumn Header="Coverage">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock IsVisible="False" Text="{Binding Coverage}"/>
+									<TextBlock IsVisible="False" Text="{Binding Coverage.Value}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -662,7 +665,7 @@
 						<DataGridTemplateColumn Header="Coverage">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock IsVisible="False" Text="{Binding Coverage}"/>
+									<TextBlock IsVisible="False" Text="{Binding Coverage.Value}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>

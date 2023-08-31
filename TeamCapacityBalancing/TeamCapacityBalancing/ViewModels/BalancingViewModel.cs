@@ -169,12 +169,6 @@ public sealed partial class BalancingViewModel : ObservableObject
         _navigationService.CurrentPageType = typeof(TeamPage);
     }
 
-    [RelayCommand]
-
-    public void Verificare()
-    {
-        //facem
-    }
 
     [RelayCommand]
     public void SerializeOnSave()
@@ -195,6 +189,15 @@ public sealed partial class BalancingViewModel : ObservableObject
         _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, teamLeaderName);
 
         _navigationService.CurrentPageType = typeof(TeamPage);
+    }
+
+    [RelayCommand]
+    public void CalculateCoverage()
+    {
+        for(int i=0;i<MyUserAssociation.Count;i++)
+        {
+            MyUserAssociation[i].CalculateCoverage();
+        }
     }
 
     public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>

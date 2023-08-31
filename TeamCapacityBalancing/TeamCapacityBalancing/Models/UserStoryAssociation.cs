@@ -10,9 +10,18 @@ using TeamCapacityBalancing.Services;
 
 namespace TeamCapacityBalancing.Models;
 
-public class Wrapper<T>
+public class Wrapper<T>:Utility
 {
-    public T Value { get; set; } = default;
+    public T _value; 
+    public T Value 
+    {
+        get => _value;
+        set
+        {
+            _value = value;
+            NotifyPropertyChanged();
+        }
+    }
     public Wrapper()
     {
     }
@@ -36,13 +45,18 @@ public class UserStoryAssociation : Utility
     }
 
 
-    public float Coverage { get; set; }
+    public Wrapper<float> Coverage { get; set; }
     public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, List<float> days)
     {
         StoryData = storyData;
         ShortTerm = shortTerm;
         Remaining = remaining;
         Days = new(days.Select(x => new Wrapper<float>() { Value = x}));
-        Coverage = 0;
+        Coverage = new Wrapper<float>() { Value = 0 };
+    }
+
+    public void CalculateCoverage()
+    {
+        Coverage.Value = Days.Sum(x => x.Value);
     }
 }
