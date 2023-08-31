@@ -4,12 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing.Drawing2D;
 using System.IO;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Threading.Tasks;
 using TeamCapacityBalancing.Models;
 using TeamCapacityBalancing.Navigation;
 using TeamCapacityBalancing.Services.LocalDataSerialization;
@@ -23,18 +18,13 @@ public sealed partial class BalancingViewModel : ObservableObject
 {
     private readonly PageService _pageService;
     private readonly NavigationService _navigationService;
-    private string teamLeaderName = "teamLeader";   //injected in constructor
-    private const int MaxNumberOfUsers = 10; 
-    private int EpicId = 10100;
-   
-
-
+    private readonly ServiceCollection _serviceCollection;
+    private const int MaxNumberOfUsers = 10;
+    private int EpicId;
 
     //services
     private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
     private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
-    public List<PageData> Pages { get; }
-
 
 
     [ObservableProperty]
@@ -42,20 +32,16 @@ public sealed partial class BalancingViewModel : ObservableObject
     public ObservableCollection<IssueData> Epics { get; set; } = new ObservableCollection<IssueData>();
     public BalancingViewModel()
     {
-        GetTeamUsers();
-        AllUsers = _queriesForDataBase.GetAllUsers();
     }
 
-    public BalancingViewModel(PageService pageService, NavigationService navigationService)
+    public BalancingViewModel(PageService pageService, NavigationService navigationService, ServiceCollection serviceCollection)
     {
         _pageService = pageService;
         _navigationService = navigationService;
-        Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList();
-        GetTeamUsers();
-
+        _serviceCollection = serviceCollection;
+        PopulateDefaultTeamUsers();
         AllUsers = _queriesForDataBase.GetAllTeamLeaders();
     }
-       
 
     [ObservableProperty]
     private bool _isShortTermVisible = false;
@@ -84,12 +70,19 @@ public sealed partial class BalancingViewModel : ObservableObject
             if (_selectedUser != value)
             {
                 _selectedUser = value;
-                List<IssueData> epics;
-                epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
-                if (epics != null)
+
+                if (value != null)
                 {
-                    Epics = new ObservableCollection<IssueData>(epics);
-                    OnPropertyChanged("Epics");
+                    IsEpicClicked = false;
+                    FinalBalancing = false;
+                    MyUserAssociation.Clear();
+                    List<IssueData> epics;
+                    epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
+                    if (epics != null)
+                    {
+                        Epics = new ObservableCollection<IssueData>(epics);
+                        OnPropertyChanged("Epics");
+                    }
                 }
                 OnPropertyChanged(nameof(SelectedUser));
             }
@@ -101,7 +94,7 @@ public sealed partial class BalancingViewModel : ObservableObject
 
 
     public ObservableCollection<UserStoryAssociation> MyUserAssociation { get; set; } = new ObservableCollection<UserStoryAssociation>();
-    
+
 
     public ObservableCollection<UserStoryAssociation> Balancing { get; set; } = new ObservableCollection<UserStoryAssociation>
     {
@@ -116,23 +109,38 @@ public sealed partial class BalancingViewModel : ObservableObject
     private void GetSerializedData()
     {
         List<UserStoryDataSerialization> userStoryDataSerializations = new();
-        userStoryDataSerializations = _jsonSerialization.DeserializeUserStoryData(teamLeaderName);
-        foreach(UserStoryDataSerialization ser in  userStoryDataSerializations)
+        userStoryDataSerializations = _jsonSerialization.DeserializeUserStoryData(SelectedUser.Username);
+        foreach (UserStoryDataSerialization ser in userStoryDataSerializations)
         {
             List<float> capacityList = new List<float>();
-            for(int i =0; i<ser.UsersCapacity.Count; i++)
+            for (int i = 0; i < ser.UsersCapacity.Count; i++)
             {
                 capacityList.Add(ser.UsersCapacity[i].Item2);
             }
-            MyUserAssociation.Add(new UserStoryAssociation(ser.Story,ser.ShortTerm,ser.Remaining,capacityList));
+            MyUserAssociation.Add(new UserStoryAssociation(ser.Story, ser.ShortTerm, ser.Remaining, capacityList));
         }
 
     }
 
     private void GetTeamUsers()
     {
-        TeamMembers = _jsonSerialization.DeserializeTeamData(teamLeaderName);
-        for(int i = TeamMembers.Count; i < MaxNumberOfUsers; i++)
+        var aux = new ObservableCollection<User>(_jsonSerialization.DeserializeTeamData(SelectedUser.Username));
+        for (int i = aux.Count; i < MaxNumberOfUsers; i++)
+        {
+            User newUser = new User($"user {i}");
+            newUser.HasTeam = false;
+            aux.Add(newUser);
+        }
+        for (int i = 0; i < MaxNumberOfUsers; i++)
+        {
+            TeamMembers[i] = aux[i];
+        }
+    }
+
+    private void PopulateDefaultTeamUsers()
+    {
+        TeamMembers = new ObservableCollection<User>();
+        for (int i = 0; i < MaxNumberOfUsers; i++)
         {
             User newUser = new User($"user {i}");
             newUser.HasTeam = false;
@@ -149,46 +157,67 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
         List<IssueData> stories = new List<IssueData>();
         stories = _queriesForDataBase.GetStoriesByEpic(EpicId);
-        
 
-        foreach(IssueData story in stories)
+
+        foreach (IssueData story in stories)
         {
             MyUserAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList));
         }
-        
+
     }
     [RelayCommand]
     public void OpenTeamPage()
     {
-        _navigationService.CurrentPageType = typeof(TeamPage);
+        if (SelectedUser != null)
+        {
+            var vm = _serviceCollection.GetService(typeof(TeamViewModel));
+            if (vm != null)
+            {
+                ((TeamViewModel)vm).PopulateUsersLists(SelectedUser.Username);
+            }
+            _navigationService.CurrentPageType = typeof(TeamPage);
+            RefreshPage();
+        }
     }
 
     [RelayCommand]
     public void SerializeOnSave()
     {
         List<UserStoryDataSerialization> userStoryDataSerializations = new List<UserStoryDataSerialization>();
-        
 
-            for (int j = 0; j < MyUserAssociation.Count; j++)
+
+        for (int j = 0; j < MyUserAssociation.Count; j++)
+        {
+            List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
+            for (int i = 0; i < MaxNumberOfUsers; i++)
             {
-                List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
-                for (int i = 0; i < MaxNumberOfUsers; i++)
-                {
-                    capacityList.Add(new Tuple<User, float>(TeamMembers[i], MyUserAssociation[j].Days[i].Value));
-                }
-                userStoryDataSerializations.Add(new UserStoryDataSerialization(MyUserAssociation[j].StoryData, MyUserAssociation[j].ShortTerm, MyUserAssociation[j].Remaining, capacityList));
+                capacityList.Add(new Tuple<User, float>(TeamMembers[i], MyUserAssociation[j].Days[i].Value));
             }
-            
-        _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, teamLeaderName);
+            userStoryDataSerializations.Add(new UserStoryDataSerialization(MyUserAssociation[j].StoryData, MyUserAssociation[j].ShortTerm, MyUserAssociation[j].Remaining, capacityList));
+        }
+
+        _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
 
         //TODO: popUpMessage for saving
     }
 
-    [RelayCommand]
-    public void EpicClicked()
+    public void RefreshPage()
     {
-        GetTeamUsers();
-        if (File.Exists(JsonSerialization.UserStoryFilePath + teamLeaderName))
+        FinalBalancing = false;
+        IsEpicClicked = false;
+        IsShortTermVisible = false;
+        IsBalancing = false;
+    }
+
+    [RelayCommand]
+    public void EpicClicked(int id)
+    {
+        EpicId = id;
+        if (File.Exists(JsonSerialization.UserFilePath + SelectedUser.Username))
+        {
+            GetTeamUsers();
+        }
+        if (File.Exists(JsonSerialization.UserStoryFilePath + SelectedUser.Username))
         {
             GetSerializedData();
         }
@@ -204,7 +233,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void CalculateCoverage()
     {
-        for(int i=0;i<MyUserAssociation.Count;i++)
+        for (int i = 0; i < MyUserAssociation.Count; i++)
         {
             MyUserAssociation[i].CalculateCoverage();
         }
@@ -232,9 +261,10 @@ public sealed partial class BalancingViewModel : ObservableObject
             ),
     };
 
-        public List<User> TeamMembers { get; set; } = new List<User>();
-    };
+    [ObservableProperty]
+    private ObservableCollection<User> _teamMembers;
+};
 
 
-   
+
 

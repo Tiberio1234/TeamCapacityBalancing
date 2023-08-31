@@ -26,4 +26,9 @@
     <PackageReference Include="Material.Icons.Avalonia" Version="1.1.10" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="LocalFiles\TeamData\" />
+    <Folder Include="LocalFiles\UserStoryData\" />
+  </ItemGroup>
 </Project>
