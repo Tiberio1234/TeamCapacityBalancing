@@ -43,14 +43,6 @@ public sealed partial class BalancingViewModel : ObservableObject
     public BalancingViewModel()
     {
         GetTeamUsers();
-        if (File.Exists(JsonSerialization.UserStoryFilePath + teamLeaderName))
-        {
-            GetSerializedData();
-        }
-        else
-        {
-            PopulateByDefault();
-        }
         AllUsers = _queriesForDataBase.GetAllUsers();
     }
 
@@ -59,16 +51,8 @@ public sealed partial class BalancingViewModel : ObservableObject
         _pageService = pageService;
         _navigationService = navigationService;
         Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList();
-
         GetTeamUsers();
-        if (File.Exists(JsonSerialization.UserStoryFilePath + teamLeaderName))
-        {
-            GetSerializedData();
-        }
-        else
-        {
-            PopulateByDefault();
-        }
+
         AllUsers = _queriesForDataBase.GetAllTeamLeaders();
     }
        
@@ -196,6 +180,25 @@ public sealed partial class BalancingViewModel : ObservableObject
             }
             
         _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, teamLeaderName);
+
+        //TODO: popUpMessage for saving
+    }
+
+    [RelayCommand]
+    public void EpicClicked()
+    {
+        GetTeamUsers();
+        if (File.Exists(JsonSerialization.UserStoryFilePath + teamLeaderName))
+        {
+            GetSerializedData();
+        }
+        else
+        {
+            PopulateByDefault();
+        }
+        FinalBalancing = true;
+        IsEpicClicked = true;
+
     }
 
     public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>
