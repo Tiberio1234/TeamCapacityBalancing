@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using TeamCapacityBalancing.Models;
 using TeamCapacityBalancing.Navigation;
 using TeamCapacityBalancing.Services.LocalDataSerialization;
@@ -50,7 +49,7 @@ public sealed partial class ResourceViewModel : ObservableObject
     [RelayCommand]
     public void OpenBalacingPage()
     {
-        if(_navigationService != null)
+        if (_navigationService != null)
             _navigationService.CurrentPageType = typeof(BalancingPage);
     }
 

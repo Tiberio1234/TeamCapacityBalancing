@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json.Serialization;
-using Npgsql;
+﻿using Npgsql;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using TeamCapacityBalancing.Models;
 using TeamCapacityBalancing.Services.ServicesAbstractions;
 
@@ -46,7 +44,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             {
                 Console.WriteLine(e.Message);
             }
-            return timeEstimate-timeSpent;
+            return timeEstimate - timeSpent;
         }
 
         public List<User> GetAllUsers()
@@ -109,11 +107,11 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
 
                         //calculate only the first to decimals for a float
                         float result = ((CalculateRemainingTimeForStory(id) / 60) / 60) / 24; //from seconds to days
-                        float onlydecimals =(float)( result - (int)result);
+                        float onlydecimals = (float)(result - (int)result);
                         int first2DecimalsInt = (int)(onlydecimals * 100);
                         float firstTwoDecimalsFloat = (float)first2DecimalsInt / 100;
                         float remaining = firstTwoDecimalsFloat + (int)result;
-                        stories.Add(new IssueData(id, name, assignee,remaining));
+                        stories.Add(new IssueData(id, name, assignee, remaining));
 
                         //stories.Add(new IssueData(id, name, IssueData.IssueType.Story, assignee, issueNumber, projectId));
                     }

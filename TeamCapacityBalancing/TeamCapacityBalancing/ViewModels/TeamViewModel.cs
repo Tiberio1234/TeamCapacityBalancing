@@ -18,7 +18,7 @@ public sealed partial class TeamViewModel : ObservableObject
     private ServiceCollection? _serviceCollection;
     private readonly PageService? _pageService;
     private readonly NavigationService? _navigationService;
-    public string TeamLeaderId { get; set; }
+    public string TeamLeaderUsername { get; set; }
 
     //Services
     private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
@@ -39,8 +39,8 @@ public sealed partial class TeamViewModel : ObservableObject
 
     public void PopulateUsersLists(string teamLeaderUsername)
     {
-        TeamLeaderId = teamLeaderUsername;
-        YourTeam = new ObservableCollection<User>(_jsonSerialization.DeserializeTeamData(TeamLeaderId));
+        TeamLeaderUsername = teamLeaderUsername;
+        YourTeam = new ObservableCollection<User>(_jsonSerialization.DeserializeTeamData(TeamLeaderUsername));
         AllUsers = new ObservableCollection<User>(_queriesForDataBase.GetAllUsers());
         foreach (var user in YourTeam)
         {
@@ -151,7 +151,7 @@ public sealed partial class TeamViewModel : ObservableObject
             user.HasTeam = true;
         }
         CheckButtonsVisibility();
-        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderId);
+        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderUsername);
     }
 
     [RelayCommand]
@@ -160,7 +160,7 @@ public sealed partial class TeamViewModel : ObservableObject
         AllUsers = new ObservableCollection<User>(_queriesForDataBase.GetAllUsers());
         YourTeam = new();
         CheckButtonsVisibility();
-        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderId);
+        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderUsername);
     }
 
     [RelayCommand]
@@ -177,11 +177,9 @@ public sealed partial class TeamViewModel : ObservableObject
                 existingUser.HasTeam = false;
                 YourTeam.Remove(existingUser);
             }
-            CheckButtonsVisibility();
-            _jsonSerialization.SerializeTeamData(YourTeam.ToList(), teamLeaderName);
         }
         CheckButtonsVisibility();
-        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderId);
+        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderUsername);
     }
 
     [RelayCommand]
@@ -199,7 +197,7 @@ public sealed partial class TeamViewModel : ObservableObject
         }
 
         CheckButtonsVisibility();
-        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderId);
+        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderUsername);
     }
 
     [RelayCommand]

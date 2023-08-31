@@ -6,10 +6,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using TeamCapacityBalancing.Models;
 using TeamCapacityBalancing.Navigation;
 using TeamCapacityBalancing.Services.LocalDataSerialization;
@@ -24,7 +20,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     private readonly PageService? _pageService;
     private readonly NavigationService? _navigationService;
     private readonly ServiceCollection _serviceCollection;
-    private const int MaxNumberOfUsers = 10; 
+    private const int MaxNumberOfUsers = 10;
     private int EpicId;
 
     //services
@@ -44,7 +40,6 @@ public sealed partial class BalancingViewModel : ObservableObject
         _navigationService = navigationService;
         _serviceCollection = serviceCollection;
         PopulateDefaultTeamUsers();
-        GetTeamUsers();
         ShowShortTermStoryes();
         AllUsers = _queriesForDataBase.GetAllTeamLeaders();
     }
@@ -67,7 +62,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     [ObservableProperty]
     private bool _IsEpicClicked = false;
 
-    private User?_selectedUser;
+    private User? _selectedUser;
     public User? SelectedUser
     {
         get { return _selectedUser; }
@@ -80,6 +75,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                 if (value != null)
                 {
                     IsEpicClicked = false;
+                    IsShortTermVisible = false;
                     FinalBalancing = false;
                     MyUserAssociation.Clear();
                     List<IssueData> epics;
@@ -195,7 +191,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
             for (int i = 0; i < MaxNumberOfUsers; i++)
-
+            {
                 capacityList.Add(new Tuple<User, float>(TeamMembers[i], MyUserAssociation[j].Days[i].Value));
             }
             userStoryDataSerializations.Add(new UserStoryDataSerialization(MyUserAssociation[j].StoryData, MyUserAssociation[j].ShortTerm, MyUserAssociation[j].Remaining, capacityList));
@@ -217,6 +213,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void EpicClicked(int id)
     {
+        MyUserAssociation.Clear();
         EpicId = id;
         if (File.Exists(JsonSerialization.UserFilePath + SelectedUser.Username))
         {
@@ -238,21 +235,22 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     [RelayCommand]
     public void RefreshClicked()
-    { 
+    {
         MyUserAssociation.Clear();
         GetSerializedData();
 
         List<IssueData> storyList = new List<IssueData>();
         storyList = _queriesForDataBase.GetStoriesByEpic(EpicId);
 
-        if(MyUserAssociation.Count != storyList.Count)
+        if (MyUserAssociation.Count != storyList.Count)
         {
-            foreach(IssueData story in storyList)
+            foreach (IssueData story in storyList)
             {
                 int indexMyUserAssociation;
-                for(indexMyUserAssociation = 0; indexMyUserAssociation < MyUserAssociation.Count; indexMyUserAssociation++)
+                for (indexMyUserAssociation = 0; indexMyUserAssociation < MyUserAssociation.Count; indexMyUserAssociation++)
                 {
-                    if (MyUserAssociation[indexMyUserAssociation].StoryData.Name == story.Name) {
+                    if (MyUserAssociation[indexMyUserAssociation].StoryData.Name == story.Name)
+                    {
                         break;
                     }
                 }

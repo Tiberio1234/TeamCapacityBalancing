@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TeamCapacityBalancing.Navigation;
 
@@ -11,7 +9,7 @@ public sealed class ServiceCollection
 {
     private readonly Dictionary<Type, Func<object>> _services = new();
 
-    public ServiceCollection AddSingleton<T>() 
+    public ServiceCollection AddSingleton<T>()
     {
         object? obj = null;
         _services[typeof(T)] = () => obj ??= CreateService<T>()!;
