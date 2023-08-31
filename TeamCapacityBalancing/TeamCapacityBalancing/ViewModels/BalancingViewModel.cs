@@ -67,7 +67,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             PopulateByDefault();
         }
-        AllUsers = _queriesForDataBase.GetAllUsers();
+        AllUsers = _queriesForDataBase.GetAllTeamLeaders();
     }
        
 
