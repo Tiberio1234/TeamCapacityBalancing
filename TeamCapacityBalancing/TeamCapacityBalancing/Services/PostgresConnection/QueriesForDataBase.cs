@@ -200,7 +200,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                         string assignee = "";
                         int issueNumber = reader.GetInt32(reader.GetOrdinal("issuenum"));
                         int projectId = reader.GetInt32(reader.GetOrdinal("project"));
-                        epics.Add(new IssueData(id, name, assignee));
+                        epics.Add(new IssueData(id, name));
                     }
                 }
             }
@@ -210,6 +210,39 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             }
 
             return epics;
+        }
+        public List<User> GetAllTeamLeaders()
+        {
+            List<User> users = new List<User>();
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(DataBaseConnection.GetInstance().GetConnectionString()))
+                {
+                    connection.Open();
+
+                    var cmd = new NpgsqlCommand($@"SELECT cu.id, cu.user_name, cu.display_name
+                         FROM {JiraissueTable} AS i
+                        JOIN app_user AS au ON i.assignee = au.user_key 
+                        JOIN {UserTable} AS cu ON au.id = cu.id 
+                       WHERE i.issuetype = '{StoryIssueType}' AND i.summary LIKE '%#%'", connection);
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32(reader.GetOrdinal("id"));
+                        string username = reader.GetString(reader.GetOrdinal("user_name"));
+                        string displayName = reader.GetString(reader.GetOrdinal("display_name"));
+                        users.Add(new User(username, displayName, id));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return users;
         }
     }
 }

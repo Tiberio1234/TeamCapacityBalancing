@@ -22,6 +22,12 @@ public class IssueData
 
     }
 
+    public IssueData(int id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+
     public IssueData(string name, float remaining, string release, string sprint, bool status, IssueType type)
     {
         Name = name;
