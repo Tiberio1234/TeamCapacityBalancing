@@ -12,8 +12,8 @@ namespace TeamCapacityBalancing.Models;
 
 public class Wrapper<T>:Utility
 {
-    public T _value; 
-    public T Value 
+    public T? _value; 
+    public T? Value 
     {
         get => _value;
         set
@@ -51,7 +51,7 @@ public class UserStoryAssociation : Utility
         StoryData = storyData;
         ShortTerm = shortTerm;
         Remaining = remaining;
-        Days = new(days.Select(x => new Wrapper<float>() { Value = x}));
+        _days = new(days.Select(x => new Wrapper<float>() { Value = x}));
         Coverage = new Wrapper<float>() { Value = 0 };
     }
 

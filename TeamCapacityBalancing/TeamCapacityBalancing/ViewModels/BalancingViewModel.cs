@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using TeamCapacityBalancing.Models;
 using TeamCapacityBalancing.Navigation;
 using TeamCapacityBalancing.Services.LocalDataSerialization;
@@ -21,8 +22,8 @@ namespace TeamCapacityBalancing.ViewModels;
 
 public sealed partial class BalancingViewModel : ObservableObject
 {
-    private readonly PageService _pageService;
-    private readonly NavigationService _navigationService;
+    private readonly PageService? _pageService;
+    private readonly NavigationService? _navigationService;
     private string teamLeaderName = "teamLeader";   //injected in constructor
     private const int MaxNumberOfUsers = 10; 
     private int EpicId = 10100;
@@ -33,7 +34,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     //services
     private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
     private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
-    public List<PageData> Pages { get; }
+    public List<PageData>? Pages { get; }
 
 
 
@@ -75,8 +76,8 @@ public sealed partial class BalancingViewModel : ObservableObject
     [ObservableProperty]
     private bool _IsEpicClicked = false;
 
-    private User _selectedUser;
-    public User SelectedUser
+    private User?_selectedUser;
+    public User? SelectedUser
     {
         get { return _selectedUser; }
         set
@@ -84,12 +85,15 @@ public sealed partial class BalancingViewModel : ObservableObject
             if (_selectedUser != value)
             {
                 _selectedUser = value;
-                List<IssueData> epics;
-                epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
-                if (epics != null)
+                if (SelectedUser != null)
                 {
-                    Epics = new ObservableCollection<IssueData>(epics);
-                    OnPropertyChanged("Epics");
+                    List<IssueData> epics;
+                    epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
+                    if (epics != null)
+                    {
+                        Epics = new ObservableCollection<IssueData>(epics);
+                        OnPropertyChanged("Epics");
+                    }
                 }
                 OnPropertyChanged(nameof(SelectedUser));
             }
@@ -142,15 +146,9 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     private void PopulateByDefault()
     {
-        List<float> capacityList = new List<float>();
-        for (int i = 0; i < MaxNumberOfUsers; i++)
-        {
-            capacityList.Add(0);
-        }
-        List<IssueData> stories = new List<IssueData>();
-        stories = _queriesForDataBase.GetStoriesByEpic(EpicId);
+        List<float> capacityList = Enumerable.Repeat(0f, 10).ToList();
+        List<IssueData> stories = _queriesForDataBase.GetStoriesByEpic(EpicId);
         
-
         foreach(IssueData story in stories)
         {
             MyUserAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList));
@@ -159,8 +157,9 @@ public sealed partial class BalancingViewModel : ObservableObject
     }
     [RelayCommand]
     public void OpenTeamPage()
-    {
-        _navigationService.CurrentPageType = typeof(TeamPage);
+    {    
+        if(_navigationService != null)
+        _navigationService.CurrentPageType = typeof(TeamPage);    
     }
 
     [RelayCommand]
@@ -168,7 +167,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         List<UserStoryDataSerialization> userStoryDataSerializations = new List<UserStoryDataSerialization>();
         
-
+            
             for (int j = 0; j < MyUserAssociation.Count; j++)
             {
                 List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
@@ -187,6 +186,8 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void EpicClicked()
     {
+        TeamMembers.Clear();
+        MyUserAssociation.Clear();
         GetTeamUsers();
         if (File.Exists(JsonSerialization.UserStoryFilePath + teamLeaderName))
         {
@@ -198,6 +199,39 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
         FinalBalancing = true;
         IsEpicClicked = true;
+
+    }
+
+    [RelayCommand]
+    public void RefreshClicked()
+    { 
+        MyUserAssociation.Clear();
+        GetSerializedData();
+
+        List<IssueData> storyList = new List<IssueData>();
+        storyList = _queriesForDataBase.GetStoriesByEpic(EpicId);
+
+        if(MyUserAssociation.Count != storyList.Count)
+        {
+            foreach(IssueData story in storyList)
+            {
+                int indexMyUserAssociation;
+                for(indexMyUserAssociation = 0; indexMyUserAssociation < MyUserAssociation.Count; indexMyUserAssociation++)
+                {
+                    if (MyUserAssociation[indexMyUserAssociation].StoryData.Name == story.Name) {
+                        break;
+                    }
+                }
+
+                List<float> capacityList = Enumerable.Repeat(0f, 10).ToList();
+                if (indexMyUserAssociation == MyUserAssociation.Count)
+                {
+                    MyUserAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList));
+                }
+
+            }
+        }
+
 
     }
 
