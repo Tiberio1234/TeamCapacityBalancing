@@ -23,15 +23,15 @@ public enum DaysPerWeek
 
 public sealed partial class ResourceViewModel : ObservableObject
 {
-    public User User { get; set; }
+    public User? User { get; set; }
 
     private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
 
     private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
 
-    private readonly PageService _pageService;
+    private readonly PageService? _pageService;
 
-    private readonly NavigationService _navigationService;
+    private readonly NavigationService? _navigationService;
     public ResourceViewModel()
     {
     }
@@ -50,14 +50,17 @@ public sealed partial class ResourceViewModel : ObservableObject
     [RelayCommand]
     public void OpenBalacingPage()
     {
-        _navigationService.CurrentPageType = typeof(BalancingPage);
+        if(_navigationService != null)
+            _navigationService.CurrentPageType = typeof(BalancingPage);
     }
 
     [RelayCommand]
     public void BackToTeamPage()
     {
-        _navigationService.CurrentPageType = typeof(TeamPage);
+        if (_navigationService != null)
+            _navigationService.CurrentPageType = typeof(TeamPage);
     }
 
-    public List<DaysPerWeek> DaysPerWeeks { get; } = new List<DaysPerWeek>(Enum.GetValues(typeof(DaysPerWeek)) as DaysPerWeek[]);
+    public List<DaysPerWeek> DaysPerWeeks { get; } = new List<DaysPerWeek>((DaysPerWeek[])Enum.GetValues(typeof(DaysPerWeek)));
+    //public List<DaysPerWeek> DaysPerWeeks { get; } = new List<DaysPerWeek>(Enum.GetValues(typeof(DaysPerWeek)) as DaysPerWeek[]);
 }

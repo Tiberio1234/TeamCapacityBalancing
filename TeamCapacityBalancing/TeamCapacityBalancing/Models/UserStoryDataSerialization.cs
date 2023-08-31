@@ -24,10 +24,7 @@ namespace TeamCapacityBalancing.Models
             Remaining = remaining;
             UsersCapacity = usersCapacity;
         }
-
-        public UserStoryDataSerialization()
-        {
-        }
+       
     }
 
     

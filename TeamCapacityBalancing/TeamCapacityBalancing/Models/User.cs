@@ -12,7 +12,10 @@
 
         public User()
         {
-
+            Username = string.Empty;
+            DisplayName = string.Empty;
+            HasTeam = false;
+            Id = 0;
         }
 
         public User(string username, string displayName, int id)
@@ -20,6 +23,7 @@
             Username = username;
             DisplayName = displayName;
             Id = id;
+            HasTeam = false;
         }
 
         public User(string username, string displayName, bool hasTeam, int id)
@@ -32,7 +36,10 @@
 
         public User(string username)
         {
-            DisplayName = username;
+            Username = username;
+            HasTeam = false;
+            Id = 0;
+            DisplayName = string.Empty;
         }
     }
 }

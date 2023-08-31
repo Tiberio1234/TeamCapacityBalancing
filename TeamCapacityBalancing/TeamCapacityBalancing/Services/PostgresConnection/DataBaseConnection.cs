@@ -4,7 +4,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
 {
     public class DataBaseConnection
     {
-        private static DataBaseConnection _instance;
+        private static DataBaseConnection? _instance;
         private static readonly object _lock = new object();
 
         private const string Host = "localhost";
