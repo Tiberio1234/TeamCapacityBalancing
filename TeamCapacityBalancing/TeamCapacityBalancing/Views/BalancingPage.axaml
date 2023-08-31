@@ -33,7 +33,6 @@
 			<Button Width="40" Height="40" Background="Transparent">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Refresh"/>
 			</Button>
-			<Button Width="40" Height="40" Background="Transparent"/>
 			<Button Width="40" Height="40" Background="Transparent" Command="{Binding SerializeOnSaveCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="ContentSave"/>
 			</Button>
