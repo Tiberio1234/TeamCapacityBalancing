@@ -133,6 +133,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[0].DisplayName}" IsVisible="{Binding TeamMembers[0].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
+									<NumericUpDown Value="{Binding Days[0].Value, Mode=TwoWay}" Minimum="0" Maximum="100" ShowButtonSpinner="False"/>
 									<!--<TextBox Text="{Binding Days[0]}"/>-->
 									<NumericUpDown  Value="{Binding Days[0].Value, Mode=TwoWay}"></NumericUpDown>
 								</DataTemplate>
@@ -144,7 +145,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[1].DisplayName}" IsVisible="{Binding TeamMembers[1].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[1], Mode=TwoWay}"/>
+									<NumericUpDown Value="{Binding Days[1].Value, Mode=TwoWay}" Minimum="0" Maximum="100" ShowButtonSpinner="False"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -154,7 +155,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[2].DisplayName}" IsVisible="{Binding TeamMembers[2].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[2]}"/>
+									<NumericUpDown Value="{Binding Days[2].Value, Mode=TwoWay}" Minimum="0" Maximum="100" ShowButtonSpinner="False"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -163,7 +164,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[3].DisplayName}" IsVisible="{Binding TeamMembers[3].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[3]}"/>
+									<NumericUpDown Value="{Binding Days[3].Value, Mode=TwoWay}" Minimum="0" Maximum="100" ShowButtonSpinner="False"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -173,7 +174,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[4].DisplayName}" IsVisible="{Binding TeamMembers[4].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[4]}"/>
+									<NumericUpDown Value="{Binding Days[4].Value, Mode=TwoWay}" Minimum="0" Maximum="100" ShowButtonSpinner="False"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -183,7 +184,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[5].DisplayName}" IsVisible="{Binding TeamMembers[5].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[5]}"/>
+									<NumericUpDown Value="{Binding Days[5].Value, Mode=TwoWay}" Minimum="0" Maximum="100" ShowButtonSpinner="False"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -193,7 +194,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[6].DisplayName}" IsVisible="{Binding TeamMembers[6].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[6]}"/>
+									<NumericUpDown Value="{Binding Days[6].Value, Mode=TwoWay}" Minimum="0" Maximum="100" ShowButtonSpinner="False"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -203,7 +204,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[7].DisplayName}" IsVisible="{Binding TeamMembers[7].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[7]}"/>
+									<NumericUpDown Value="{Binding Days[7].Value, Mode=TwoWay}" Minimum="0" Maximum="100" ShowButtonSpinner="False"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -213,7 +214,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[8].DisplayName}" IsVisible="{Binding TeamMembers[8].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[8]}"/>
+									<NumericUpDown Value="{Binding Days[8].Value, Mode=TwoWay}" Minimum="0" Maximum="100" ShowButtonSpinner="False"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -223,7 +224,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[9].DisplayName}" IsVisible="{Binding TeamMembers[9].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[9]}"/>
+									<NumericUpDown Value="{Binding Days[9].Value, Mode=TwoWay}" Minimum="0" Maximum="100" ShowButtonSpinner="False"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -233,7 +234,7 @@
 						<DataGridTemplateColumn Header="Coverage">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Coverage}"/>
+									<TextBlock Text="{Binding Coverage}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -257,7 +258,7 @@
 						<DataGridTemplateColumn Header="ShortTerm">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<CheckBox IsChecked="{Binding ShortTerm}" HorizontalAlignment="Center"/>
+									<CheckBox IsChecked="{Binding ShortTerm}" HorizontalAlignment="Center" IsEnabled="False"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -277,7 +278,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[0].DisplayName}" IsVisible="{Binding TeamMembers[0].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[0]}"/>
+									<TextBlock Text="{Binding Days[0]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -287,7 +288,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[1].DisplayName}" IsVisible="{Binding TeamMembers[1].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[1]}"/>
+									<TextBlock Text="{Binding Days[1]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -297,7 +298,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[2].DisplayName}" IsVisible="{Binding TeamMembers[2].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[2]}"/>
+									<TextBlock Text="{Binding Days[2]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -306,7 +307,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[3].DisplayName}" IsVisible="{Binding TeamMembers[3].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[3]}"/>
+									<TextBlock Text="{Binding Days[3]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -316,7 +317,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[4].DisplayName}" IsVisible="{Binding TeamMembers[4].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[4]}"/>
+									<TextBlock Text="{Binding Days[4]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -326,7 +327,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[5].DisplayName}" IsVisible="{Binding TeamMembers[5].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[5]}"/>
+									<TextBlock Text="{Binding Days[5]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -336,7 +337,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[6].DisplayName}" IsVisible="{Binding TeamMembers[6].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[6]}"/>
+									<TextBlock Text="{Binding Days[6]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -346,7 +347,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[7].DisplayName}" IsVisible="{Binding TeamMembers[7].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[7]}"/>
+									<TextBlock Text="{Binding Days[7]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -356,7 +357,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[8].DisplayName}" IsVisible="{Binding TeamMembers[8].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[8]}"/>
+									<TextBlock Text="{Binding Days[8]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -366,7 +367,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[9].DisplayName}" IsVisible="{Binding TeamMembers[9].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[9]}"/>
+									<TextBlock Text="{Binding Days[9]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -376,7 +377,7 @@
 						<DataGridTemplateColumn Header="Coverage">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Coverage}"/>
+									<TextBlock Text="{Binding Coverage}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -421,7 +422,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[0].DisplayName}" IsVisible="{Binding TeamMembers[0].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[0]}"/>
+									<TextBlock Text="{Binding Days[0]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -431,7 +432,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[1].DisplayName}" IsVisible="{Binding TeamMembers[1].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[1]}"/>
+									<TextBlock Text="{Binding Days[1]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -441,7 +442,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[2].DisplayName}" IsVisible="{Binding TeamMembers[2].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[2]}"/>
+									<TextBlock Text="{Binding Days[2]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -450,7 +451,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[3].DisplayName}" IsVisible="{Binding TeamMembers[3].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[3]}"/>
+									<TextBlock Text="{Binding Days[3]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -460,7 +461,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[4].DisplayName}" IsVisible="{Binding TeamMembers[4].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[4]}"/>
+									<TextBlock Text="{Binding Days[4]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -470,7 +471,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[5].DisplayName}" IsVisible="{Binding TeamMembers[5].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[5]}"/>
+									<TextBlock Text="{Binding Days[5]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -480,7 +481,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[6].DisplayName}" IsVisible="{Binding TeamMembers[6].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[6]}"/>
+									<TextBlock Text="{Binding Days[6]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -490,7 +491,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[7].DisplayName}" IsVisible="{Binding TeamMembers[7].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[7]}"/>
+									<TextBlock Text="{Binding Days[7]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -500,7 +501,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[8].DisplayName}" IsVisible="{Binding TeamMembers[8].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[8]}"/>
+									<TextBlock Text="{Binding Days[8]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -510,7 +511,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[9].DisplayName}" IsVisible="{Binding TeamMembers[9].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[9]}"/>
+									<TextBlock Text="{Binding Days[9]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -520,7 +521,7 @@
 						<DataGridTemplateColumn Header="Coverage">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox IsVisible="False" Text="{Binding Coverage}"/>
+									<TextBlock IsVisible="False" Text="{Binding Coverage}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -565,7 +566,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[0].DisplayName}" IsVisible="{Binding TeamMembers[0].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[0]}"/>
+									<TextBlock Text="{Binding Days[0]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -575,7 +576,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[1].DisplayName}" IsVisible="{Binding TeamMembers[1].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[1]}"/>
+									<TextBlock Text="{Binding Days[1]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -585,7 +586,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[2].DisplayName}" IsVisible="{Binding TeamMembers[2].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[2]}"/>
+									<TextBlock Text="{Binding Days[2]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -594,7 +595,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[3].DisplayName}" IsVisible="{Binding TeamMembers[3].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[3]}"/>
+									<TextBlock Text="{Binding Days[3]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -604,7 +605,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[4].DisplayName}" IsVisible="{Binding TeamMembers[4].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[4]}"/>
+									<TextBlock Text="{Binding Days[4]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -614,7 +615,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[5].DisplayName}" IsVisible="{Binding TeamMembers[5].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[5]}"/>
+									<TextBlock Text="{Binding Days[5]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -624,7 +625,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[6].DisplayName}" IsVisible="{Binding TeamMembers[6].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[6]}"/>
+									<TextBlock Text="{Binding Days[6]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -634,7 +635,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[7].DisplayName}" IsVisible="{Binding TeamMembers[7].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[7]}"/>
+									<TextBlock Text="{Binding Days[7]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -644,7 +645,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[8].DisplayName}" IsVisible="{Binding TeamMembers[8].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[8]}"/>
+									<TextBlock Text="{Binding Days[8]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -654,7 +655,7 @@
 						<DataGridTemplateColumn Header="{Binding TeamMembers[9].DisplayName}" IsVisible="{Binding TeamMembers[9].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox Text="{Binding Days[9]}"/>
+									<TextBlock Text="{Binding Days[9]}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -664,7 +665,7 @@
 						<DataGridTemplateColumn Header="Coverage">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBox IsVisible="False" Text="{Binding Coverage}"/>
+									<TextBlock IsVisible="False" Text="{Binding Coverage}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
