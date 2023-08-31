@@ -197,7 +197,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                     {
                         int id = reader.GetInt32(reader.GetOrdinal("id"));
                         string name = reader.GetString(reader.GetOrdinal("summary"));
-                        string assignee = reader.GetString(reader.GetOrdinal("assignee"));
+                        string assignee = "";
                         int issueNumber = reader.GetInt32(reader.GetOrdinal("issuenum"));
                         int projectId = reader.GetInt32(reader.GetOrdinal("project"));
                         epics.Add(new IssueData(id, name, assignee));
