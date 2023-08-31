@@ -196,9 +196,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             PopulateByDefault();
         }
-        IsShortTermVisible = true;
         FinalBalancing = true;
-        IsBalancing = true;
         IsEpicClicked = true;
 
     }
