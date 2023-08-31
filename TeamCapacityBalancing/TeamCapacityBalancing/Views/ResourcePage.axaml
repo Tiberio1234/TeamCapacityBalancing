@@ -26,6 +26,10 @@
 			<TextBlock Text="Select Capacity for Resource" FontSize="25"/>
 		</StackPanel>
 
+		<Button Grid.Row="0" HorizontalAlignment="Left" Margin="15" Command="{Binding BackToTeamPageCommand}">
+			<icons:MaterialIcon Width="30" Height="15" Kind="ArrowLeft"/>
+		</Button>
+
 
 		<StackPanel Orientation="Vertical">
 			<Grid>

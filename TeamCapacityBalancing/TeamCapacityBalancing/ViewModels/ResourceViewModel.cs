@@ -53,5 +53,11 @@ public sealed partial class ResourceViewModel : ObservableObject
         _navigationService.CurrentPageType = typeof(BalancingPage);
     }
 
+    [RelayCommand]
+    public void BackToTeamPage()
+    {
+        _navigationService.CurrentPageType = typeof(TeamPage);
+    }
+
     public List<DaysPerWeek> DaysPerWeeks { get; } = new List<DaysPerWeek>(Enum.GetValues(typeof(DaysPerWeek)) as DaysPerWeek[]);
 }

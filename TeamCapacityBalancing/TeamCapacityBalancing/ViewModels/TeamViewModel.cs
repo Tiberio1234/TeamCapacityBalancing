@@ -74,35 +74,48 @@ public sealed partial class TeamViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<User> _yourTeam;
 
-    private User _selectedUser;
-    public User SelectedUser
+    private User _selectedUserYourTeam;
+    public User SelectedUserYourTeam
     {
-        get { return _selectedUser; }
+        get { return _selectedUserYourTeam; }
         set
         {
-            if (value == null)
+            if (value != null)
             {
-                RemoveFromTeamVisibility = false;
-                AddToTeamEnabledVisibility = false;
+                SelectedUserAllUsers = null;
+                ResourcePageVisibility = true;
+                RemoveFromTeamVisibility = true;
+            }
+            else
+            {
                 ResourcePageVisibility = false;
+                RemoveFromTeamVisibility = false;
             }
-            else if(_selectedUser != value)
+            AddToTeamEnabledVisibility = false;
+            _selectedUserYourTeam = value;
+            OnPropertyChanged(nameof(SelectedUserYourTeam));
+        }
+    }
+
+    private User _selectedUserAllUsers;
+    public User SelectedUserAllUsers
+    {
+        get { return _selectedUserAllUsers; }
+        set
+        {
+            if (value != null)
             {
-                if (YourTeam.Contains(value))
-                {
-                    RemoveFromTeamVisibility = true;
-                    AddToTeamEnabledVisibility = false;
-                    ResourcePageVisibility = true;
-                }
-                else
-                {
-                    RemoveFromTeamVisibility = false;
-                    AddToTeamEnabledVisibility = true;
-                    ResourcePageVisibility = false;
-                }
+                SelectedUserYourTeam = null;
+                AddToTeamEnabledVisibility = true;
             }
-            _selectedUser = value;
-            OnPropertyChanged(nameof(SelectedUser));
+            else
+            {
+                AddToTeamEnabledVisibility = false;
+            }
+            ResourcePageVisibility = false;
+            RemoveFromTeamVisibility = false;
+            _selectedUserAllUsers = value;
+            OnPropertyChanged(nameof(SelectedUserAllUsers));
         }
     }
 
@@ -111,6 +124,7 @@ public sealed partial class TeamViewModel : ObservableObject
         if (YourTeam.Count() == 0)
         {
             RemoveAllFromTeamEnable = false;
+            RemoveFromTeamVisibility = false;
         }
         else
         {
@@ -119,6 +133,7 @@ public sealed partial class TeamViewModel : ObservableObject
         if (AllUsers.Count() == 0)
         {
             AddAllFromTeamEnable = false;
+            AddToTeamEnabledVisibility = false;
         }
         else
         {
@@ -151,7 +166,7 @@ public sealed partial class TeamViewModel : ObservableObject
     [RelayCommand]
     public void RemoveFromTeam()
     {
-        var existingUser = YourTeam.FirstOrDefault(u => u.Id == SelectedUser.Id);
+        var existingUser = YourTeam.FirstOrDefault(u => u.Id == SelectedUserYourTeam.Id);
         if (existingUser != null)
         {
             AllUsers.Add(existingUser);
@@ -165,7 +180,7 @@ public sealed partial class TeamViewModel : ObservableObject
     [RelayCommand]
     public void AddToTeam()
     {
-        var existingUser = AllUsers.FirstOrDefault(u => u.Id == SelectedUser.Id);
+        var existingUser = AllUsers.FirstOrDefault(u => u.Id == SelectedUserAllUsers.Id);
         if (existingUser != null)
         {
             YourTeam.Add(existingUser);
@@ -182,16 +197,19 @@ public sealed partial class TeamViewModel : ObservableObject
         var vm = _serviceCollection.GetService(typeof(ResourceViewModel));
         if (vm != null)
         {
-            ((ResourceViewModel)vm).SetUser(SelectedUser);
+            ((ResourceViewModel)vm).SetUser(SelectedUserYourTeam);
         }
         _navigationService.CurrentPageType = typeof(ResourcePage);
+        SelectedUserYourTeam = null;
+        SelectedUserAllUsers = null;
     }
 
     [RelayCommand]
     public void BackToPage()
     {
         _navigationService.CurrentPageType = typeof(BalancingPage);
-
+        SelectedUserYourTeam = null;
+        SelectedUserAllUsers = null;
     }
 
 

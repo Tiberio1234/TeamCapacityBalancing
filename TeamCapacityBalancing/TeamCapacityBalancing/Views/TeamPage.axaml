@@ -23,8 +23,12 @@
 		</Grid.RowDefinitions>
 
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Grid.Row="0">
-			<TextBlock Text="Selection Team" FontSize="25"/>
+			<TextBlock Text="Team Selection" FontSize="25"/>
 		</StackPanel>
+
+		<Button Grid.Row="0" HorizontalAlignment="Left" Margin="20" Command="{Binding BackToPageCommand}">
+			<icons:MaterialIcon Width="30" Height="15" Kind="ArrowLeft"/>
+		</Button>
 
 
 		<Grid Grid.Row="1" Margin="15 0 15 0">
@@ -44,7 +48,7 @@
 					<TextBlock Text="All Users"/>
 				</StackPanel>
 
-				<ListBox Items="{Binding AllUsers}" SelectedItem="{Binding SelectedUser}" Grid.Row="1" Margin="5" >
+				<ListBox Items="{Binding AllUsers}" SelectedItem="{Binding SelectedUserAllUsers}"  Grid.Row="1" Margin="5" >
 					<ListBox.ItemTemplate>
 						<DataTemplate>
 							<TextBlock Text="{Binding DisplayName}" />
@@ -78,7 +82,7 @@
 					<TextBlock Text="My Team"/>
 				</StackPanel>
 
-				<ListBox Items="{Binding YourTeam}" SelectedItem="{Binding SelectedUser}" Grid.Row="1" Margin="5">
+				<ListBox Items="{Binding YourTeam}"  SelectedItem="{Binding SelectedUserYourTeam}" Grid.Row="1" Margin="5">
 					<ListBox.ItemTemplate>
 						<DataTemplate>
 							<TextBlock Text="{Binding DisplayName}" />
