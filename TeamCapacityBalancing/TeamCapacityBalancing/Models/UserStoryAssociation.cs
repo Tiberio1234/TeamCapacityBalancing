@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
@@ -27,10 +29,12 @@ public class Wrapper<T>:Utility
     }
 }
 
-public class UserStoryAssociation : Utility
+public partial class UserStoryAssociation : ObservableObject
 {
     public IssueData StoryData { get; set; }
-    public bool ShortTerm { get; set; }
+
+    [ObservableProperty]
+    public bool _shortTerm;
     public float Remaining { get; set; }
 
     private ObservableCollection<Wrapper<float>> _days;
@@ -40,7 +44,7 @@ public class UserStoryAssociation : Utility
         set
         {
             _days = value;
-            NotifyPropertyChanged();
+            OnPropertyChanged();
         }
     }
 

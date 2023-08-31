@@ -52,7 +52,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         _navigationService = navigationService;
         Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList();
         GetTeamUsers();
-
+        ShowShortTermStoryes();
         AllUsers = _queriesForDataBase.GetAllTeamLeaders();
     }
        
@@ -101,7 +101,10 @@ public sealed partial class BalancingViewModel : ObservableObject
 
 
     public ObservableCollection<UserStoryAssociation> MyUserAssociation { get; set; } = new ObservableCollection<UserStoryAssociation>();
-    
+
+    [ObservableProperty]
+    public ObservableCollection<UserStoryAssociation> _shortTermStoryes;
+
 
     public ObservableCollection<UserStoryAssociation> Balancing { get; set; } = new ObservableCollection<UserStoryAssociation>
     {
@@ -198,7 +201,8 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
         FinalBalancing = true;
         IsEpicClicked = true;
-
+        ShowShortTermStoryes();
+        CalculateCoverage();
     }
 
     [RelayCommand]
@@ -207,6 +211,34 @@ public sealed partial class BalancingViewModel : ObservableObject
         for(int i=0;i<MyUserAssociation.Count;i++)
         {
             MyUserAssociation[i].CalculateCoverage();
+        }
+    }
+
+    [RelayCommand]
+    public void ShowShortTermStoryes()
+    {
+        ShortTermStoryes = new();
+
+        for (int i = 0; i < MyUserAssociation.Count; i++)
+        {
+            if (MyUserAssociation[i].ShortTerm)
+            {
+                ShortTermStoryes.Add(MyUserAssociation[i]);
+            }
+        }
+
+    }
+
+    [RelayCommand]
+    public void UncheckShortTermStory(string id)
+    {
+        for (int i = 0; i < MyUserAssociation.Count; i++)
+        {
+            if (MyUserAssociation[i].StoryData.Name == id)
+            {
+                MyUserAssociation[i].ShortTerm = false;
+                ShortTermStoryes.Remove(MyUserAssociation[i]);
+            }
         }
     }
 
