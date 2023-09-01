@@ -223,6 +223,15 @@ public sealed partial class TeamViewModel : ObservableObject
     [RelayCommand]
     public void BackToPage()
     {
+        if (_serviceCollection != null)
+        {
+            var vm = _serviceCollection.GetService(typeof(BalancingViewModel));
+            if (vm != null)
+            {
+                ((BalancingViewModel)vm).SyncTeamWithBalancingPageData();
+            }
+        }
+
         _navigationService.CurrentPageType = typeof(BalancingPage);
         SelectedUserYourTeam = null;
         SelectedUserAllUsers = null;

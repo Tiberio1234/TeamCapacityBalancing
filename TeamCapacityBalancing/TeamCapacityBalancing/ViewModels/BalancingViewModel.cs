@@ -86,6 +86,10 @@ public sealed partial class BalancingViewModel : ObservableObject
                         Epics = new ObservableCollection<IssueData>(epics);
                         OnPropertyChanged("Epics");
                     }
+                    if (File.Exists(JsonSerialization.UserFilePath + SelectedUser.Username))
+                    {
+                        GetTeamUsers();
+                    }
                 }
                 OnPropertyChanged(nameof(SelectedUser));
             }
@@ -108,7 +112,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                 true,
                 3.0f,
                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-            ),  
+            ),
     };
 
     private void GetSerializedData()
@@ -117,10 +121,10 @@ public sealed partial class BalancingViewModel : ObservableObject
         userStoryDataSerializations = _jsonSerialization.DeserializeUserStoryData(SelectedUser.Username);
         foreach (UserStoryDataSerialization ser in userStoryDataSerializations)
         {
-            List<float> capacityList = new List<float>();
+            List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
             for (int i = 0; i < ser.UsersCapacity.Count; i++)
             {
-                capacityList.Add(ser.UsersCapacity[i].Item2);
+                capacityList.Add(new(ser.UsersCapacity[i].Item1, ser.UsersCapacity[i].Item2));
             }
             MyUserAssociation.Add(new UserStoryAssociation(ser.Story, ser.ShortTerm, ser.Remaining, capacityList));
         }
@@ -132,7 +136,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         var aux = new ObservableCollection<User>(_jsonSerialization.DeserializeTeamData(SelectedUser.Username));
         for (int i = aux.Count; i < MaxNumberOfUsers; i++)
         {
-            User newUser = new User($"user {i}");
+            User newUser = new User("default");
             newUser.HasTeam = false;
             aux.Add(newUser);
         }
@@ -147,7 +151,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         TeamMembers = new ObservableCollection<User>();
         for (int i = 0; i < MaxNumberOfUsers; i++)
         {
-            User newUser = new User($"user {i}");
+            User newUser = new User("default}");
             newUser.HasTeam = false;
             TeamMembers.Add(newUser);
         }
@@ -155,10 +159,10 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     private void PopulateByDefault()
     {
-        List<float> capacityList = Enumerable.Repeat(0f, 10).ToList();
+        List<Tuple<User, float>> capacityList = new();
         for (int i = 0; i < MaxNumberOfUsers; i++)
         {
-            capacityList.Add(0);
+            capacityList.Add(Tuple.Create(new User { Username = TeamMembers[i].Username, HasTeam = false}, 0f));
         }
         List<IssueData> stories = _queriesForDataBase.GetStoriesByEpic(EpicId);
 
@@ -179,15 +183,8 @@ public sealed partial class BalancingViewModel : ObservableObject
                 ((TeamViewModel)vm).PopulateUsersLists(SelectedUser.Username);
             }
             _navigationService.CurrentPageType = typeof(TeamPage);
-            //RefreshPage();
+
         }
-        MyUserAssociation.Clear();
-        //TeamMembers.Clear();
-        //Take serialized data
-        //Syncronize serialized data with new team members ( or delete team members )
-
-
-        //TODO: save when leaving the balancig page
 
     }
 
@@ -211,13 +208,81 @@ public sealed partial class BalancingViewModel : ObservableObject
         //TODO: popUpMessage for saving
     }
 
-    public void RefreshPage()
+    public static void ResizeObservableList<T>(ObservableCollection<T> obsList, int newSize, T defaultValue = default)
     {
-        FinalBalancing = false;
-        IsEpicClicked = false;
-        IsShortTermVisible = false;
-        IsBalancing = false;
-        MyUserAssociation.Clear();
+        if (obsList.Count == newSize)
+        {
+            return;
+        }
+
+        List<T> list = obsList.ToList();
+        if (list.Count < newSize)
+        {
+            int countToAdd = newSize - list.Count;
+            list.AddRange(Enumerable.Repeat(defaultValue, countToAdd));
+        }
+        else if (list.Count > newSize)
+        {
+            list.RemoveRange(newSize, list.Count - newSize);
+        }
+        obsList = new ObservableCollection<T>(list);
+    }
+
+    private void OrderTeamAndStoryInfo()
+    {
+        TeamMembers = new ObservableCollection<User>(TeamMembers.OrderBy(m => m.Username));
+        foreach (UserStoryAssociation userStoryAssociation in MyUserAssociation)
+        {
+            userStoryAssociation.Days = new ObservableCollection<Wrapper<float>>(userStoryAssociation.Days.OrderBy(m => m.UserName));
+        }
+    }
+
+    public void test(List<Wrapper<float>> defaultList)
+    {
+        defaultList.Clear();
+        for (int i = 0; i < 10; i++)
+        {
+            defaultList.Add(new Wrapper<float> { UserName = "default", Value = 0 });    
+        }
+    }
+
+    public void SyncTeamWithBalancingPageData()
+    {
+        //FinalBalancing = false;
+        //IsEpicClicked = false;
+        //IsShortTermVisible = false;
+        //IsBalancing = false;
+        if (File.Exists(JsonSerialization.UserFilePath + SelectedUser.Username))
+        {
+            GetTeamUsers();
+        }
+
+        List<User> teamMembers = TeamMembers.Where(user => user.Username != "default").ToList();
+
+        List<Wrapper<float>> defaultList = new();
+
+
+        foreach (UserStoryAssociation userStoryAssociation in MyUserAssociation)
+        {
+            //ResizeObservableList<Wrapper<float>>(userStoryAssociation.Days, TeamMembers.Count, new Wrapper<float> { UserName = "default", Value = 0 });
+
+            test(defaultList);
+
+            for (int i = 0; i < teamMembers.Count; i++)
+            {
+                var exists = userStoryAssociation.Days.FirstOrDefault(x => x.UserName == teamMembers[i].Username);
+                if (exists != null)
+                {
+                    defaultList[i].UserName = exists.UserName;
+                    defaultList[i].Value = exists.Value;
+                }
+            }
+            userStoryAssociation.Days = new ObservableCollection<Wrapper<float>>(defaultList);
+        }
+
+        OrderTeamAndStoryInfo();
+
+        CalculateCoverage();
     }
 
     [RelayCommand]
@@ -225,10 +290,6 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         MyUserAssociation.Clear();
         EpicId = id;
-        if (File.Exists(JsonSerialization.UserFilePath + SelectedUser.Username))
-        {
-            GetTeamUsers();
-        }
         if (File.Exists(JsonSerialization.UserStoryFilePath + SelectedUser.Username))
         {
             GetSerializedData();
@@ -241,6 +302,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         IsEpicClicked = true;
         ShowShortTermStoryes();
         CalculateCoverage();
+        OrderTeamAndStoryInfo();
     }
 
     [RelayCommand]
@@ -273,7 +335,6 @@ public sealed partial class BalancingViewModel : ObservableObject
 
             }
         }
-
 
     }
 
