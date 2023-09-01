@@ -179,8 +179,16 @@ public sealed partial class BalancingViewModel : ObservableObject
                 ((TeamViewModel)vm).PopulateUsersLists(SelectedUser.Username);
             }
             _navigationService.CurrentPageType = typeof(TeamPage);
-            RefreshPage();
+            //RefreshPage();
         }
+        MyUserAssociation.Clear();
+        //TeamMembers.Clear();
+        //Take serialized data
+        //Syncronize serialized data with new team members ( or delete team members )
+
+
+        //TODO: save when leaving the balancig page
+
     }
 
     [RelayCommand]
@@ -209,6 +217,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         IsEpicClicked = false;
         IsShortTermVisible = false;
         IsBalancing = false;
+        MyUserAssociation.Clear();
     }
 
     [RelayCommand]
