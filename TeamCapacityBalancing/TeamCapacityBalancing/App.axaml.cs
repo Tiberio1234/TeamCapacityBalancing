@@ -34,9 +34,6 @@ namespace TeamCapacityBalancing
 
             serviceCollection.AddSingleton<TeamViewModel>();
             serviceCollection.AddSingleton<TeamPage>();            
-            
-            serviceCollection.AddSingleton<InputViewModel>();
-            serviceCollection.AddSingleton<InputWindow>();
 
             PageService pageService = serviceCollection.GetService<PageService>();
             pageService.RegisterPage<BalancingPage, BalancingViewModel>("Balancing Page");

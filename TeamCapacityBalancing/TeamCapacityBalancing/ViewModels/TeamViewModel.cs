@@ -206,22 +206,20 @@ public sealed partial class TeamViewModel : ObservableObject
     {
         if (_serviceCollection != null)
         {
-            var vm = _serviceCollection.GetService(typeof(TeamViewModel));
-            if (vm != null && SelectedUserYourTeam != null)
+            InputWindow inputWindow = new InputWindow();
+            inputWindow.DataContext = new InputViewModel(_serviceCollection);
+
+            if (SelectedUserYourTeam != null)
             {
+                var mainWindow = _serviceCollection.GetService(typeof(Window));
+                if (mainWindow != null)
+                {
+                    inputWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    inputWindow.ShowDialog((MainWindow)mainWindow);
+                }
             }
         }
-        //if (_navigationService != null)
-        //{
-        //    _navigationService.CurrentPageType = typeof(ResourcePage);
-        //}
-        SelectedUserYourTeam = null;
         SelectedUserAllUsers = null;
-        var mainWindow = _serviceCollection.GetService(typeof(Window));
-        var dialog = new InputWindow();
-        dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        dialog.ShowDialog((MainWindow)mainWindow);
-
     }
 
     [RelayCommand]
