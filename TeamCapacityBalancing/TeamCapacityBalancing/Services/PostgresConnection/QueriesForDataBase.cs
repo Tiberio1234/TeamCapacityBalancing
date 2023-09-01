@@ -14,6 +14,9 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
         private const string StoryIssueType = "10001";
         private const string EpicStoryLinkType = "10201";
         private const string StoryTaskLinkType = "10100";
+        private const string SubTaskIssueType = "10003";
+        private const string OpenStatus = "1";
+
 
         private float CalculateRemainingTimeForStory(int storyId)
         {
@@ -240,6 +243,40 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             }
 
             return users;
+        }
+        public List<OpenTasksUserAssociation> GetRemainingForUser()
+        {
+            List<OpenTasksUserAssociation> openTasks= new List<OpenTasksUserAssociation>();
+            try
+            {
+                using (var connection = new NpgsqlConnection(DataBaseConnection.GetInstance().GetConnectionString()))
+                {
+                    connection.Open();
+                    var cmd = new NpgsqlCommand($@"SELECT ji.assignee AS User, au.id, cu.user_name,
+                        SUM(((ji.timeestimate + ji.timespent) - ji.timespent) / 60 / 60 / 8) AS TotalRemaining 
+                        FROM {JiraissueTable} AS ji
+                        JOIN app_user AS au ON au.user_key = ji.assignee
+                        JOIN {UserTable} AS cu ON cu.id = au.id 
+                        WHERE ji.issuetype = '{SubTaskIssueType}' 
+                        AND ji.assignee IS NOT NULL 
+                        AND ji.issuestatus = '{OpenStatus}' 
+                        GROUP BY ji.assignee, cu.user_name, au.id", connection);
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        int id=  reader.GetInt32(reader.GetOrdinal("id"));
+                        string username = reader.GetString(reader.GetOrdinal("user_name"));
+                        float remaining = reader.GetFloat(reader.GetOrdinal("totalremaining"));
+
+                        openTasks.Add(new OpenTasksUserAssociation(id, username, (float)Math.Round(remaining,2)));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return openTasks;
         }
     }
 }

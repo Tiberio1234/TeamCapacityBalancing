@@ -29,6 +29,8 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     [ObservableProperty]
     public List<User> _allUsers;
+    [ObservableProperty]
+    public List<OpenTasksUserAssociation> _openTasks;
     public ObservableCollection<IssueData> Epics { get; set; } = new ObservableCollection<IssueData>();
     public BalancingViewModel()
     {
@@ -42,6 +44,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         PopulateDefaultTeamUsers();
         ShowShortTermStoryes();
         AllUsers = _queriesForDataBase.GetAllTeamLeaders();
+        OpenTasks = _queriesForDataBase.GetRemainingForUser();
     }
 
     [ObservableProperty]
