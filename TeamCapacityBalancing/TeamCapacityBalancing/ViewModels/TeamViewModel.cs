@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -205,19 +206,21 @@ public sealed partial class TeamViewModel : ObservableObject
     {
         if (_serviceCollection != null)
         {
-            var vm = _serviceCollection.GetService(typeof(ResourceViewModel));
+            var vm = _serviceCollection.GetService(typeof(TeamViewModel));
             if (vm != null && SelectedUserYourTeam != null)
             {
-                ((ResourceViewModel)vm).SetUser(SelectedUserYourTeam);
             }
         }
-        if (_navigationService != null)
-        {
-            _navigationService.CurrentPageType = typeof(ResourcePage);
-        }
+        //if (_navigationService != null)
+        //{
+        //    _navigationService.CurrentPageType = typeof(ResourcePage);
+        //}
             SelectedUserYourTeam = null;
             SelectedUserAllUsers = null;
-        
+        var mainWindow = _serviceCollection.GetService(typeof(Window));
+        var dialog = new InputWindow();
+        dialog.ShowDialog((MainWindow)mainWindow);
+
     }
 
     [RelayCommand]

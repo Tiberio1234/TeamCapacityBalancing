@@ -33,15 +33,14 @@ namespace TeamCapacityBalancing
             serviceCollection.AddSingleton<BalancingPage>();
 
             serviceCollection.AddSingleton<TeamViewModel>();
-            serviceCollection.AddSingleton<TeamPage>();
-
-            serviceCollection.AddSingleton<ResourceViewModel>();
-            serviceCollection.AddSingleton<ResourcePage>();
+            serviceCollection.AddSingleton<TeamPage>();            
+            
+            serviceCollection.AddSingleton<InputViewModel>();
+            serviceCollection.AddSingleton<InputWindow>();
 
             PageService pageService = serviceCollection.GetService<PageService>();
             pageService.RegisterPage<BalancingPage, BalancingViewModel>("Balancing Page");
             pageService.RegisterPage<TeamPage, TeamViewModel>("Team Page");
-            pageService.RegisterPage<ResourcePage, ResourceViewModel>("Resource Page");
 
             NavigationService navigationService = serviceCollection.GetService<NavigationService>();
             navigationService.CurrentPageType=typeof(BalancingPage);
