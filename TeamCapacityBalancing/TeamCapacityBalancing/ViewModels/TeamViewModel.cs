@@ -215,10 +215,11 @@ public sealed partial class TeamViewModel : ObservableObject
         //{
         //    _navigationService.CurrentPageType = typeof(ResourcePage);
         //}
-            SelectedUserYourTeam = null;
-            SelectedUserAllUsers = null;
+        SelectedUserYourTeam = null;
+        SelectedUserAllUsers = null;
         var mainWindow = _serviceCollection.GetService(typeof(Window));
         var dialog = new InputWindow();
+        dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
         dialog.ShowDialog((MainWindow)mainWindow);
 
     }

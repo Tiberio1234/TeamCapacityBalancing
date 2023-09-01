@@ -209,6 +209,11 @@ public sealed partial class BalancingViewModel : ObservableObject
         _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
 
         //TODO: popUpMessage for saving
+
+        var mainWindow = _serviceCollection.GetService(typeof(Window));
+        var dialog = new SaveSuccessfulWindow("Saved succesfully!");
+        dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        dialog.ShowDialog((MainWindow)mainWindow);
     }
 
     public void RefreshPage()
