@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using TeamCapacityBalancing.Models;
@@ -53,8 +54,8 @@ public sealed partial class BalancingViewModel : ObservableObject
     [ObservableProperty]
     private bool _isPaneOpen = true;
 
-    [ObservableProperty]
-    private bool _sumsOpen = true;
+    //[ObservableProperty]
+    //private bool _sumsOpen = true;
 
     [ObservableProperty]
     private bool _finalBalancing = false;
@@ -107,7 +108,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                 true,
                 3.0f,
                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-            ),
+            ),  
     };
 
     private void GetSerializedData()
@@ -274,6 +275,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             MyUserAssociation[i].CalculateCoverage();
         }
+
     }
 
     [RelayCommand]
