@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -33,6 +34,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     public ObservableCollection<IssueData> Epics { get; set; } = new ObservableCollection<IssueData>();
     public BalancingViewModel()
     {
+        
     }
 
     public BalancingViewModel(PageService pageService, NavigationService navigationService, ServiceCollection serviceCollection)
@@ -107,9 +109,11 @@ public sealed partial class BalancingViewModel : ObservableObject
                 new IssueData("Balancing", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                 true,
                 3.0f,
-                new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+                new List<float> { 10, -5, 0, 0, -5,  0, 0, 0, 0,0 },
+                MaxNumberOfUsers
             ),  
     };
+    
 
     private void GetSerializedData()
     {
@@ -122,7 +126,7 @@ public sealed partial class BalancingViewModel : ObservableObject
             {
                 capacityList.Add(ser.UsersCapacity[i].Item2);
             }
-            MyUserAssociation.Add(new UserStoryAssociation(ser.Story, ser.ShortTerm, ser.Remaining, capacityList));
+            MyUserAssociation.Add(new UserStoryAssociation(ser.Story, ser.ShortTerm, ser.Remaining, capacityList,MaxNumberOfUsers));
         }
 
     }
@@ -156,18 +160,33 @@ public sealed partial class BalancingViewModel : ObservableObject
     private void PopulateByDefault()
     {
         List<float> capacityList = Enumerable.Repeat(0f, 10).ToList();
-        for (int i = 0; i < MaxNumberOfUsers; i++)
+        /*for (int i = 0; i < MaxNumberOfUsers; i++)
         {
             capacityList.Add(0);
-        }
+        }*/
         List<IssueData> stories = _queriesForDataBase.GetStoriesByEpic(EpicId);
 
         foreach (IssueData story in stories)
         {
-            MyUserAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList));
+            MyUserAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList, MaxNumberOfUsers));
         }
 
     }
+
+    private void ChangeColorByNumberOfDays()
+    {
+        for(int dayIndex = 0; dayIndex < Balancing[0].Days.Count; dayIndex++)
+        {
+            if (Balancing[0].Days[dayIndex].Value < 0)
+                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.Red);
+            else if (Balancing[0].Days[dayIndex].Value < 4)
+                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.Yellow);
+            else
+                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.Green);
+
+        }
+    }
+
     [RelayCommand]
     public void OpenTeamPage()
     {
@@ -179,9 +198,9 @@ public sealed partial class BalancingViewModel : ObservableObject
                 ((TeamViewModel)vm).PopulateUsersLists(SelectedUser.Username);
             }
             _navigationService.CurrentPageType = typeof(TeamPage);
-            //RefreshPage();
+            RefreshPage();
         }
-        MyUserAssociation.Clear();
+        //MyUserAssociation.Clear();
         //TeamMembers.Clear();
         //Take serialized data
         //Syncronize serialized data with new team members ( or delete team members )
@@ -208,6 +227,7 @@ public sealed partial class BalancingViewModel : ObservableObject
 
         _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
 
+        ChangeColorByNumberOfDays();
         //TODO: popUpMessage for saving
     }
 
@@ -268,7 +288,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                 List<float> capacityList = Enumerable.Repeat(0f, 10).ToList();
                 if (indexMyUserAssociation == MyUserAssociation.Count)
                 {
-                    MyUserAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList));
+                    MyUserAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList,MaxNumberOfUsers));
                 }
 
             }
@@ -321,19 +341,23 @@ public sealed partial class BalancingViewModel : ObservableObject
                 new IssueData("Total work open story", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                 true,
                 3.0f,
-                new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+                new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                MaxNumberOfUsers
+
             ),
        new UserStoryAssociation(
                 new IssueData("Total work", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                 true,
                 3.0f,
-                new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+                new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                MaxNumberOfUsers
             ),
        new UserStoryAssociation(
                 new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                 true,
                 3.0f,
-                new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+                new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                MaxNumberOfUsers
             ),
     };
 
