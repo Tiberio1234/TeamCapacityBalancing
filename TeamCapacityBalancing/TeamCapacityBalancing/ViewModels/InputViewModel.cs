@@ -7,7 +7,12 @@ namespace TeamCapacityBalancing.ViewModels;
 public sealed partial class InputViewModel : ObservableObject
 {
     public ServiceCollection? _serviceCollection;
-    public int hours = 0;
+
+    [ObservableProperty]
+    private int _hours;
+
+    [ObservableProperty]
+    private string _currentUsername;
 
     public InputViewModel()
     {
@@ -16,6 +21,12 @@ public sealed partial class InputViewModel : ObservableObject
     public InputViewModel(ServiceCollection serviceCollection)
     {
         _serviceCollection = serviceCollection;
+        var vm = _serviceCollection.GetService(typeof(TeamViewModel));
+        if (vm != null)
+        {
+            CurrentUsername=((TeamViewModel)vm).SelectedUserYourTeam.DisplayName;
+            Hours =(int)((TeamViewModel)vm).SelectedUserYourTeam.HoursPerDay.Value;
+        }
     }
 
     [RelayCommand]
@@ -26,7 +37,7 @@ public sealed partial class InputViewModel : ObservableObject
             var vm = _serviceCollection.GetService(typeof(TeamViewModel));
             if (vm != null)
             {
-                ((TeamViewModel)vm).SelectedUserYourTeam.HoursPerDay = hours;
+                ((TeamViewModel)vm).SelectedUserYourTeam.HoursPerDay.Value = Hours;
             }
         }
     }

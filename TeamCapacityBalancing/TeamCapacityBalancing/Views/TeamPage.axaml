@@ -14,7 +14,7 @@
 	<UserControl.DataContext>
 		<vm:TeamViewModel/>
 	</UserControl.DataContext>
-	
+
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -45,13 +45,18 @@
 				</Grid.RowDefinitions>
 
 				<StackPanel HorizontalAlignment="Center" Grid.Row="0">
-					<TextBlock Text="All Users"/>
+					<TextBlock Text="All Users" FontSize="20"/>
 				</StackPanel>
 
 				<ListBox Items="{Binding AllUsers}" SelectedItem="{Binding SelectedUserAllUsers}"  Grid.Row="1" Margin="5" >
 					<ListBox.ItemTemplate>
 						<DataTemplate>
-							<TextBlock Text="{Binding DisplayName}" />
+							<StackPanel Orientation="Horizontal">
+								<TextBlock Text="{Binding DisplayName}" />
+								<TextBlock Text="(" />
+								<TextBlock Text="{Binding HoursPerDay.Value}" />
+								<TextBlock Text=")" />
+							</StackPanel>
 						</DataTemplate>
 					</ListBox.ItemTemplate>
 				</ListBox>
@@ -59,16 +64,16 @@
 
 			<StackPanel Grid.Column="1" VerticalAlignment="Center">
 				<Button Width="40" Height="40" Background="Transparent" Command="{Binding RemoveFromTeamCommand}" IsEnabled="{Binding RemoveFromTeamVisibility}">
-					<icons:MaterialIcon Width="40" Height="40" Kind="ArrowLeft"/>
+					<icons:MaterialIcon Width="40" Height="40" Kind="ChevronLeft"/>
 				</Button>
 				<Button Width="40" Height="40" Background="Transparent" Command="{Binding AddToTeamCommand}" IsEnabled="{Binding AddToTeamEnabledVisibility}">
-					<icons:MaterialIcon Width="40" Height="40" Kind="ArrowRight"/>
+					<icons:MaterialIcon Width="40" Height="40" Kind="ChevronRight"/>
 				</Button>
 				<Button Width="40" Height="40" Background="Transparent" Command="{Binding AddAllToTeamCommand}" IsEnabled="{Binding AddAllFromTeamEnable}">
-					<icons:MaterialIcon Width="40" Height="40" Kind="NextTitle"/>
+					<icons:MaterialIcon Width="40" Height="40" Kind="ChevronDoubleRight"/>
 				</Button>
 				<Button Width="40" Height="40" Background="Transparent" Command="{Binding RemoveAllFromTeamCommand}" IsEnabled="{Binding RemoveAllFromTeamEnable}">
-					<icons:MaterialIcon Width="40" Height="40" Kind="TitleBackward"/>
+					<icons:MaterialIcon Width="40" Height="40" Kind="ChevronDoubleLeft"/>
 				</Button>
 			</StackPanel>
 
@@ -79,13 +84,18 @@
 				</Grid.RowDefinitions>
 
 				<StackPanel HorizontalAlignment="Center" Grid.Row="0">
-					<TextBlock Text="My Team"/>
+					<TextBlock Text="My Team" FontSize="20"/>
 				</StackPanel>
 
 				<ListBox Items="{Binding YourTeam}"  SelectedItem="{Binding SelectedUserYourTeam}" Grid.Row="1" Margin="5">
 					<ListBox.ItemTemplate>
 						<DataTemplate>
-							<TextBlock Text="{Binding DisplayName}" />
+							<StackPanel Orientation="Horizontal">
+								<TextBlock Text="{Binding DisplayName}" />
+								<TextBlock Text="(" />
+								<TextBlock Text="{Binding HoursPerDay.Value}" />
+								<TextBlock Text=")" />
+							</StackPanel>						
 						</DataTemplate>
 					</ListBox.ItemTemplate>
 				</ListBox>
@@ -93,6 +103,7 @@
 		</Grid>
 
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10 10 80 30" Grid.Row="2">
-			<Button Content="Resource Page" IsEnabled="{Binding ResourcePageVisibility}" Command="{Binding ResourcePageCommand}"/></StackPanel>
+			<Button Content="Resource Page" IsEnabled="{Binding ResourcePageVisibility}" Command="{Binding ResourcePageCommand}"/>
+		</StackPanel>
 	</Grid>
 </UserControl>
