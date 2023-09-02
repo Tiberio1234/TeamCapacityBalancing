@@ -10,12 +10,15 @@
 
         public int Id { get; set; }
 
+        public int HoursPerDay { get; set; }
+
         public User()
         {
             Username = string.Empty;
             DisplayName = string.Empty;
             HasTeam = false;
             Id = 0;
+            HoursPerDay = 0;
         }
 
         public User(string username, string displayName, int id)
@@ -23,7 +26,7 @@
             Username = username;
             DisplayName = displayName;
             Id = id;
-            HasTeam = false;
+            HasTeam = false;    
         }
 
         public User(string username, string displayName, bool hasTeam, int id)
