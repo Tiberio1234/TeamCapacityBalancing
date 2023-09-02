@@ -208,26 +208,6 @@ public sealed partial class BalancingViewModel : ObservableObject
         //TODO: popUpMessage for saving
     }
 
-    public static void ResizeObservableList<T>(ObservableCollection<T> obsList, int newSize, T defaultValue = default)
-    {
-        if (obsList.Count == newSize)
-        {
-            return;
-        }
-
-        List<T> list = obsList.ToList();
-        if (list.Count < newSize)
-        {
-            int countToAdd = newSize - list.Count;
-            list.AddRange(Enumerable.Repeat(defaultValue, countToAdd));
-        }
-        else if (list.Count > newSize)
-        {
-            list.RemoveRange(newSize, list.Count - newSize);
-        }
-        obsList = new ObservableCollection<T>(list);
-    }
-
     private void OrderTeamAndStoryInfo()
     {
         TeamMembers = new ObservableCollection<User>(TeamMembers.OrderBy(m => m.Username));
@@ -237,10 +217,11 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
     }
 
-    public void test(List<Wrapper<float>> defaultList)
+    public void CreateDefaultListWithDays
+        (List<Wrapper<float>> defaultList)
     {
         defaultList.Clear();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < MaxNumberOfUsers; i++)
         {
             defaultList.Add(new Wrapper<float> { UserName = "default", Value = 0 });    
         }
@@ -264,9 +245,8 @@ public sealed partial class BalancingViewModel : ObservableObject
 
         foreach (UserStoryAssociation userStoryAssociation in MyUserAssociation)
         {
-            //ResizeObservableList<Wrapper<float>>(userStoryAssociation.Days, TeamMembers.Count, new Wrapper<float> { UserName = "default", Value = 0 });
 
-            test(defaultList);
+            CreateDefaultListWithDays(defaultList);
 
             for (int i = 0; i < teamMembers.Count; i++)
             {
@@ -276,11 +256,18 @@ public sealed partial class BalancingViewModel : ObservableObject
                     defaultList[i].UserName = exists.UserName;
                     defaultList[i].Value = exists.Value;
                 }
+                else
+                {
+                    defaultList[i].UserName = teamMembers[i].Username;
+                    defaultList[i].Value = 0;
+                }
             }
             userStoryAssociation.Days = new ObservableCollection<Wrapper<float>>(defaultList);
         }
 
         OrderTeamAndStoryInfo();
+
+        SerializeOnSave();
 
         CalculateCoverage();
     }

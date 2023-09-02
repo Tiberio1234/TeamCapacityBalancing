@@ -233,6 +233,15 @@ public sealed partial class TeamViewModel : ObservableObject
         }
 
         _navigationService.CurrentPageType = typeof(BalancingPage);
+
+        //var window = _serviceCollection.GetService(typeof(Avalonia.Controls.Window));
+
+        //if (window != null)
+        //{
+        //    ((MainWindow)window).WindowState = Avalonia.Controls.WindowState.Maximized;
+        //    ((MainWindow)window).WindowState = Avalonia.Controls.WindowState.Normal;
+        //}
+
         SelectedUserYourTeam = null;
         SelectedUserAllUsers = null;
     }
