@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia.Media;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -32,6 +33,18 @@ public partial class UserStoryAssociation : ObservableObject
     public bool _shortTerm;
     public float Remaining { get; set; }
 
+
+    ObservableCollection<Avalonia.Media.Brush> _colorBackgroundBalancingList;
+    public ObservableCollection<Avalonia.Media.Brush> ColorBackgroundBalancingList
+    {
+        get => _colorBackgroundBalancingList;
+        set
+        {
+            _colorBackgroundBalancingList = value;
+            OnPropertyChanged();
+        }
+    }
+
     private ObservableCollection<Wrapper<float>> _days;
     public ObservableCollection<Wrapper<float>> Days
     {
@@ -45,12 +58,13 @@ public partial class UserStoryAssociation : ObservableObject
 
 
     public Wrapper<float> Coverage { get; set; }
-    public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, List<float> days)
+    public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, List<float> days, int maxNumberOfUsers)
     {
         StoryData = storyData;
         ShortTerm = shortTerm;
         Remaining = remaining;
         _days = new(days.Select(x => new Wrapper<float>() { Value = x }));
+        _colorBackgroundBalancingList = new ObservableCollection<Avalonia.Media.Brush>(Enumerable.Repeat(new SolidColorBrush(Colors.White), maxNumberOfUsers).ToList());
         Coverage = new Wrapper<float>() { Value = 0 };
     }
 
