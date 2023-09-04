@@ -9,7 +9,7 @@ namespace TeamCapacityBalancing.Services.ServicesAbstractions
         public List<IssueData> GetAllStoriesByTeamLeader(User teamLeader);
         public List<User> GetAllUsers();
         public List<IssueData> GetStoriesByEpic(int epicId);
-
+        public List<OpenTasksUserAssociation> GetRemainingForUser();
         public List<User> GetAllTeamLeaders();
     }
 }
