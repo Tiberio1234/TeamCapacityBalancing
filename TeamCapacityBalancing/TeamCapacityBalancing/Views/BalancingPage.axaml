@@ -36,7 +36,7 @@
 			<Button Width="40" Height="40" Background="Transparent" Command="{Binding SerializeOnSaveCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="ContentSave"/>
 			</Button>
-			<Button Width="40" Height="40" Background="Transparent">
+			<Button Width="40" Height="40" Background="Transparent" Command="{Binding OpenSprintSelectionPageCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Calendar"/>
 			</Button>
 			<Button Width="40" Height="40" Background="Transparent" Command="{Binding OpenTeamPageCommand}">

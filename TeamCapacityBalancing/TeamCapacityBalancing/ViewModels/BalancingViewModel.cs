@@ -111,6 +111,10 @@ public sealed partial class BalancingViewModel : ObservableObject
             ),  
     };
 
+    public DateOnly finishDate;
+
+    public float TotalWorkInShortTerm { get; set; }
+
     private void GetSerializedData()
     {
         List<UserStoryDataSerialization> userStoryDataSerializations = new();
@@ -168,6 +172,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
 
     }
+
     [RelayCommand]
     public void OpenTeamPage()
     {
@@ -178,9 +183,15 @@ public sealed partial class BalancingViewModel : ObservableObject
             {
                 ((TeamViewModel)vm).PopulateUsersLists(SelectedUser.Username);
             }
-            _navigationService.CurrentPageType = typeof(TeamPage);
+            _navigationService!.CurrentPageType = typeof(TeamPage);
             RefreshPage();
         }
+    }
+
+    [RelayCommand]
+    public void OpenSprintSelectionPage() 
+    {
+       _navigationService!.CurrentPageType=typeof(SprintSelectionPage);
     }
 
     [RelayCommand]
