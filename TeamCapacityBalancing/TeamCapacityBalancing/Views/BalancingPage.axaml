@@ -102,7 +102,7 @@
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
 
-				<DataGrid Grid.Row="0"  CanUserResizeColumns="True"  ColumnWidth="*" Items="{Binding MyUserAssociation}" AutoGenerateColumns="False" IsVisible="{Binding IsEpicClicked}"
+				<DataGrid Grid.Row="0"  CanUserResizeColumns="True"  ColumnWidth="*" Items="{Binding MyUserAssociation}" AutoGenerateColumns="False" IsVisible="{Binding GetStories}"
 					   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
 
 					<DataGrid.Columns>

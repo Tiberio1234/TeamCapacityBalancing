@@ -225,7 +225,25 @@ public sealed partial class TeamViewModel : ObservableObject
     [RelayCommand]
     public void BackToPage()
     {
+        if (_serviceCollection != null)
+        {
+            var vm = _serviceCollection.GetService(typeof(BalancingViewModel));
+            if (vm != null)
+            {
+                ((BalancingViewModel)vm).SyncTeamWithBalancingPageData();
+            }
+        }
+
         _navigationService.CurrentPageType = typeof(BalancingPage);
+
+        //var window = _serviceCollection.GetService(typeof(Avalonia.Controls.Window));
+
+        //if (window != null)
+        //{
+        //    ((MainWindow)window).WindowState = Avalonia.Controls.WindowState.Maximized;
+        //    ((MainWindow)window).WindowState = Avalonia.Controls.WindowState.Normal;
+        //}
+
         SelectedUserYourTeam = null;
         SelectedUserAllUsers = null;
     }
