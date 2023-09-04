@@ -47,6 +47,35 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             return timeEstimate - timeSpent;
         }
 
+        private int GetEpicIdFromStory(int storyId)
+        {
+            int epicId = 0;
+            try
+            {
+                using (var connection = new NpgsqlConnection(DataBaseConnection.GetInstance().GetConnectionString()))
+                {
+                    connection.Open();
+
+                    var cmd = new NpgsqlCommand($"SELECT {IssuelinkTable}.source " +
+                        $"FROM {IssuelinkTable} " +
+                        $"WHERE {IssuelinkTable}.linktype = {EpicStoryLinkType} " +
+                        $"AND {IssuelinkTable}.destination = {storyId}", connection);
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        epicId = reader.GetInt32(reader.GetOrdinal("source"));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return epicId;
+        }
+
         public List<User> GetAllUsers()
         {
             List<User> users = new List<User>();
@@ -125,7 +154,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             return stories;
         }
 
-        public List<IssueData> GetAllStoriesByTeamLeader(string teamLeaderUsername)
+        public List<IssueData> GetAllStoriesByTeamLeader(User teamLeader)
         {
             List<IssueData> stories = new List<IssueData>();
 
@@ -137,7 +166,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
 
                     var cmd = new NpgsqlCommand($"SELECT {JiraissueTable}.id, {JiraissueTable}.assignee, {JiraissueTable}.issuenum, {JiraissueTable}.project, {JiraissueTable}.summary " +
                         $"From {JiraissueTable} " +
-                        $"where {JiraissueTable}.assignee = '{teamLeaderUsername}' " +
+                        $"where {JiraissueTable}.assignee = 'JIRAUSER{teamLeader.Id}' " +
                         $"and {JiraissueTable}.issuetype = '{StoryIssueType}' " +
                         $"group by {JiraissueTable}.id", connection);
 
@@ -150,8 +179,16 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                         string assignee = reader.GetString(reader.GetOrdinal("assignee"));
                         int issueNumber = reader.GetInt32(reader.GetOrdinal("issuenum"));
                         int projectId = reader.GetInt32(reader.GetOrdinal("project"));
-                        stories.Add(new IssueData(id, name, assignee));
-                        //stories.Add(new IssueData(id, name, IssueData.IssueType.Story, assignee, issueNumber, projectId));
+                        int epicId = GetEpicIdFromStory(id);
+
+                        //calculate only the first to decimals for a float
+                        float result = ((CalculateRemainingTimeForStory(id) / 60) / 60) / 24; //from seconds to days
+                        float onlydecimals = (float)(result - (int)result);
+                        int first2DecimalsInt = (int)(onlydecimals * 100);
+                        float firstTwoDecimalsFloat = (float)first2DecimalsInt / 100;
+                        float remaining = firstTwoDecimalsFloat + (int)result;
+
+                        stories.Add(new IssueData(id, epicId,name, assignee, remaining));
                     }
                 }
             }
@@ -218,7 +255,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                 {
                     connection.Open();
 
-                    var cmd = new NpgsqlCommand($@"SELECT cu.id, cu.user_name, cu.display_name
+                    var cmd = new NpgsqlCommand($@"SELECT Distinct cu.id, cu.user_name, cu.display_name
                          FROM {JiraissueTable} AS i
                         JOIN app_user AS au ON i.assignee = au.user_key 
                         JOIN {UserTable} AS cu ON au.id = cu.id 

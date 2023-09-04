@@ -22,7 +22,8 @@ public sealed partial class BalancingViewModel : ObservableObject
     private readonly NavigationService? _navigationService;
     private readonly ServiceCollection _serviceCollection;
     private const int MaxNumberOfUsers = 10;
-    private int EpicId;
+    private List<IssueData> allStories = new List<IssueData>();
+    private List<UserStoryAssociation> allUserStoryAssociation = new List<UserStoryAssociation>();
 
     //services
     private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
@@ -61,7 +62,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     private bool _finalBalancing = false;
 
     [ObservableProperty]
-    private bool _IsEpicClicked = false;
+    private bool _getStories = false;
 
     private User? _selectedUser;
     public User? SelectedUser
@@ -75,12 +76,14 @@ public sealed partial class BalancingViewModel : ObservableObject
 
                 if (value != null)
                 {
-                    IsEpicClicked = false;
+                    _getStories = false;
                     IsShortTermVisible = false;
                     FinalBalancing = false;
                     MyUserAssociation.Clear();
+                    allUserStoryAssociation.Clear();
                     List<IssueData> epics;
                     epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
+                    allStories = _queriesForDataBase.GetAllStoriesByTeamLeader(SelectedUser);
                     if (epics != null)
                     {
                         Epics = new ObservableCollection<IssueData>(epics);
@@ -90,6 +93,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                     {
                         GetTeamUsers();
                     }
+                    ShowAllStories();
                 }
                 OnPropertyChanged(nameof(SelectedUser));
             }
@@ -126,7 +130,8 @@ public sealed partial class BalancingViewModel : ObservableObject
             {
                 capacityList.Add(new(ser.UsersCapacity[i].Item1, ser.UsersCapacity[i].Item2));
             }
-            MyUserAssociation.Add(new UserStoryAssociation(ser.Story, ser.ShortTerm, ser.Remaining, capacityList));
+            allUserStoryAssociation.Add(new UserStoryAssociation(ser.Story, ser.ShortTerm, ser.Remaining, capacityList));
+            MyUserAssociation.Add(allUserStoryAssociation.Last());
         }
 
     }
@@ -164,11 +169,13 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             capacityList.Add(Tuple.Create(new User { Username = TeamMembers[i].Username, HasTeam = false}, 0f));
         }
-        List<IssueData> stories = _queriesForDataBase.GetStoriesByEpic(EpicId);
 
-        foreach (IssueData story in stories)
+        
+        foreach (IssueData story in allStories)
         {
-            MyUserAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList));
+            
+            allUserStoryAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList));
+            MyUserAssociation.Add(allUserStoryAssociation.Last());
         }
 
     }
@@ -272,11 +279,54 @@ public sealed partial class BalancingViewModel : ObservableObject
         CalculateCoverage();
     }
 
+    private void SyncronizeDisplayedAsocListWithAllStoriesList()
+    {
+        for(int myUserAsocIndex = 0; myUserAsocIndex < MyUserAssociation.Count; myUserAsocIndex++)
+        {
+            for(int allUserAsocIndex = 0; allUserAsocIndex < allUserStoryAssociation.Count; allUserAsocIndex++)
+            {
+                if (allUserStoryAssociation[allUserAsocIndex].StoryData.Name == MyUserAssociation[myUserAsocIndex].StoryData.Name)
+                {
+                    allUserStoryAssociation[allUserAsocIndex] = MyUserAssociation[myUserAsocIndex];
+                    break;
+                }
+            }
+        }
+
+    }
+
+    private void DisplayStoriesFromAnEpic(int epicId)
+    {
+       MyUserAssociation.Clear();
+       for (int allUserStoryAssociationIndex = 0; allUserStoryAssociationIndex < allUserStoryAssociation.Count; allUserStoryAssociationIndex++)
+       {
+            if(allUserStoryAssociation[allUserStoryAssociationIndex].StoryData.EpicID == epicId)
+            MyUserAssociation.Add(allUserStoryAssociation[allUserStoryAssociationIndex]);
+       }
+    }
+
     [RelayCommand]
     public void EpicClicked(int id)
     {
+
+        //SyncronizeDisplayedAsocListWithAllStoriesList();
+        DisplayStoriesFromAnEpic(id);
+
+        //get stories with same epicID and display them
+        
+        
+
+        FinalBalancing = true;
+        GetStories = true;
+        
+        CalculateCoverage();
+        OrderTeamAndStoryInfo();
+    }
+
+    [RelayCommand]
+    public void ShowAllStories()
+    {
         MyUserAssociation.Clear();
-        EpicId = id;
         if (File.Exists(JsonSerialization.UserStoryFilePath + SelectedUser.Username))
         {
             GetSerializedData();
@@ -285,11 +335,9 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             PopulateByDefault();
         }
+
         FinalBalancing = true;
-        IsEpicClicked = true;
-        ShowShortTermStoryes();
-        CalculateCoverage();
-        OrderTeamAndStoryInfo();
+        GetStories = true;
     }
 
     [RelayCommand]
@@ -299,7 +347,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         GetSerializedData();
 
         List<IssueData> storyList = new List<IssueData>();
-        storyList = _queriesForDataBase.GetStoriesByEpic(EpicId);
+        storyList = _queriesForDataBase.GetAllStoriesByTeamLeader(SelectedUser);
 
         if (MyUserAssociation.Count != storyList.Count)
         {
@@ -340,11 +388,11 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         ShortTermStoryes = new();
 
-        for (int i = 0; i < MyUserAssociation.Count; i++)
+        for (int i = 0; i < allUserStoryAssociation.Count; i++)
         {
-            if (MyUserAssociation[i].ShortTerm)
+            if (allUserStoryAssociation[i].ShortTerm)
             {
-                ShortTermStoryes.Add(MyUserAssociation[i]);
+                ShortTermStoryes.Add(allUserStoryAssociation[i]);
             }
         }
 

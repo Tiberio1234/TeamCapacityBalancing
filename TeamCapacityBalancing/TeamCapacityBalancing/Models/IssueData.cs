@@ -8,6 +8,8 @@ public class IssueData
         Story,
         Task,
     }
+
+    public int? EpicID { get; set; }
     public int Id { get; set; }
     public string? Asignee { get; set; }
     public float Remaining { get; set; }
@@ -47,6 +49,15 @@ public class IssueData
     public IssueData(int id, string summary, string assignee, float remaining)
     {
         Id = id;
+        Name = summary;
+        Asignee = assignee;
+        Remaining = remaining;
+    }
+
+    public IssueData(int id,int epicId, string summary, string assignee, float remaining)
+    {
+        Id = id;
+        EpicID = epicId;
         Name = summary;
         Asignee = assignee;
         Remaining = remaining;
