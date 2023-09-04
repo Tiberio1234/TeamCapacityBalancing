@@ -445,6 +445,11 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    public void OpenReleaseCalendar() 
+    {
+    _navigationService.CurrentPageType= typeof(ReleaseCalendarPage);
+    }
     public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>
     {
        //new UserStoryAssociation(

@@ -48,6 +48,9 @@
 			<ToggleButton  Width="40" Height="40" Background="Transparent" IsChecked="{Binding IsBalancing}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="ChartBar"/>
 			</ToggleButton>
+			<Button  Width="40" Height="40" Background="Transparent" Command="{Binding OpenReleaseCalendarCommand}">
+				<icons:MaterialIcon Width="40" Height="40" Kind="CalendarClockOutline"/>
+			</Button>
 
 			<ToggleButton Height="40"
 						  HorizontalContentAlignment="Center"
@@ -58,6 +61,7 @@
 						  >
 			</ToggleButton>
 
+			
 		</StackPanel>
 		<SplitView Grid.Row="1" OpenPaneLength="200" CompactPaneLength="35" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="{Binding Mode}">
 			<SplitView.Pane>
