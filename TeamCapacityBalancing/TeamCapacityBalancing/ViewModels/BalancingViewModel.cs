@@ -126,6 +126,10 @@ public sealed partial class BalancingViewModel : ObservableObject
     };
     
 
+    public DateOnly finishDate;
+
+    public float TotalWorkInShortTerm { get; set; }
+
     private void GetSerializedData()
     {
         List<UserStoryDataSerialization> userStoryDataSerializations = new();
@@ -214,6 +218,12 @@ public sealed partial class BalancingViewModel : ObservableObject
             _navigationService.CurrentPageType = typeof(TeamPage);
         }
 
+    }
+
+    [RelayCommand]
+    public void OpenSprintSelectionPage() 
+    {
+       _navigationService!.CurrentPageType=typeof(SprintSelectionPage);
     }
 
     [RelayCommand]
