@@ -89,7 +89,11 @@
 					<Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0" Margin="10,0,10,0" IsVisible="{Binding #MenuToggle.IsChecked}"/>
 
 					<StackPanel Grid.Row="1" Orientation="Vertical">
-						<CheckBox Content="Filter" Margin="10" IsVisible="{Binding #MenuToggle.IsChecked}"/>
+						<CheckBox Content="Place holders" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}"/>
+						<StackPanel Grid.Row="1" Orientation="Horizontal">
+							<CheckBox Content="Filter by" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}"/>
+							<TextBox Margin="3 0 0 0" Text ="" Height="10"/>
+						</StackPanel>
 					</StackPanel>
 				</Grid>
 			</SplitView.Pane>
