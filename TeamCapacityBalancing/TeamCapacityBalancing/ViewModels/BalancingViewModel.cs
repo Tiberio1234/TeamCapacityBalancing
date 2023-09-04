@@ -230,7 +230,7 @@ public sealed partial class BalancingViewModel : ObservableObject
 
         _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
 
-        ChangeColorByNumberOfDays();
+       
         //TODO: popUpMessage for saving
 
         var mainWindow = _serviceCollection.GetService(typeof(Window));
@@ -333,8 +333,8 @@ public sealed partial class BalancingViewModel : ObservableObject
         DisplayStoriesFromAnEpic(id);
 
         //get stories with same epicID and display them
-        
-        
+
+
 
         FinalBalancing = true;
         GetStories = true;
@@ -385,7 +385,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                 List<float> capacityList = Enumerable.Repeat(0f, 10).ToList();
                 if (indexMyUserAssociation == MyUserAssociation.Count)
                 {
-                    MyUserAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList,MaxNumberOfUsers));
+                    //MyUserAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList, MaxNumberOfUsers));
                 }
 
             }
@@ -406,6 +406,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void ShowShortTermStoryes()
     {
+
         ShortTermStoryes = new();
 
         for (int i = 0; i < allUserStoryAssociation.Count; i++)
@@ -433,28 +434,28 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>
     {
-       new UserStoryAssociation(
-                new IssueData("Total work open story", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
-                true,
-                3.0f,
-                new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                MaxNumberOfUsers
+       //new UserStoryAssociation(
+       //         new IssueData("Total work open story", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+       //         true,
+       //         3.0f,
+       //         new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+       //         MaxNumberOfUsers
 
-            ),
-       new UserStoryAssociation(
-                new IssueData("Total work", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
-                true,
-                3.0f,
-                new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                MaxNumberOfUsers
-            ),
-       new UserStoryAssociation(
-                new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
-                true,
-                3.0f,
-                new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                MaxNumberOfUsers
-            ),
+       //     ),
+       //new UserStoryAssociation(
+       //         new IssueData("Total work", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+       //         true,
+       //         3.0f,
+       //         new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+       //         MaxNumberOfUsers
+       //     ),
+       //new UserStoryAssociation(
+       //         new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+       //         true,
+       //         3.0f,
+       //         new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+       //         MaxNumberOfUsers
+       //     ),
     };
 
     [ObservableProperty]

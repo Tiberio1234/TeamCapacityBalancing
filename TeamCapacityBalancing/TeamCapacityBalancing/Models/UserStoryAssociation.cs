@@ -64,22 +64,22 @@ public partial class UserStoryAssociation : ObservableObject
 
     public Wrapper<float> Coverage { get; set; }
 
-    public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, List<float> days, int maxNumberOfUsers)
-    {
-        StoryData = storyData;
-        ShortTerm = shortTerm;
-        Remaining = remaining;
-        _days = new(days.Select(x => new Wrapper<float>() { Value = x }));
-        _colorBackgroundBalancingList = new ObservableCollection<Avalonia.Media.Brush>(Enumerable.Repeat(new SolidColorBrush(Colors.White), maxNumberOfUsers).ToList());
-        Coverage = new Wrapper<float>() { Value = 0 };
-    }
-
-    public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, List<Tuple<User, float>> days)
+    public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, List<Tuple<User, float>> days, int maxNumberOfUsers)
     {
         StoryData = storyData;
         ShortTerm = shortTerm;
         Remaining = remaining;
         _days = new(days.Select(x => new Wrapper<float>() { Value = x.Item2, UserName = x.Item1.Username }));
+        _colorBackgroundBalancingList = new ObservableCollection<Avalonia.Media.Brush>(Enumerable.Repeat(new SolidColorBrush(Colors.White), maxNumberOfUsers).ToList());
+        Coverage = new Wrapper<float>() { Value = 0 };
+    }
+    public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, List<float> days, int maxNumberOfUsers)
+    {
+        StoryData = storyData;
+        ShortTerm = shortTerm;
+        Remaining = remaining;
+        _days = new(days.Select(x => new Wrapper<float>() { Value = x, UserName = "default" }));
+        _colorBackgroundBalancingList = new ObservableCollection<Avalonia.Media.Brush>(Enumerable.Repeat(new SolidColorBrush(Colors.White), maxNumberOfUsers).ToList());
         Coverage = new Wrapper<float>() { Value = 0 };
     }
 
