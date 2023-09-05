@@ -35,11 +35,12 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
     public DateTimeOffset? _finishDate;
 
     [ObservableProperty]
-    public bool _selecteSprintForShortTerm=false;
+    public bool _selecteSprintForShortTerm = false;
 
     [RelayCommand]
     public void GenerateSprints()
     {
+        Sprints.Clear();
         for (int i = 0; i < NumberOfSprints; i++)
         {
             Sprints.Add(new Sprint($"Sprint {i + 1}", 0, false));
@@ -47,16 +48,26 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void OpenBalancigPage() 
+    public void OpenBalancigPage()
     {
         float totalWeeks = 0;
 
+        DateTime dueStart=DateTime.Now;
 
         for (int i = 0; i < Sprints.Count; i++) 
         {
+            Sprints[i].StartDate = dueStart.ToString("dd/MM/yyyy");
+            dueStart = dueStart.AddDays(Sprints[i].NumberOfWeeks*7);
+            Sprints[i].EndDate = dueStart.ToString("dd/MM/yyyy");
+            dueStart = dueStart.AddDays(1);
+        }
+
+
+        for (int i = 0; i < Sprints.Count; i++)
+        {
             if (Sprints[i].IsInShortTerm)
             {
-                totalWeeks =totalWeeks+ Sprints[i].NumberOfWeeks;
+                totalWeeks = totalWeeks + Sprints[i].NumberOfWeeks;
             }
         }
 
@@ -75,6 +86,18 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
                 ((BalancingViewModel)vm).finishDate = (FinishDate.Value.Date);
             }
         }
-        _navigationService!.CurrentPageType=typeof(BalancingPage);  
+        _navigationService!.CurrentPageType = typeof(BalancingPage);
+    }
+
+    [RelayCommand]
+    public void UncheckSprint() 
+    {
+        if (!SelecteSprintForShortTerm) 
+        {
+        foreach(var item in Sprints) 
+            {
+                item.IsInShortTerm=false;
+            }
+        }
     }
 }

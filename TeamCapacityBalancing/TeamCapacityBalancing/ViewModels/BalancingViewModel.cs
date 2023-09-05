@@ -103,6 +103,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                         GetTeamUsers();
                     }
                     ShowAllStories();
+                    OrderTeamAndStoryInfo();
                 }
                 foreach (var user in TeamMembers)
                 {
@@ -168,7 +169,7 @@ public sealed partial class BalancingViewModel : ObservableObject
             allUserStoryAssociation.Add(new UserStoryAssociation(ser.Story, ser.ShortTerm, ser.Remaining, capacityList, MaxNumberOfUsers));
             MyUserAssociation.Add(allUserStoryAssociation.Last());
         }
-
+        CalculateCoverage();
     }
 
     private void GetTeamUsers()
@@ -229,6 +230,12 @@ public sealed partial class BalancingViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public void FilterByBusinessCase(string businessCase)
+    {
+
+    }
+
+    [RelayCommand]
     public void OpenTeamPage()
     {
         if (SelectedUser != null)
@@ -254,14 +261,14 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         List<UserStoryDataSerialization> userStoryDataSerializations = new List<UserStoryDataSerialization>();
 
-        for (int j = 0; j < MyUserAssociation.Count; j++)
+        for (int j = 0; j < allUserStoryAssociation.Count; j++)
         {
             List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
             for (int i = 0; i < MaxNumberOfUsers; i++)
             {
-                capacityList.Add(new Tuple<User, float>(TeamMembers[i], MyUserAssociation[j].Days[i].Value));
+                capacityList.Add(new Tuple<User, float>(TeamMembers[i], allUserStoryAssociation[j].Days[i].Value));
             }
-            userStoryDataSerializations.Add(new UserStoryDataSerialization(MyUserAssociation[j].StoryData, MyUserAssociation[j].ShortTerm, MyUserAssociation[j].Remaining, capacityList));
+            userStoryDataSerializations.Add(new UserStoryDataSerialization(allUserStoryAssociation[j].StoryData, allUserStoryAssociation[j].ShortTerm, allUserStoryAssociation[j].Remaining, capacityList));
         }
 
         _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
@@ -380,7 +387,7 @@ public sealed partial class BalancingViewModel : ObservableObject
 
         //SyncronizeDisplayedAsocListWithAllStoriesList();
         DisplayStoriesFromAnEpic(id);
-
+        ShowShortTermStoryes();
         //get stories with same epicID and display them
         FinalBalancing = true;
         GetStories = true;
@@ -401,7 +408,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             PopulateByDefault();
         }
-
+        ShowShortTermStoryes();
         FinalBalancing = true;
         GetStories = true;
     }
@@ -455,11 +462,11 @@ public sealed partial class BalancingViewModel : ObservableObject
 
         ShortTermStoryes = new();
 
-        for (int i = 0; i < allUserStoryAssociation.Count; i++)
+        for (int i = 0; i < MyUserAssociation.Count; i++)
         {
-            if (allUserStoryAssociation[i].ShortTerm)
+            if (MyUserAssociation[i].ShortTerm)
             {
-                ShortTermStoryes.Add(allUserStoryAssociation[i]);
+                ShortTermStoryes.Add(MyUserAssociation[i]);
             }
         }
 
@@ -484,6 +491,15 @@ public sealed partial class BalancingViewModel : ObservableObject
             }
         }
     }
+
+    [RelayCommand]
+    public void OpenReleaseCalendar() 
+    {
+    _navigationService.CurrentPageType= typeof(ReleaseCalendarPage);
+    }
+
+    public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>
+
     public List<Tuple<User, float>> CalculateOpenTasks()
     {
         List<Tuple<User, float>> workOpenStory = new List<Tuple<User, float>>();

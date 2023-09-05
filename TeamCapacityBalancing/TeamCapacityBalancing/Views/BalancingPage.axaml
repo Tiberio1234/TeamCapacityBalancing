@@ -48,6 +48,9 @@
 			<ToggleButton  Width="40" Height="40" Background="Transparent" IsChecked="{Binding IsBalancing}" Command="{Binding CalculateTotalsCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="ChartBar"/>
 			</ToggleButton>
+			<Button  Width="40" Height="40" Background="Transparent" Command="{Binding OpenReleaseCalendarCommand}">
+				<icons:MaterialIcon Width="40" Height="40" Kind="CalendarClockOutline"/>
+			</Button>
 
 			<ToggleButton Height="40"
 						  HorizontalContentAlignment="Center"
@@ -58,6 +61,7 @@
 						  >
 			</ToggleButton>
 
+			
 		</StackPanel>
 		<SplitView Grid.Row="1" OpenPaneLength="200" CompactPaneLength="35" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="{Binding Mode}">
 			<SplitView.Pane>
@@ -89,7 +93,11 @@
 					<Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0" Margin="10,0,10,0" IsVisible="{Binding #MenuToggle.IsChecked}"/>
 
 					<StackPanel Grid.Row="1" Orientation="Vertical">
-						<CheckBox Content="Filter" Margin="10" IsVisible="{Binding #MenuToggle.IsChecked}"/>
+						<CheckBox Content="Place holders" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}"/>
+						<StackPanel Grid.Row="1" Orientation="Horizontal">
+							<CheckBox Content="Filter by" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}"/>
+							<TextBox Margin="3 0 0 0" Text ="" Height="10"/>
+						</StackPanel>
 					</StackPanel>
 				</Grid>
 			</SplitView.Pane>

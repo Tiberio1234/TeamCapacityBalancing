@@ -9,6 +9,7 @@
              x:Class="TeamCapacityBalancing.Views.SprintSelectionPage"
 			 x:DataType="vm:SprintSelectionViewModel"
 			 x:CompileBindings="True"
+			 x:Name="SprintSelectionControl"
 			 >
 
 	<UserControl.DataContext>
@@ -33,13 +34,13 @@
 		</Button>
 
 		<StackPanel Grid.Row="1" Orientation="Horizontal">
-			<TextBox Width="50" Margin="5 5 5 5" Watermark="Number of sprints" Text="{Binding NumberOfSprints}"/>
+			<ToggleSwitch Content="Calendar or Short-Term" IsChecked="{Binding SelecteSprintForShortTerm}" Command="{Binding UncheckSprintCommand}"/>
+			<NumericUpDown Width="50" Height="10" Margin="5 5 5 5" Watermark="Number of sprints" Value="{Binding NumberOfSprints}" ShowButtonSpinner="False"/>
 			<Separator Width="20"/>
-			<Button Content="Select" Background="Turquoise" Command="{Binding GenerateSprintsCommand}"/>
+			<Button Content="Select" Command="{Binding GenerateSprintsCommand}"/>
 			<Separator Width="20"/>
-			<ToggleSwitch Content="Sprint for ShortTerm" IsChecked="{Binding SelecteSprintForShortTerm}"/>
 		</StackPanel>
-		<DataGrid IsVisible="{Binding SelecteSprintForShortTerm}" Grid.Row="2" ColumnWidth="*" Items="{Binding Sprints}" AutoGenerateColumns="False"
+		<DataGrid Grid.Row="2" ColumnWidth="*" Items="{Binding Sprints}" AutoGenerateColumns="False"
 		GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
 
 			<DataGrid.Columns>
@@ -75,17 +76,14 @@
 					</DataGridTemplateColumn.Header>
 					<DataGridTemplateColumn.CellTemplate>
 						<DataTemplate x:DataType="models:Sprint">
-							<CheckBox IsChecked="{Binding IsInShortTerm}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+							<CheckBox IsChecked="{Binding IsInShortTerm}" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{ReflectionBinding #SprintSelectionControl.DataContext.SelecteSprintForShortTerm}"/>
 						</DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
 				</DataGridTemplateColumn>
 			</DataGrid.Columns>
 		</DataGrid>
 		<StackPanel Grid.Row="3" Height="100" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-			<DatePicker IsVisible="{Binding !SelecteSprintForShortTerm}" Width="700" Height="40" SelectedDate="{Binding FinishDate}"/>
-			<!--<Button Width="40" Height="40" Background="Transparent" Command="{Binding SelectDateCommand}">
-				<icons:MaterialIcon Width="40" Height="40" Kind="ArrowForward"/>
-			</Button>-->
+			<DatePicker Width="700" Height="40" SelectedDate="{Binding FinishDate}" IsEnabled="{Binding !SelecteSprintForShortTerm}"/>
 		</StackPanel>
 	</Grid>
 

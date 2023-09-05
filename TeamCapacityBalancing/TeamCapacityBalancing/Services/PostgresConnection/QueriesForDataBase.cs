@@ -214,7 +214,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                     connection.Open();
 
                     var cmd = new NpgsqlCommand($@"
-                        SELECT {JiraissueTable}.id, {JiraissueTable}.assignee, {JiraissueTable}.issuenum, {JiraissueTable}.project, {JiraissueTable}.summary
+                        SELECT {JiraissueTable}.id, {JiraissueTable}.assignee, {JiraissueTable}.issuenum, {JiraissueTable}.project, {JiraissueTable}.summary, {JiraissueTable}.description
                         FROM {JiraissueTable}
                         WHERE {JiraissueTable}.id IN
                         (SELECT {IssuelinkTable}.source
@@ -237,7 +237,9 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                         string name = reader.GetString(reader.GetOrdinal("summary"));
                         int issueNumber = reader.GetInt32(reader.GetOrdinal("issuenum"));
                         int projectId = reader.GetInt32(reader.GetOrdinal("project"));
-                        epics.Add(new IssueData(id, name));
+                        //string businesscase = reader.GetString(reader.GetOrdinal("description"));
+                        string businesscase = "VVA";
+                        epics.Add(new IssueData(id, name,businesscase));
                     }
                 }
             }
