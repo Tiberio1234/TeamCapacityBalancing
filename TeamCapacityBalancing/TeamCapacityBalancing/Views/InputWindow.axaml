@@ -17,16 +17,21 @@
 
 	<Grid>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+		<StackPanel Grid.Row="0" Margin="0 20 0 0" HorizontalAlignment="Center"  VerticalAlignment="Center">
+			<TextBlock Text="Enter the number of hours:" FontSize="15"/>
+		</StackPanel>
+
+		<StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
 			<TextBlock Text="{Binding CurrentUsername}" FontSize="15" Margin="0 7 25 0"/>
 			<NumericUpDown Value="{Binding Hours}" Minimum="0"/>
 		</StackPanel>
 
-		<StackPanel Grid.Row="1" Margin="0 0 30 10">
+		<StackPanel Grid.Row="2" Margin="0 0 30 10">
 			<Button Content="OK" HorizontalAlignment="Right" Command="{Binding AtCloseCommand}" Click="Close"/>
 		</StackPanel>
 	</Grid>

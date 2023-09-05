@@ -53,6 +53,9 @@ public sealed partial class BalancingViewModel : ObservableObject
     }
 
     [ObservableProperty]
+    private bool _miniMessage = true;
+
+    [ObservableProperty]
     private string _BusinessCaseString = string.Empty;
 
     [ObservableProperty]
@@ -87,6 +90,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             if (_selectedUser != value)
             {
+                MiniMessage = false;
                 _selectedUser = value;
 
                 if (value != null)
