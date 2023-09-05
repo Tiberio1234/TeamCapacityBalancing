@@ -17,7 +17,7 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
     {
 
     }
-    public SprintSelectionViewModel(PageService pageService, NavigationService navigationService, ServiceCollection serviceCollection)
+    public SprintSelectionViewModel(NavigationService navigationService, ServiceCollection serviceCollection)
     {
         _navigationService = navigationService;
         _serviceCollection = serviceCollection;

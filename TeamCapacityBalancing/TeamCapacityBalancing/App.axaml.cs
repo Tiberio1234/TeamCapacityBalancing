@@ -41,14 +41,18 @@ namespace TeamCapacityBalancing
             serviceCollection.AddSingleton<ReleaseCalendarViewModel>();
             serviceCollection.AddSingleton<ReleaseCalendarPage>();
 
+            serviceCollection.AddSingleton<HomeViewModel>();
+            serviceCollection.AddSingleton<HomePage>();
+
             PageService pageService = serviceCollection.GetService<PageService>();
             pageService.RegisterPage<BalancingPage, BalancingViewModel>("Balancing Page");
             pageService.RegisterPage<TeamPage, TeamViewModel>("Team Page");
             pageService.RegisterPage<SprintSelectionPage, SprintSelectionViewModel>("Sprint Selection Page");
             pageService.RegisterPage<ReleaseCalendarPage, ReleaseCalendarViewModel>("Release Calendar Page");
+            pageService.RegisterPage<HomePage, HomeViewModel>("Home Page");
 
             NavigationService navigationService = serviceCollection.GetService<NavigationService>();
-            navigationService.CurrentPageType=typeof(BalancingPage);
+            navigationService.CurrentPageType=typeof(HomePage);
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
