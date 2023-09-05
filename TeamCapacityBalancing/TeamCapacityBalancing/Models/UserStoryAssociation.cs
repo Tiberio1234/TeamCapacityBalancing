@@ -33,10 +33,8 @@ public class Wrapper<T> : Utility
 public partial class UserStoryAssociation : ObservableObject
 {
     public IssueData StoryData { get; set; }
-
-    [ObservableProperty]
-    public bool _shortTerm;
     public float Remaining { get; set; }
+    public Wrapper<float> Coverage { get; set; }
 
 
     ObservableCollection<Avalonia.Media.Brush> _colorBackgroundBalancingList;
@@ -62,7 +60,10 @@ public partial class UserStoryAssociation : ObservableObject
     }
 
 
-    public Wrapper<float> Coverage { get; set; }
+    [ObservableProperty]
+    public bool _shortTerm;
+
+    
 
     public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, List<Tuple<User, float>> days, int maxNumberOfUsers)
     {
@@ -73,7 +74,8 @@ public partial class UserStoryAssociation : ObservableObject
         _colorBackgroundBalancingList = new ObservableCollection<Avalonia.Media.Brush>(Enumerable.Repeat(new SolidColorBrush(Colors.White), maxNumberOfUsers).ToList());
         Coverage = new Wrapper<float>() { Value = 0 };
     }
-    public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, List<float> days, int maxNumberOfUsers)
+
+    public UserStoryAssociation(IssueData storyData, bool shortTerm, float remaining, List<float> days, int maxNumberOfUsers) //After sebi does what he does it can die
     {
         StoryData = storyData;
         ShortTerm = shortTerm;

@@ -16,17 +16,21 @@ public sealed partial class InputViewModel : ObservableObject
 
     public InputViewModel()
     {
+        _currentUsername = string.Empty;
     }
 
     public InputViewModel(ServiceCollection serviceCollection)
     {
+        _currentUsername = string.Empty;
         _serviceCollection = serviceCollection;
         var vm = _serviceCollection.GetService(typeof(TeamViewModel));
-        if (vm != null)
+        
+        if (vm != null)   //TODO: solve this warning if somebody knows how to do it
         {
             CurrentUsername=((TeamViewModel)vm).SelectedUserYourTeam.DisplayName;
             Hours =(int)((TeamViewModel)vm).SelectedUserYourTeam.HoursPerDay.Value;
         }
+
     }
 
     [RelayCommand]

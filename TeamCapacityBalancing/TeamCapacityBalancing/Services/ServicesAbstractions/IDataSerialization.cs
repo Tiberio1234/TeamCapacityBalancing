@@ -16,5 +16,9 @@ namespace TeamCapacityBalancing.Services.ServicesAbstractions
 
         public List<User> DeserializeTeamData(string filename);
 
+        public void SerializeSprintData(List<Sprint> sprint, string filename);
+
+        public List<Sprint> DeserializeSprint(string filename);
+
     }
 }

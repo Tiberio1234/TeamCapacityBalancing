@@ -20,31 +20,12 @@ public class User
         Id = 0;
         HoursPerDay = new Wrapper<int>() { Value = 0 };
     }
-
-    public User(string username, string displayName, int id)
-    {
-        Username = username;
-        DisplayName = displayName;
-        Id = id;
-        HasTeam = false;
-        HoursPerDay = new Wrapper<int>() { Value = 0 };
-    }
-
-    public User(string username, string displayName, bool hasTeam, int id)
-    {
-        Username = username;
-        DisplayName = displayName;
-        HasTeam = hasTeam;
-        Id = id;
-        HoursPerDay = new Wrapper<int>() { Value = 0 };
-    }
-
-    public User(string username)
+    public User(string username, string displayName = "", int id = 0)
     {
         Username = username;
         HasTeam = false;
-        Id = 0;
-        DisplayName = string.Empty;
+        Id = id;
+        DisplayName = displayName;
         HoursPerDay = new Wrapper<int>() { Value = 0 };
     }
 }
