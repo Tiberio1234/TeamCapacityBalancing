@@ -327,33 +327,41 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void OpenSprintSelectionPage() 
     {
-       _navigationService!.CurrentPageType=typeof(SprintSelectionPage);
+        if (SelectedUser != null)
+        {
+            _navigationService!.CurrentPageType = typeof(SprintSelectionPage);
+        }
     }
 
     [RelayCommand]
     public void SerializeOnSave()
     {
-        List<UserStoryDataSerialization> userStoryDataSerializations = new List<UserStoryDataSerialization>();
+        if (SelectedUser == null)
+        { return; }
 
-        for (int j = 0; j < allUserStoryAssociation.Count; j++)
-        {
-            List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
-            for (int i = 0; i < MaxNumberOfUsers; i++)
-            {
-                capacityList.Add(new Tuple<User, float>(TeamMembers[i], allUserStoryAssociation[j].Days[i].Value));
-            }
-            userStoryDataSerializations.Add(new UserStoryDataSerialization(allUserStoryAssociation[j].StoryData, allUserStoryAssociation[j].ShortTerm, allUserStoryAssociation[j].Remaining, capacityList));
-        }
-
-        _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
-
-       
-        //TODO: popUpMessage for saving
+        SerializeStoryData();
 
         var mainWindow = _serviceCollection.GetService(typeof(Window));
         var dialog = new SaveSuccessfulWindow("Saved succesfully!");
         dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
         dialog.ShowDialog((MainWindow)mainWindow);
+    }
+
+    private void SerializeStoryData()
+    {
+        List<UserStoryDataSerialization> userStoryDataSerializations = new List<UserStoryDataSerialization>();
+
+            for (int j = 0; j < allUserStoryAssociation.Count; j++)
+            {
+                List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
+                for (int i = 0; i < MaxNumberOfUsers; i++)
+                {
+                    capacityList.Add(new Tuple<User, float>(TeamMembers[i], allUserStoryAssociation[j].Days[i].Value));
+                }
+                userStoryDataSerializations.Add(new UserStoryDataSerialization(allUserStoryAssociation[j].StoryData, allUserStoryAssociation[j].ShortTerm, allUserStoryAssociation[j].Remaining, capacityList));
+            }
+
+        _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
     }
 
     private void OrderTeamAndStoryInfo()
@@ -411,7 +419,7 @@ public sealed partial class BalancingViewModel : ObservableObject
 
         OrderTeamAndStoryInfo();
 
-        SerializeOnSave();
+        SerializeStoryData();
 
         CalculateCoverage();
     }
@@ -548,7 +556,16 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void OpenReleaseCalendar() 
     {
-    _navigationService.CurrentPageType= typeof(ReleaseCalendarPage);
+        if (SelectedUser != null)
+        {
+            var vm = _serviceCollection.GetService(typeof(ReleaseCalendarViewModel));
+            if (vm != null)
+            {
+                ((ReleaseCalendarViewModel)vm).GetSprintsFromSprintSelection();
+            }
+
+            _navigationService.CurrentPageType = typeof(ReleaseCalendarPage);
+        }
     }
     public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>
     {

@@ -8,10 +8,14 @@ public partial class Sprint:ObservableObject
 {
     public string Name { get; set; }
     public float NumberOfWeeks { get; set; }
+
     [ObservableProperty]
     public bool _isInShortTerm;           
     public string? StartDate { get; set; }
     public string? EndDate { get; set; }
+
+    public Sprint() { 
+    }
 
     public Sprint(string name, float numberOfWeeks, bool isInShortTerm)
     {
