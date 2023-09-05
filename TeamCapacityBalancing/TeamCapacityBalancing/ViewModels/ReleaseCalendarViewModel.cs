@@ -17,7 +17,7 @@ public partial class ReleaseCalendarViewModel : ObservableObject
     public ServiceCollection? _serviceCollection;
     private readonly NavigationService? _navigationService;
 
-    public ObservableCollection<Sprint> Sprints {set; get;}
+    public ObservableCollection<Sprint>? Sprints {set; get;}
 
     public ReleaseCalendarViewModel()
     {
