@@ -290,7 +290,7 @@ public sealed partial class BalancingViewModel : ObservableObject
             userStoryAssociation.Days = new ObservableCollection<Wrapper<float>>(userStoryAssociation.Days.OrderBy(m => m.UserName));
         }
         OpenTasks = OpenTasks.OrderBy(x => x.User.Username).ToList();
-        
+
     }
 
     public void CreateDefaultListWithDays
@@ -464,7 +464,6 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void ShowShortTermStoryes()
     {
-
         ShortTermStoryes = new();
 
         for (int i = 0; i < MyUserAssociation.Count; i++)
@@ -498,9 +497,9 @@ public sealed partial class BalancingViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void OpenReleaseCalendar() 
+    public void OpenReleaseCalendar()
     {
-    _navigationService.CurrentPageType= typeof(ReleaseCalendarPage);
+        _navigationService.CurrentPageType = typeof(ReleaseCalendarPage);
     }
 
 
@@ -513,13 +512,20 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
         return workOpenStory;
     }
-    //public List<Tuple<User,float>> CalculateWorkOpenStories()
+    //public List<Tuple<User, float>> CalculateWorkOpenStories()
     //{
-
+    //    List<Tuple<User, float>> openStories = new List<Tuple<User, float>>();
+    //    foreach (var member in TeamMembers)
+    //    {
+    //        foreach (var item in allUserStoryAssociation)
+    //        {
+    //            if(member.UserName)
+    //        }
+    //    }
     //}
     public List<Tuple<User, float>> CalculateWork()
     {
-        
+
         totalWork = new();
 
         int numberOfWorkingDays = 0;
@@ -547,8 +553,8 @@ public sealed partial class BalancingViewModel : ObservableObject
               CalculateOpenTasks(),
               MaxNumberOfUsers
           );
-        Totals[0]=a;
-        Totals[1]=new UserStoryAssociation(
+        Totals[0] = a;
+        Totals[1] = new UserStoryAssociation(
                   new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                  true,
                  3.0f,
@@ -556,7 +562,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                  CalculateWork(),
                  MaxNumberOfUsers
              );
-        Totals[2]=new UserStoryAssociation(
+        Totals[2] = new UserStoryAssociation(
                  new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                  true,
                  3.0f,
