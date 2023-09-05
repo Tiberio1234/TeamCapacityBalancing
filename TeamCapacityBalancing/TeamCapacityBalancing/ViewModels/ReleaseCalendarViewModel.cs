@@ -17,7 +17,8 @@ public partial class ReleaseCalendarViewModel : ObservableObject
     public ServiceCollection? _serviceCollection;
     private readonly NavigationService? _navigationService;
 
-    public ObservableCollection<Sprint>? Sprints {set; get;}
+    [ObservableProperty]
+    private ObservableCollection<Sprint>? _sprints;
 
     public ReleaseCalendarViewModel()
     {
@@ -27,10 +28,15 @@ public partial class ReleaseCalendarViewModel : ObservableObject
     {
         _serviceCollection = serviceCollection;
         _navigationService = navigationService;
+        GetSprintsFromSprintSelection();
+    }
+
+    public void GetSprintsFromSprintSelection()
+    {
         var vm = _serviceCollection.GetService(typeof(SprintSelectionViewModel));
         if (vm != null)
         {
-            Sprints = ((SprintSelectionViewModel)vm).Sprints;
+            Sprints = new ObservableCollection<Sprint>(((SprintSelectionViewModel)vm).Sprints);
         }
     }
 

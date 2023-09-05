@@ -8,6 +8,7 @@
         x:Class="TeamCapacityBalancing.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/siemens.ico"
+		WindowState="Maximized"
         Title="TeamCapacityBalancing">
 
 	<UserControl Content="{Binding Content}"></UserControl>

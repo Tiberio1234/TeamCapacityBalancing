@@ -19,7 +19,7 @@ namespace TeamCapacityBalancing.Services.LocalDataSerialization
 
         public List<Sprint> DeserializeSprint(string filename)
         {
-            if (File.Exists(UserFilePath + filename))
+            if (File.Exists(SprintPath + filename))
             {
                 return JsonConvert.DeserializeObject<List<Sprint>>(File.ReadAllText(SprintPath + filename));
             }

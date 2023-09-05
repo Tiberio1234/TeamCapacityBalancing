@@ -262,12 +262,15 @@ public sealed partial class TeamViewModel : ObservableObject
 
         //if (window != null)
         //{
-        //    ((MainWindow)window).WindowState = Avalonia.Controls.WindowState.Maximized;
         //    ((MainWindow)window).WindowState = Avalonia.Controls.WindowState.Normal;
+        //    ((MainWindow)window).WindowState = Avalonia.Controls.WindowState.Maximized;
+
         //}
 
         SelectedUserYourTeam = null;
         SelectedUserAllUsers = null;
+
+        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderUsername);
     }
 
 
