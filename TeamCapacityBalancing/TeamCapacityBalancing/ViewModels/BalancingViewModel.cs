@@ -25,6 +25,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     private const int MaxNumberOfUsers = 10;
     private List<IssueData> allStories = new List<IssueData>();
     private List<UserStoryAssociation> allUserStoryAssociation = new List<UserStoryAssociation>();
+    private int currentEpicId = 0;
 
     //services
     private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
@@ -52,6 +53,9 @@ public sealed partial class BalancingViewModel : ObservableObject
     }
 
     [ObservableProperty]
+    private string _BusinessCaseString = string.Empty;
+
+    [ObservableProperty]
     private bool _isShortTermVisible = false;
 
     [ObservableProperty]
@@ -62,6 +66,12 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     //[ObservableProperty]
     //private bool _sumsOpen = true;
+    [ObservableProperty]
+    private bool _ByPlaceHolder = false;
+
+    [ObservableProperty]
+    private bool _ByBusinessCase = false;
+
 
     [ObservableProperty]
     private bool _finalBalancing = false;
@@ -81,6 +91,7 @@ public sealed partial class BalancingViewModel : ObservableObject
 
                 if (value != null)
                 {
+                    currentEpicId = -1;
                     _getStories = false;
                     IsShortTermVisible = false;
                     FinalBalancing = false;
@@ -175,13 +186,19 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
     }
 
-    private void PopulateByDefault()
+    private List<Tuple<User, float>> GenerateDefaultDays()
     {
         List<Tuple<User, float>> capacityList = new();
         for (int i = 0; i < MaxNumberOfUsers; i++)
         {
-            capacityList.Add(Tuple.Create(new User { Username = TeamMembers[i].Username, HasTeam = false}, 0f));
+            capacityList.Add(Tuple.Create(new User { Username = TeamMembers[i].Username, HasTeam = false }, 0f));
         }
+        return capacityList;
+    }
+
+    private void PopulateByDefault()
+    {
+        List<Tuple<User, float>> capacityList = GenerateDefaultDays();
 
         foreach (IssueData story in allStories)
         {
@@ -207,8 +224,84 @@ public sealed partial class BalancingViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public void FilterByPlaceHolder()
+    {
+        if (ByPlaceHolder)
+        {
+            for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
+            {
+                if (!MyUserAssociation[userStoryAssociationIndex].StoryData.Name.Contains("#"))
+                {
+                    MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
+                    userStoryAssociationIndex--;
+                }
+            }
+        }
+        else
+        {
+            
+            MyUserAssociation.Clear();
+            foreach (UserStoryAssociation userStoryAssociation in allUserStoryAssociation)
+            {
+                MyUserAssociation.Add(userStoryAssociation);
+            }
+
+            if(currentEpicId != -1)
+            {
+                for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
+                {
+                    if (MyUserAssociation[userStoryAssociationIndex].StoryData.EpicID != currentEpicId)
+                    {
+                        MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
+                        userStoryAssociationIndex--;
+                    }
+                }
+            }
+        }
+    }
+
+    [RelayCommand]
     public void FilterByBusinessCase(string businessCase)
     {
+        if (ByBusinessCase)
+        {
+            for(int issueIndex=0; issueIndex < Epics.Count; issueIndex++)
+            {
+                if (Epics[issueIndex].BusinessCase != businessCase)
+                {
+                   
+                    if(MyUserAssociation.First().StoryData.EpicID == Epics[issueIndex].Id && MyUserAssociation.Count != allUserStoryAssociation.Count)
+                    MyUserAssociation.Clear();
+                
+                    Epics.Remove(Epics[issueIndex]);
+                    issueIndex--;
+                }
+            }
+            if (MyUserAssociation.Count == allUserStoryAssociation.Count)
+            {
+                for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
+                {
+                    int issueIndex;
+                    for (issueIndex = 0; issueIndex < Epics.Count; issueIndex++)
+                    {
+                        if (MyUserAssociation[userStoryAssociationIndex].StoryData.EpicID == Epics[issueIndex].Id)
+                            break;
+                    }
+                    if (issueIndex == Epics.Count)
+                        MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
+
+                }
+            }
+        }
+        else
+        {
+            Epics.Clear();
+            List<IssueData> epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
+            foreach (var item in epics)
+            {
+                Epics.Add(item);
+            }
+        }
 
     }
 
@@ -339,10 +432,15 @@ public sealed partial class BalancingViewModel : ObservableObject
         //get stories with same epicID and display them
 
 
-
+        currentEpicId = id;
         FinalBalancing = true;
         GetStories = true;
-        
+
+        if (BusinessCaseString != string.Empty)
+        { FilterByBusinessCase(BusinessCaseString); }
+
+        FilterByPlaceHolder();
+
         CalculateCoverage();
         OrderTeamAndStoryInfo();
     }
@@ -362,39 +460,46 @@ public sealed partial class BalancingViewModel : ObservableObject
         ShowShortTermStoryes();
         FinalBalancing = true;
         GetStories = true;
+        currentEpicId = -1;
+
+        if(BusinessCaseString != string.Empty) 
+        { FilterByBusinessCase(BusinessCaseString); }
+        
+        FilterByPlaceHolder();
+    }
+
+    public void RefreshStories()
+    {
+        List<Tuple<User, float>> capacityList = GenerateDefaultDays();
+
+        foreach (var story in allStories)
+        {
+            if (allUserStoryAssociation.FirstOrDefault(u => u.StoryData.Id == story.Id) == null)
+            {
+                allUserStoryAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList, MaxNumberOfUsers));
+                MyUserAssociation.Add(allUserStoryAssociation.Last());
+            }
+        }
     }
 
     [RelayCommand]
     public void RefreshClicked()
     {
-        MyUserAssociation.Clear();
-        GetSerializedData();
-
-        List<IssueData> storyList = new List<IssueData>();
-        storyList = _queriesForDataBase.GetAllStoriesByTeamLeader(SelectedUser);
-
-        if (MyUserAssociation.Count != storyList.Count)
+        if (SelectedUser == null)
         {
-            foreach (IssueData story in storyList)
-            {
-                int indexMyUserAssociation;
-                for (indexMyUserAssociation = 0; indexMyUserAssociation < MyUserAssociation.Count; indexMyUserAssociation++)
-                {
-                    if (MyUserAssociation[indexMyUserAssociation].StoryData.Name == story.Name)
-                    {
-                        break;
-                    }
-                }
-
-                List<float> capacityList = Enumerable.Repeat(0f, 10).ToList();
-                if (indexMyUserAssociation == MyUserAssociation.Count)
-                {
-                    //MyUserAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList, MaxNumberOfUsers));
-                }
-
-            }
+            return;
         }
+        MyUserAssociation.Clear();
 
+        allUserStoryAssociation.Clear();
+
+        allStories = _queriesForDataBase.GetAllStoriesByTeamLeader(SelectedUser);
+
+        ShowAllStories();
+
+        RefreshStories();
+
+        OrderTeamAndStoryInfo();
     }
 
     [RelayCommand]

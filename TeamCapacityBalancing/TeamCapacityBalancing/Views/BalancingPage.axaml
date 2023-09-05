@@ -93,10 +93,11 @@
 					<Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0" Margin="10,0,10,0" IsVisible="{Binding #MenuToggle.IsChecked}"/>
 
 					<StackPanel Grid.Row="1" Orientation="Vertical">
-						<CheckBox Content="Place holders" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}"/>
+						<CheckBox Content="Place holders" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}" IsChecked="{Binding ByPlaceHolder}" Command="{Binding FilterByPlaceHolderCommand}" />
 						<StackPanel Grid.Row="1" Orientation="Horizontal">
-							<CheckBox Content="Filter by" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}"/>
-							<TextBox Margin="3 0 0 0" Text ="" Height="10"/>
+							<CheckBox Content="Filter by" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}" ToolTip.Tip="Choose BusinessCase" IsChecked="{Binding ByBusinessCase}" 
+									  Command="{Binding FilterByBusinessCaseCommand}"/>
+							<TextBox Margin="3 0 0 0" Text ="{Binding BusinessCaseString}" Height="10"/>
 						</StackPanel>
 					</StackPanel>
 				</Grid>

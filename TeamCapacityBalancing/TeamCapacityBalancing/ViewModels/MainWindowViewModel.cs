@@ -10,6 +10,9 @@ namespace TeamCapacityBalancing.ViewModels;
 public partial class MainWindowViewModel : ObservableObject
 {
     private readonly ServiceCollection _serviceCollection;
+    public List<PageData> Pages { get; }
+    public NavigationService Navigation { get; }
+
     [ObservableProperty]
     private UserControl? _content;
 
@@ -19,14 +22,11 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private bool _isPaneOpen = true;
 
-    public List<PageData> Pages { get; }
-    public NavigationService Navigation { get; }
-
     public MainWindowViewModel(ServiceCollection serviceCollection, PageService pageService, NavigationService navigation)
     {
         _serviceCollection = serviceCollection;
         Navigation = navigation;
-        Pages = pageService.Pages.Select(x=>x.Value).ToList();
+        Pages = pageService.Pages.Select(x => x.Value).ToList();
 
         if (navigation.CurrentPageType is not null)
         {
