@@ -38,11 +38,14 @@ namespace TeamCapacityBalancing
             serviceCollection.AddSingleton<SprintSelectionViewModel>();
             serviceCollection.AddSingleton<SprintSelectionPage>();
 
+            serviceCollection.AddSingleton<ReleaseCalendarViewModel>();
+            serviceCollection.AddSingleton<ReleaseCalendarPage>();
 
             PageService pageService = serviceCollection.GetService<PageService>();
             pageService.RegisterPage<BalancingPage, BalancingViewModel>("Balancing Page");
             pageService.RegisterPage<TeamPage, TeamViewModel>("Team Page");
             pageService.RegisterPage<SprintSelectionPage, SprintSelectionViewModel>("Sprint Selection Page");
+            pageService.RegisterPage<ReleaseCalendarPage, ReleaseCalendarViewModel>("Release Calendar Page");
 
             NavigationService navigationService = serviceCollection.GetService<NavigationService>();
             navigationService.CurrentPageType=typeof(BalancingPage);
