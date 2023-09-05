@@ -445,6 +445,21 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+
+    public void DeleteLocalFiles() 
+    {
+        File.Delete(JsonSerialization.UserFilePath + SelectedUser!.Username);
+        File.Delete(JsonSerialization.UserStoryFilePath + SelectedUser.Username);
+
+        var mainWindow = _serviceCollection.GetService(typeof(Window));
+        var dialog = new SaveSuccessfulWindow("Local files have been deleted successfully");
+        dialog.Title = "Delete Local Files";
+        dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        dialog.ShowDialog((MainWindow)mainWindow);
+
+    }
+
     public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>
     {
        //new UserStoryAssociation(
