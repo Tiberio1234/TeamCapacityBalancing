@@ -61,7 +61,7 @@ namespace TeamCapacityBalancing.Services.LocalDataSerialization
 
         public List<UserStoryDataSerialization> DeserializeUserStoryData(string filename)
         {
-            if (File.Exists(UserFilePath + filename))
+            if (File.Exists(UserStoryFilePath + filename))
             {
                 return JsonConvert.DeserializeObject<List<UserStoryDataSerialization>>(File.ReadAllText(UserStoryFilePath + filename));
             }
