@@ -16,6 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Remove="Images\intropic.jpg" />
 		<None Remove="Images\siemenslogo.png" />
 	</ItemGroup>
 

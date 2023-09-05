@@ -12,12 +12,12 @@ namespace TeamCapacityBalancing.ViewModels;
 public sealed partial class SprintSelectionViewModel : ObservableObject
 {
     private readonly NavigationService? _navigationService;
-    private readonly ServiceCollection _serviceCollection;
+    private readonly ServiceCollection? _serviceCollection;
     public SprintSelectionViewModel()
     {
 
     }
-    public SprintSelectionViewModel(PageService pageService, NavigationService navigationService, ServiceCollection serviceCollection)
+    public SprintSelectionViewModel(NavigationService navigationService, ServiceCollection serviceCollection)
     {
         _navigationService = navigationService;
         _serviceCollection = serviceCollection;
@@ -71,22 +71,25 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
             }
         }
 
-        var vm = _serviceCollection.GetService(typeof(BalancingViewModel));
-        if (SelecteSprintForShortTerm)
+        if (_serviceCollection is not null)
         {
-            if (vm != null)
+            var vm = _serviceCollection.GetService(typeof(BalancingViewModel));
+            if (SelecteSprintForShortTerm)
             {
-                ((BalancingViewModel)vm).TotalWorkInShortTerm = totalWeeks * 5;
+                if (vm != null)
+                {
+                    ((BalancingViewModel)vm).TotalWorkInShortTerm = totalWeeks * 5;
+                }
             }
-        }
-        else
-        {
-            if (vm != null && FinishDate is not null)
+            else
             {
-                ((BalancingViewModel)vm).finishDate = DateOnly.FromDateTime(FinishDate.Value.Date);
+                if (vm != null && FinishDate is not null)
+                {
+                    ((BalancingViewModel)vm).finishDate = DateOnly.FromDateTime(FinishDate.Value.Date);
+                }
             }
+            _navigationService!.CurrentPageType = typeof(BalancingPage);
         }
-        _navigationService!.CurrentPageType = typeof(BalancingPage);
     }
 
     [RelayCommand]
