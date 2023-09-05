@@ -356,8 +356,6 @@ public sealed partial class BalancingViewModel : ObservableObject
                 }
                 userStoryDataSerializations.Add(new UserStoryDataSerialization(allUserStoryAssociation[j].StoryData, allUserStoryAssociation[j].ShortTerm, allUserStoryAssociation[j].Remaining, capacityList));
             }
-            userStoryDataSerializations.Add(new UserStoryDataSerialization(allUserStoryAssociation[j].StoryData, allUserStoryAssociation[j].ShortTerm, allUserStoryAssociation[j].Remaining, capacityList));
-        }
 
         _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
     }
@@ -556,6 +554,12 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         if (SelectedUser != null)
         {
+            var vm = _serviceCollection.GetService(typeof(ReleaseCalendarViewModel));
+            if (vm != null)
+            {
+                ((ReleaseCalendarViewModel)vm).GetSprintsFromSprintSelection();
+            }
+
             _navigationService.CurrentPageType = typeof(ReleaseCalendarPage);
         }
     }
