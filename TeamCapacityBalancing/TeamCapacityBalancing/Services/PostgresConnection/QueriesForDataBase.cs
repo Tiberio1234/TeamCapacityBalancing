@@ -110,7 +110,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             return users;
         }
 
-        public List<IssueData> GetStoriesByEpic(int epicId)
+        public List<IssueData> GetStoriesByEpic(int epicId)  //After sebi does what he does it may die
         {
             List<IssueData> stories = new List<IssueData>();
 
@@ -191,7 +191,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                         float firstTwoDecimalsFloat = (float)first2DecimalsInt / 100;
                         float remaining = firstTwoDecimalsFloat + (int)result;
 
-                        stories.Add(new IssueData(id, epicId,name, assignee, remaining));
+                        stories.Add(new IssueData(id,name, assignee, remaining,epicId));
                     }
                 }
             }
