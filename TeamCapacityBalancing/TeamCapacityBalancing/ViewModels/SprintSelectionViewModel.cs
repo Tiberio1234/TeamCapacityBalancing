@@ -30,7 +30,26 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
 
     public ObservableCollection<Sprint> Sprints { get; set; } = new ObservableCollection<Sprint>()
     { };
-
+    private int CalculcateWorkingDays(DateTime start, DateTime end)
+    {
+        int workingDays = 0;
+       //check if the start and end are the same dates
+       while(start.Date!=end.Date)
+        {
+            if(start.DayOfWeek!=DayOfWeek.Saturday && start.DayOfWeek!=DayOfWeek.Sunday)
+            {
+                workingDays++;
+            }
+            start=start.AddDays(1);
+        }
+        return workingDays;
+    }
+    public int RemainingDays()
+    {
+        DateTime today= DateTime.Now;
+        DateTime lastDate = DateTime.Parse(Sprints[Sprints.Count - 1].EndDate);
+        return CalculcateWorkingDays(today, lastDate);
+    }
     [ObservableProperty]
     public DateTimeOffset? _finishDate;
 
@@ -46,23 +65,28 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
             Sprints.Add(new Sprint($"Sprint {i + 1}", 0, false));
         }
     }
-
+  
     [RelayCommand]
     public void OpenBalancigPage()
     {
         float totalWeeks = 0;
 
         DateTime dueStart=DateTime.Now;
-
+        while(dueStart.DayOfWeek!=DayOfWeek.Monday)
+        {
+            dueStart=dueStart.AddDays(-1);
+        }
         for (int i = 0; i < Sprints.Count; i++) 
         {
             Sprints[i].StartDate = dueStart.ToString("dd/MM/yyyy");
             dueStart = dueStart.AddDays(Sprints[i].NumberOfWeeks*7);
+            while (dueStart.DayOfWeek != DayOfWeek.Friday)
+            {
+                dueStart = dueStart.AddDays(-1);
+            }
             Sprints[i].EndDate = dueStart.ToString("dd/MM/yyyy");
-            dueStart = dueStart.AddDays(1);
+            dueStart = dueStart.AddDays(+3);
         }
-
-
         for (int i = 0; i < Sprints.Count; i++)
         {
             if (Sprints[i].IsInShortTerm)

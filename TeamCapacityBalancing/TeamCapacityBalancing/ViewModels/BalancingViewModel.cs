@@ -381,6 +381,11 @@ public sealed partial class BalancingViewModel : ObservableObject
         return calcBusinessDays;
     }
 
+    public void CalculateTotalWorkOpenStory()
+    {
+
+    }
+
     [RelayCommand]
     public void EpicClicked(int id)
     {
@@ -498,7 +503,6 @@ public sealed partial class BalancingViewModel : ObservableObject
     _navigationService.CurrentPageType= typeof(ReleaseCalendarPage);
     }
 
-    public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>
 
     public List<Tuple<User, float>> CalculateOpenTasks()
     {
@@ -509,19 +513,25 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
         return workOpenStory;
     }
+    //public List<Tuple<User,float>> CalculateWorkOpenStories()
+    //{
+
+    //}
     public List<Tuple<User, float>> CalculateWork()
     {
-        int numberOfSprints = 0;
+        
         totalWork = new();
+
+        int numberOfWorkingDays = 0;
 
         var vm = _serviceCollection.GetService(typeof(SprintSelectionViewModel));
         if (vm != null)
         {
-            numberOfSprints = ((SprintSelectionViewModel)vm).NumberOfSprints;
+            numberOfWorkingDays = ((SprintSelectionViewModel)vm).RemainingDays();
         }
         foreach (var item in TeamMembers)
         {
-            totalWork.Add(Tuple.Create(item, (float)(item.HoursPerDay.Value * numberOfSprints * 5)));
+            totalWork.Add(Tuple.Create(item, (float)(item.HoursPerDay.Value * numberOfWorkingDays)));
         }
         totalWork = totalWork.OrderBy(x => x.Item1.Username).ToList();
         return totalWork;
