@@ -485,6 +485,10 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void RefreshClicked()
     {
+        if (SelectedUser == null)
+        {
+            return;
+        }
         MyUserAssociation.Clear();
 
         allUserStoryAssociation.Clear();
@@ -494,6 +498,8 @@ public sealed partial class BalancingViewModel : ObservableObject
         ShowAllStories();
 
         RefreshStories();
+
+        OrderTeamAndStoryInfo();
     }
 
     [RelayCommand]
