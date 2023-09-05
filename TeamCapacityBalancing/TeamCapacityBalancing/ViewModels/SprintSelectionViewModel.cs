@@ -1,10 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using TeamCapacityBalancing.Models;
 using TeamCapacityBalancing.Navigation;
+using TeamCapacityBalancing.Services.LocalDataSerialization;
 using TeamCapacityBalancing.Services.Postgres_connection;
+using TeamCapacityBalancing.Services.ServicesAbstractions;
 using TeamCapacityBalancing.Views;
 
 namespace TeamCapacityBalancing.ViewModels;
@@ -13,6 +16,8 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
 {
     private readonly NavigationService? _navigationService;
     private readonly ServiceCollection? _serviceCollection;
+
+    private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
     public SprintSelectionViewModel()
     {
 
@@ -21,6 +26,13 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
     {
         _navigationService = navigationService;
         _serviceCollection = serviceCollection;
+
+        var vm = _serviceCollection.GetService(typeof(BalancingViewModel));
+            if (vm != null)
+            {
+                string filePath = ((BalancingViewModel)vm).SelectedUser.Username;
+                Sprints = new ObservableCollection<Sprint> (_jsonSerialization.DeserializeSprint(filePath));
+            }
     }
     [ObservableProperty]
     private int _isShortTermVisible = 0;
@@ -87,6 +99,13 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
                 {
                     ((BalancingViewModel)vm).finishDate = DateOnly.FromDateTime(FinishDate.Value.Date);
                 }
+            }
+            if (vm != null) 
+            {
+            
+                List<Sprint> serializeSprint = new List<Sprint>(Sprints);
+                _jsonSerialization.SerializeSprintData(serializeSprint, ((BalancingViewModel)vm).SelectedUser.Username);
+
             }
             _navigationService!.CurrentPageType = typeof(BalancingPage);
         }

@@ -323,26 +323,31 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void OpenSprintSelectionPage() 
     {
-       _navigationService!.CurrentPageType=typeof(SprintSelectionPage);
+        if (SelectedUser != null)
+        {
+            _navigationService!.CurrentPageType = typeof(SprintSelectionPage);
+        }
     }
 
     [RelayCommand]
     public void SerializeOnSave()
     {
-        List<UserStoryDataSerialization> userStoryDataSerializations = new List<UserStoryDataSerialization>();
+        if (SelectedUser == null)
+        { return; }
+            List<UserStoryDataSerialization> userStoryDataSerializations = new List<UserStoryDataSerialization>();
 
-        for (int j = 0; j < allUserStoryAssociation.Count; j++)
-        {
-            List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
-            for (int i = 0; i < MaxNumberOfUsers; i++)
+            for (int j = 0; j < allUserStoryAssociation.Count; j++)
             {
-                capacityList.Add(new Tuple<User, float>(TeamMembers[i], allUserStoryAssociation[j].Days[i].Value));
+                List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
+                for (int i = 0; i < MaxNumberOfUsers; i++)
+                {
+                    capacityList.Add(new Tuple<User, float>(TeamMembers[i], allUserStoryAssociation[j].Days[i].Value));
+                }
+                userStoryDataSerializations.Add(new UserStoryDataSerialization(allUserStoryAssociation[j].StoryData, allUserStoryAssociation[j].ShortTerm, allUserStoryAssociation[j].Remaining, capacityList));
             }
-            userStoryDataSerializations.Add(new UserStoryDataSerialization(allUserStoryAssociation[j].StoryData, allUserStoryAssociation[j].ShortTerm, allUserStoryAssociation[j].Remaining, capacityList));
-        }
 
-        _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
-
+            _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
+        
        
         //TODO: popUpMessage for saving
 
@@ -544,7 +549,10 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void OpenReleaseCalendar() 
     {
-    _navigationService.CurrentPageType= typeof(ReleaseCalendarPage);
+        if (SelectedUser != null)
+        {
+            _navigationService.CurrentPageType = typeof(ReleaseCalendarPage);
+        }
     }
     public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>
     {
