@@ -72,7 +72,7 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
         {
             if (vm != null && FinishDate is not null)
             {
-                ((BalancingViewModel)vm).finishDate = DateOnly.FromDateTime(FinishDate.Value.Date);
+                ((BalancingViewModel)vm).finishDate = (FinishDate.Value.Date);
             }
         }
         _navigationService!.CurrentPageType=typeof(BalancingPage);  

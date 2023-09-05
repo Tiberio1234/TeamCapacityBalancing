@@ -233,7 +233,7 @@ public sealed partial class TeamViewModel : ObservableObject
                 ((BalancingViewModel)vm).SyncTeamWithBalancingPageData();
             }
         }
-
+        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderUsername);
         _navigationService.CurrentPageType = typeof(BalancingPage);
 
         //var window = _serviceCollection.GetService(typeof(Avalonia.Controls.Window));
