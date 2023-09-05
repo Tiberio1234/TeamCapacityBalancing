@@ -16,43 +16,19 @@ namespace TeamCapacityBalancing.ViewModels;
 
 public sealed partial class TeamViewModel : ObservableObject
 {
+    //NavigationServices
     private ServiceCollection? _serviceCollection;
     private readonly PageService? _pageService;
     private readonly NavigationService? _navigationService;
-    public string TeamLeaderUsername { get; set; }
+    
 
-    //Services
+    //DataServices
     private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
     private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
+
+    //Properties
     public List<PageData>? Pages { get; }
-
-    public TeamViewModel()
-    {
-    }
-
-    public TeamViewModel(ServiceCollection serviceCollection, PageService pageService, NavigationService navigationService)
-    {
-        _serviceCollection = serviceCollection;
-        _pageService = pageService;
-        _navigationService = navigationService;
-        Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList();
-    }
-
-    public void PopulateUsersLists(string teamLeaderUsername)
-    {
-        TeamLeaderUsername = teamLeaderUsername;
-        YourTeam = new ObservableCollection<User>(_jsonSerialization.DeserializeTeamData(TeamLeaderUsername));
-        AllUsers = new ObservableCollection<User>(_queriesForDataBase.GetAllUsers());
-        foreach (var user in YourTeam)
-        {
-            var u = AllUsers.FirstOrDefault(u => u.Id == user.Id);
-            if (u != null)
-            {
-                AllUsers.Remove(u);
-            }
-        }
-        CheckButtonsVisibility();
-    }
+    public string TeamLeaderUsername { get; set; }
 
     [ObservableProperty]
     private bool _addAllFromTeamEnable;
@@ -73,7 +49,7 @@ public sealed partial class TeamViewModel : ObservableObject
     private ObservableCollection<User> _allUsers = new();
 
     [ObservableProperty]
-    private ObservableCollection<User> _yourTeam;
+    private ObservableCollection<User>? _yourTeam;
 
     private User? _selectedUserYourTeam;
     public User? SelectedUserYourTeam
@@ -120,9 +96,30 @@ public sealed partial class TeamViewModel : ObservableObject
         }
     }
 
+
+
+    //Constructors
+    public TeamViewModel()
+    {
+        TeamLeaderUsername = string.Empty;
+    }
+
+    public TeamViewModel(ServiceCollection serviceCollection, PageService pageService, NavigationService navigationService)
+    {
+        _serviceCollection = serviceCollection;
+        _pageService = pageService;
+        _navigationService = navigationService;
+        Pages = _pageService.Pages.Select(x => x.Value).Where(x => x.ViewModelType != this.GetType()).ToList();
+        TeamLeaderUsername = string.Empty;
+    }
+
+    
+
+    
+    //Private methods
     private void CheckButtonsVisibility()
     {
-        if (YourTeam.Count() == 0)
+        if (YourTeam!=null && YourTeam.Count == 0)
         {
             RemoveAllFromTeamEnable = false;
             RemoveFromTeamVisibility = false;
@@ -141,6 +138,24 @@ public sealed partial class TeamViewModel : ObservableObject
             AddAllFromTeamEnable = true;
         }
     }
+
+    public void PopulateUsersLists(string teamLeaderUsername)
+    {
+        TeamLeaderUsername = teamLeaderUsername;
+        YourTeam = new ObservableCollection<User>(_jsonSerialization.DeserializeTeamData(TeamLeaderUsername));
+        AllUsers = new ObservableCollection<User>(_queriesForDataBase.GetAllUsers());
+        foreach (var user in YourTeam)
+        {
+            var u = AllUsers.FirstOrDefault(u => u.Id == user.Id);
+            if (u != null)
+            {
+                AllUsers.Remove(u);
+            }
+        }
+        CheckButtonsVisibility();
+    }
+
+    //Commands
 
     [RelayCommand]
     public void AddAllToTeam()
@@ -167,7 +182,7 @@ public sealed partial class TeamViewModel : ObservableObject
     [RelayCommand]
     public void RemoveFromTeam()
     {
-        if (SelectedUserYourTeam != null)
+        if (SelectedUserYourTeam != null && YourTeam!=null)
         {
             var existingUser = YourTeam.FirstOrDefault(u => u.Id == SelectedUserYourTeam.Id);
 
@@ -191,7 +206,10 @@ public sealed partial class TeamViewModel : ObservableObject
             var existingUser = AllUsers.FirstOrDefault(u => u.Id == SelectedUserAllUsers.Id);
             if (existingUser != null)
             {
-                YourTeam.Add(existingUser);
+                if (YourTeam != null)
+                {
+                    YourTeam.Add(existingUser);
+                }
                 existingUser.HasTeam = true;
                 AllUsers.Remove(existingUser);
             }
@@ -234,7 +252,11 @@ public sealed partial class TeamViewModel : ObservableObject
             }
         }
 
-        _navigationService.CurrentPageType = typeof(BalancingPage);
+        if(_navigationService != null)
+        {
+            _navigationService.CurrentPageType = typeof(BalancingPage);
+        }
+        
 
         //var window = _serviceCollection.GetService(typeof(Avalonia.Controls.Window));
 
