@@ -510,19 +510,40 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             workOpenStory.Add(Tuple.Create(item.User, item.Remaining));
         }
+        workOpenStory.OrderBy(x=>x.Item1.Username).ToList();
         return workOpenStory;
     }
-    //public List<Tuple<User, float>> CalculateWorkOpenStories()
-    //{
-    //    List<Tuple<User, float>> openStories = new List<Tuple<User, float>>();
-    //    foreach (var member in TeamMembers)
-    //    {
-    //        foreach (var item in allUserStoryAssociation)
-    //        {
-    //            if(member.UserName)
-    //        }
-    //    }
-    //}
+    public List<Tuple<User, float>> CalculateWorkOpenstories()
+    {
+        List<Tuple<User, float>> openstories = new List<Tuple<User, float>>();
+        foreach (var member in TeamMembers)
+        {
+            float totalSum = 0;
+            if(member.HasTeam)
+            foreach (var item in allUserStoryAssociation)
+            {
+                foreach(var day in item.Days)
+                if (member.Username == day.UserName)
+                {
+                    totalSum += day.Value * item.Remaining; 
+                }
+            }
+            openstories.Add(Tuple.Create(member, (float)totalSum/100));
+        }
+
+        return openstories;
+    }
+    public List<Tuple<User,float>> GetTotalWork()
+    {
+        List<Tuple<User,float>> totalWork= new List<Tuple<User,float>>();
+        List<Tuple<User, float>> work = CalculateWorkOpenstories();
+        List<Tuple<User, float>> openStories = CalculateOpenTasks();
+        for (int i=0;i<work.Count;i++)
+        {
+            totalWork.Add(Tuple.Create(openStories[i].Item1, work[i].Item2 + openStories[i].Item2));
+        }
+        return totalWork;
+    }
     public List<Tuple<User, float>> CalculateWork()
     {
 
@@ -537,7 +558,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
         foreach (var item in TeamMembers)
         {
-            totalWork.Add(Tuple.Create(item, (float)(item.HoursPerDay.Value * numberOfWorkingDays)));
+            totalWork.Add(Tuple.Create(item, (float)(numberOfWorkingDays)));
         }
         totalWork = totalWork.OrderBy(x => x.Item1.Username).ToList();
         return totalWork;
@@ -550,23 +571,23 @@ public sealed partial class BalancingViewModel : ObservableObject
               new IssueData("Total work open story", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
               true,
               3.0f,
-              CalculateOpenTasks(),
+              CalculateWorkOpenstories(),
               MaxNumberOfUsers
           );
         Totals[0] = a;
         Totals[1] = new UserStoryAssociation(
-                  new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+                  new IssueData("Total work", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                  true,
                  3.0f,
                  //we need a float list 
-                 CalculateWork(),
+                 GetTotalWork(),
                  MaxNumberOfUsers
              );
         Totals[2] = new UserStoryAssociation(
                  new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                  true,
                  3.0f,
-                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                 CalculateWork(),
                  MaxNumberOfUsers
              );
     }
