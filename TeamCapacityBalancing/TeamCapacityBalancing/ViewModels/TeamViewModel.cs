@@ -152,7 +152,6 @@ public sealed partial class TeamViewModel : ObservableObject
             user.HasTeam = true;
         }
         CheckButtonsVisibility();
-        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderUsername);
     }
 
     [RelayCommand]
@@ -161,7 +160,6 @@ public sealed partial class TeamViewModel : ObservableObject
         AllUsers = new ObservableCollection<User>(_queriesForDataBase.GetAllUsers());
         YourTeam = new();
         CheckButtonsVisibility();
-        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderUsername);
     }
 
     [RelayCommand]
@@ -180,7 +178,6 @@ public sealed partial class TeamViewModel : ObservableObject
             }
         }
         CheckButtonsVisibility();
-        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderUsername);
     }
 
     [RelayCommand]
@@ -198,7 +195,6 @@ public sealed partial class TeamViewModel : ObservableObject
         }
 
         CheckButtonsVisibility();
-        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderUsername);
     }
 
     [RelayCommand]
@@ -247,6 +243,8 @@ public sealed partial class TeamViewModel : ObservableObject
 
         SelectedUserYourTeam = null;
         SelectedUserAllUsers = null;
+
+        _jsonSerialization.SerializeTeamData(YourTeam.ToList(), TeamLeaderUsername);
     }
 
 
