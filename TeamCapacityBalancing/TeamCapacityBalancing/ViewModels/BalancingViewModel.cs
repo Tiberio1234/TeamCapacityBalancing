@@ -645,6 +645,8 @@ public sealed partial class BalancingViewModel : ObservableObject
             }
         }
 
+        //CalculateTotals();
+
     }
     [RelayCommand]
     public void CalculateTotals()
@@ -806,7 +808,14 @@ public sealed partial class BalancingViewModel : ObservableObject
         var vm = _serviceCollection.GetService(typeof(SprintSelectionViewModel));
         if (vm != null)
         {
-            numberOfWorkingDays = ((SprintSelectionViewModel)vm).RemainingDays(shortTerm);
+            if (shortTerm)
+            {
+                numberOfWorkingDays = ((SprintSelectionViewModel)vm).GetWorkingDays();
+            }
+            else {
+
+                numberOfWorkingDays = ((SprintSelectionViewModel)vm).RemainingDays();
+                    }
         }
         foreach (var item in TeamMembers)
         {
