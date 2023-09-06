@@ -1,12 +1,15 @@
 using Avalonia.Controls;
 
-namespace TeamCapacityBalancing.Views
+namespace TeamCapacityBalancing.Views;
+
+public partial class ReleaseCalendarPage : UserControl
 {
-    public partial class ReleaseCalendarPage : UserControl
+    public ReleaseCalendarPage()
     {
-        public ReleaseCalendarPage()
+        InitializeComponent();
+        calendarGrid.SelectionChanged += (sender, e) =>
         {
-            InitializeComponent();
-        }
+            calendarGrid.SelectedItems.Clear();
+        };
     }
 }

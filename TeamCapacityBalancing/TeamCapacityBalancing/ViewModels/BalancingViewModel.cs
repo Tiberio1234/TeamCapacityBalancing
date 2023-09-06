@@ -124,8 +124,8 @@ public sealed partial class BalancingViewModel : ObservableObject
                     }
                     GetBusinessCaseForEpics();
                     ShowAllStories();
-                    OrderTeamAndStoryInfo();
                 }
+
                 foreach (var user in TeamMembers)
                 {
                     if (OpenTasks.FirstOrDefault(x => x.User.Id == user.Id) == null)
@@ -140,6 +140,9 @@ public sealed partial class BalancingViewModel : ObservableObject
                         Username = "default"
                     }, 0));
                 }
+
+                OrderTeamAndStoryInfo();
+
                 //CalculateWork();
                 //OrderTeamAndStoryInfo();
                 //InitializeTotals();
@@ -225,13 +228,14 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     private void PopulateDefaultTeamUsers()
     {
-        TeamMembers = new ObservableCollection<User>();
+        List<User> aux = new List<User>();
         for (int i = 0; i < MaxNumberOfUsers; i++)
         {
             User newUser = new User("default}");
             newUser.HasTeam = false;
-            TeamMembers.Add(newUser);
+            aux.Add(newUser);
         }
+        TeamMembers = new ObservableCollection<User>(aux);
     }
 
     private List<Tuple<User, float>> GenerateDefaultDays()
@@ -256,7 +260,6 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
 
     }
-
     private void ChangeColorByNumberOfDays()
     {
         for (int dayIndex = 0; dayIndex < Balancing[0].Days.Count; dayIndex++)
@@ -264,7 +267,7 @@ public sealed partial class BalancingViewModel : ObservableObject
             if (Balancing[0].Days[dayIndex].Value < 0)
                 Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.LightCoral);
             else if (Balancing[0].Days[dayIndex].Value < 4)
-                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.LightYellow);
+                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.Yellow);
             else
                 Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.LightGreen);
 
@@ -619,9 +622,19 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void CalculateTotals()
     {
-        CalculateWork();
+        var vm = _serviceCollection.GetService(typeof(SprintSelectionViewModel));
+        if (vm != null)
+        {
+            if (((SprintSelectionViewModel)vm).Sprints.Count == 0)
+            {
+                IsBalancing = false;
+                return;
+            }
+        }
+        
+        CalculateWork(IsShortTermVisible);
         OrderTeamAndStoryInfo();
-        CalculateBalancing();
+        CalculateBalancing(IsShortTermVisible);
         InitializeTotals();
     }
 
@@ -639,6 +652,29 @@ public sealed partial class BalancingViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public void DeleteLocalFiles() 
+    {
+        if (SelectedUser == null)
+        {
+            return;
+        }
+        File.Delete(JsonSerialization.UserFilePath + SelectedUser!.Username);
+        File.Delete(JsonSerialization.UserStoryFilePath + SelectedUser.Username);
+        File.Delete(JsonSerialization.SprintPath + SelectedUser.Username);
+
+        var mainWindow = _serviceCollection.GetService(typeof(Window));
+        var dialog = new SaveSuccessfulWindow("Local files have been deleted successfully");
+        dialog.Title = "Delete Local Files";
+        dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        dialog.ShowDialog((MainWindow)mainWindow);
+
+        PopulateDefaultTeamUsers();
+
+        RefreshClicked();
+
+    }
+
+    [RelayCommand]
     public void OpenReleaseCalendar()
     {
         if (SelectedUser != null)
@@ -652,11 +688,11 @@ public sealed partial class BalancingViewModel : ObservableObject
             _navigationService.CurrentPageType = typeof(ReleaseCalendarPage);
         }
     }
-    public List<Tuple<User,float>> CalculateBalancing()
+    public List<Tuple<User,float>> CalculateBalancing(bool shortTerm)
     {
         List<Tuple<User,float>> balance= new List<Tuple<User,float>>();
-        var work = CalculateWork();
-        var totalWork = GetTotalWork();
+        var work = CalculateWork(shortTerm);
+        var totalWork = GetTotalWork(shortTerm);
         for(int i=0;i<work.Count;i++) 
         {
             balance.Add(Tuple.Create(work[i].Item1, (float)Math.Round((work[i].Item2 - totalWork[i].Item2),2)));
@@ -681,30 +717,50 @@ public sealed partial class BalancingViewModel : ObservableObject
         workOpenStory.OrderBy(x=>x.Item1.Username).ToList();
         return workOpenStory;
     }
-    public List<Tuple<User, float>> CalculateWorkOpenstories()
+    public List<Tuple<User, float>> CalculateWorkOpenstories(bool shortTerm)
     {
         List<Tuple<User, float>> openstories = new List<Tuple<User, float>>();
-        foreach (var member in TeamMembers)
+        if (shortTerm == false)
         {
-            float totalSum = 0;
-            if(member.HasTeam)
-            foreach (var item in allUserStoryAssociation)
+            foreach (var member in TeamMembers)
             {
-                foreach(var day in item.Days)
-                if (member.Username == day.UserName)
-                {
-                    totalSum += day.Value * item.Remaining; 
-                }
+                float totalSum = 0;
+                if (member.HasTeam)
+                    foreach (var item in allUserStoryAssociation)
+                    {
+                        foreach (var day in item.Days)
+                            if (member.Username == day.UserName)
+                            {
+                                totalSum += day.Value * item.Remaining;
+                            }
+                    }
+                openstories.Add(Tuple.Create(member, (float)Math.Round(totalSum / 100, 2)));
             }
-            openstories.Add(Tuple.Create(member,(float)Math.Round(totalSum/100,2)));
+        }
+        else
+        {
+            foreach (var member in TeamMembers)
+            {
+                float totalSum = 0;
+                if (member.HasTeam)
+                    foreach (var item in ShortTermStoryes)
+                    {
+                        foreach (var day in item.Days)
+                            if (member.Username == day.UserName)
+                            {
+                                totalSum += day.Value * item.Remaining;
+                            }
+                    }
+                openstories.Add(Tuple.Create(member, (float)Math.Round(totalSum / 100, 2)));
+            }
         }
 
         return openstories;
     }
-    public List<Tuple<User,float>> GetTotalWork()
+    public List<Tuple<User,float>> GetTotalWork(bool shortTerm)
     {
         List<Tuple<User,float>> totalWork= new List<Tuple<User,float>>();
-        List<Tuple<User, float>> work = CalculateWorkOpenstories();
+        List<Tuple<User, float>> work = CalculateWorkOpenstories(shortTerm);
         List<Tuple<User, float>> openStories = CalculateOpenTasks();
         for (int i=0;i<work.Count;i++)
         {
@@ -713,7 +769,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         return totalWork;
         
     }
-    public List<Tuple<User, float>> CalculateWork()
+    public List<Tuple<User, float>> CalculateWork(bool shortTerm)
     {
 
         totalWork = new();
@@ -723,7 +779,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         var vm = _serviceCollection.GetService(typeof(SprintSelectionViewModel));
         if (vm != null)
         {
-            numberOfWorkingDays = ((SprintSelectionViewModel)vm).RemainingDays();
+            numberOfWorkingDays = ((SprintSelectionViewModel)vm).RemainingDays(shortTerm);
         }
         foreach (var item in TeamMembers)
         {
@@ -741,7 +797,7 @@ public sealed partial class BalancingViewModel : ObservableObject
               new IssueData("Total work open story", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
               true,
               3.0f,
-              CalculateWorkOpenstories(),
+              CalculateWorkOpenstories(IsShortTermVisible),
               MaxNumberOfUsers
           );
         Totals[0] = a;
@@ -750,14 +806,14 @@ public sealed partial class BalancingViewModel : ObservableObject
                  true,
                  3.0f,
                  //we need a float list 
-                 GetTotalWork(),
+                 GetTotalWork(IsShortTermVisible),
                  MaxNumberOfUsers
              ) ;
         Totals[2] = new UserStoryAssociation(
                  new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                  true,
                  3.0f,
-                 CalculateWork(),
+                 CalculateWork(IsShortTermVisible),
                  MaxNumberOfUsers
              );
     }

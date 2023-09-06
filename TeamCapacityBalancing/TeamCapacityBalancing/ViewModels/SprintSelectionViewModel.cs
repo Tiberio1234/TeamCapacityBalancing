@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using JetBrains.Annotations;
+using Microsoft.CodeAnalysis.CSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -56,11 +58,21 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
         }
         return workingDays;
     }
-    public int RemainingDays()
+    public int RemainingDays(bool isShortTerm)
     {
         DateTime today= DateTime.Now;
         DateTime beginingOfSprint = DateTime.Parse(Sprints[0].StartDate);
         DateTime lastDate = DateTime.Parse(Sprints[Sprints.Count - 1].EndDate);
+        if(isShortTerm==true)
+        {
+            foreach(var item in Sprints)
+            {
+                if(item.IsInShortTerm)
+                {
+                    lastDate = DateTime.Parse(item.EndDate);
+                }
+            }
+        }
         if (today > beginingOfSprint)
         {
             return CalculcateWorkingDays(today, lastDate);
