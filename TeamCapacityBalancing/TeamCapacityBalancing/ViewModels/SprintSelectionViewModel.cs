@@ -115,6 +115,9 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
     }
 
     [ObservableProperty]
+    public DateTimeOffset? _startDate=DateTimeOffset.Now;
+
+    [ObservableProperty]
     public bool _selecteSprintForShortTerm = false;
 
     [RelayCommand]
@@ -125,14 +128,10 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
         {
             Sprints.Add(new Sprint($"Sprint {i + 1}", 3, false));
         }
-    }
 
-    [RelayCommand]
-    public void OpenBalancigPage()
-    {
         float totalWeeks = 0;
 
-        DateTime dueStart = DateTime.Now;
+        DateTime dueStart = StartDate.Value.DateTime;
         while (dueStart.DayOfWeek != DayOfWeek.Monday)
         {
             dueStart = dueStart.AddDays(-1);
@@ -155,6 +154,12 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
                 totalWeeks = totalWeeks + Sprints[i].NumberOfWeeks;
             }
         }
+    }
+
+    [RelayCommand]
+    public void OpenBalancigPage()
+    {
+
 
         if (_serviceCollection is not null)
         {
@@ -163,7 +168,7 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
             {
                 if (vm != null)
                 {
-                    ((BalancingViewModel)vm).TotalWorkInShortTerm = totalWeeks * 5;
+                    //((BalancingViewModel)vm).TotalWorkInShortTerm = totalWeeks * 5;
                 }
             }
             else
