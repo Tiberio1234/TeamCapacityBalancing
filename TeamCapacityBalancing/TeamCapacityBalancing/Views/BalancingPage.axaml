@@ -105,11 +105,10 @@
 					<Border Grid.Row="1" BorderBrush="Black" BorderThickness="0,1,0,0" Margin="10,0,10,0" IsVisible="{Binding #MenuToggle.IsChecked}"/>
 
 					<StackPanel Grid.Row="1">
-						<CheckBox Content="Place holders" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}" IsChecked="{Binding ByPlaceHolder}" Command="{Binding FilterByPlaceHolderCommand}" />
-						<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Stretch">
-							<CheckBox Content="Filter by" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}" ToolTip.Tip="Choose BusinessCase" IsChecked="{Binding ByBusinessCase}"
-									  Command="{Binding FilterByBusinessCaseCommand}"/>
-							<ComboBox Width="100" Margin="5" SelectedItem="{Binding BusinessCaseString}" Items="{Binding BusinessCase}" >
+						
+						<StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,10,0,0">
+							<TextBlock Text="Filters" Margin="0,0,0,5"/>
+							<ComboBox Width="150" Margin="0,0,0,5" SelectedItem="{Binding FilterString}" Items="{Binding BusinessCase}" >
 								<ComboBox.ItemTemplate>
 									<DataTemplate x:DataType="vm:BalancingViewModel">
 										<StackPanel  Orientation="Horizontal">
