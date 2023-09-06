@@ -118,17 +118,13 @@ public sealed partial class BalancingViewModel : ObservableObject
                     {
                         GetTeamUsers();
                     }
+                    GetOpenTasks();
                     GetBusinessCaseForEpics();
                     ShowAllStories();
                 }
 
-                GetOpenTasks();
-
-                OrderTeamAndStoryInfo();
-
-                //CalculateWork();
                 //OrderTeamAndStoryInfo();
-                //InitializeTotals();
+
                 OnPropertyChanged(nameof(SelectedUser));
             }
         }
@@ -218,8 +214,6 @@ public sealed partial class BalancingViewModel : ObservableObject
             allUserStoryAssociation.Add(new UserStoryAssociation(ser.Story, ser.ShortTerm, ser.Remaining, capacityList, MaxNumberOfUsers));
             MyUserAssociation.Add(allUserStoryAssociation.Last());
         }
-        CalculateCoverage();
-        
     }
 
     private void GetTeamUsers()
@@ -575,6 +569,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         if (File.Exists(JsonSerialization.UserStoryFilePath + SelectedUser.Username))
         {
             GetSerializedData();
+            CalculateCoverage();
         }
         else
         {
@@ -624,14 +619,22 @@ public sealed partial class BalancingViewModel : ObservableObject
         OrderTeamAndStoryInfo();
     }
 
-    [RelayCommand]
     public void CalculateCoverage()
     {
+
         for (int i = 0; i < MyUserAssociation.Count; i++)
         {
             MyUserAssociation[i].CalculateCoverage();
         }
+
         ChangeColorOnCovorage();
+    }
+
+    [RelayCommand]
+    public void CalculateCoverageButton()
+    {
+        CalculateCoverage();
+        CalculateTotals();
     }
 
     [RelayCommand]
@@ -648,8 +651,9 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
 
     }
+
     [RelayCommand]
-    public void CalculateTotals()
+    public void CalculateTotalsButton()
     {
         if (SelectedUser == null)
         {
@@ -673,6 +677,12 @@ public sealed partial class BalancingViewModel : ObservableObject
             }
         }
 
+        CalculateTotals();
+    }
+
+    public void CalculateTotals()
+    {
+        
         CalculateWork(IsShortTermVisible);
         OrderTeamAndStoryInfo();
         CalculateBalancing(IsShortTermVisible);
