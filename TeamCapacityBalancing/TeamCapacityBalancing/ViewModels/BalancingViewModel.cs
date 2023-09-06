@@ -61,8 +61,21 @@ public sealed partial class BalancingViewModel : ObservableObject
     [ObservableProperty]
     private bool _miniMessage = true;
 
-    [ObservableProperty]
-    private string _BusinessCaseString = string.Empty;
+    private string _filterString;
+    public string FilterString
+    {
+        get
+        { 
+            return _filterString; 
+        }
+
+        set
+        {
+            _filterString = value;
+            Filter();
+            OnPropertyChanged(nameof(SelectedUser));
+        }
+    }
 
     [ObservableProperty]
     private bool _isShortTermVisible = false;
@@ -104,7 +117,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                     MyUserAssociation.Clear();
                     allUserStoryAssociation.Clear();
                     BusinessCase.Clear();
-                    BusinessCaseString = string.Empty;
+                    FilterString = "None";
                     businessCaseSet.Clear();
                     List<IssueData> epics;
                     epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
@@ -197,6 +210,8 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             BusinessCase.Add(businessCase);
         }
+        BusinessCase.Add("PlaceHolder");
+        BusinessCase.Add("None");
     }
     private void GetSerializedData()
     {
@@ -281,96 +296,106 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     private void ChangeColorOnCovorage()
     {
-        for(int asocIndex=0; asocIndex < MyUserAssociation.Count; asocIndex++)
+        for(int asocIndex=0; asocIndex < allUserStoryAssociation.Count; asocIndex++)
         {
             if (allUserStoryAssociation[asocIndex].Coverage.Value == 0)
                 allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightCoral);
             else if (allUserStoryAssociation[asocIndex].Coverage.Value == 100)
-                MyUserAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightGreen);
+                allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightGreen);
             else
-                MyUserAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.Yellow);
+                allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.Yellow);
         }
     }
 
-    [RelayCommand]
-    public void FilterByPlaceHolder()
+    
+
+    private void RepopulateEpics()
     {
-        if (ByPlaceHolder)
+        Epics.Clear();
+        List<IssueData> epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
+        foreach (var item in epics)
         {
-            for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
-            {
-                if (!MyUserAssociation[userStoryAssociationIndex].StoryData.Name.Contains("#"))
-                {
-                    MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
-                    userStoryAssociationIndex--;
-                }
-            }
+            Epics.Add(item);
         }
-        else
+    }
+    
+    private void Filter()
+    {
+        if (FilterString == string.Empty) return;
+
+        switch (FilterString)
         {
 
-            MyUserAssociation.Clear();
-            foreach (UserStoryAssociation userStoryAssociation in allUserStoryAssociation)
-            {
-                MyUserAssociation.Add(userStoryAssociation);
-            }
+            case "None":
+                RepopulateEpics();
+                MyUserAssociation.Clear();
+                foreach (UserStoryAssociation userStoryAssociation in allUserStoryAssociation)
+                {
+                    MyUserAssociation.Add(userStoryAssociation);
+                }
+                if (currentEpicId != -1)
+                {
+                    for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
+                    {
+                        if (MyUserAssociation[userStoryAssociationIndex].StoryData.EpicID != currentEpicId)
+                        {
+                            MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
+                            userStoryAssociationIndex--;
+                        }
+                    }
+                }
 
-            if (currentEpicId != -1)
-            {
+                break;
+
+            case "Placeholders":
                 for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
                 {
-                    if (MyUserAssociation[userStoryAssociationIndex].StoryData.EpicID != currentEpicId)
+                    if (!MyUserAssociation[userStoryAssociationIndex].StoryData.Name.Contains("#"))
                     {
                         MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
                         userStoryAssociationIndex--;
                     }
                 }
-            }
-        }
-    }
+                break;
+            
 
-    [RelayCommand]
-    public void FilterByBusinessCase(string businessCase)
-    {
-        if (ByBusinessCase)
-        {
-            for (int issueIndex = 0; issueIndex < Epics.Count; issueIndex++)
-            {
-                if (Epics[issueIndex].BusinessCase != businessCase)
+            default:
+                RepopulateEpics();
+                for (int issueIndex = 0; issueIndex < Epics.Count; issueIndex++)
                 {
-
-                    if (MyUserAssociation.First().StoryData.EpicID == Epics[issueIndex].Id && MyUserAssociation.Count != allUserStoryAssociation.Count)
-                        MyUserAssociation.Clear();
-
-                    Epics.Remove(Epics[issueIndex]);
-                    issueIndex--;
-                }
-            }
-            if (MyUserAssociation.Count == allUserStoryAssociation.Count)
-            {
-                for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
-                {
-                    int issueIndex;
-                    for (issueIndex = 0; issueIndex < Epics.Count; issueIndex++)
+                    if (Epics[issueIndex].BusinessCase != FilterString)
                     {
-                        if (MyUserAssociation[userStoryAssociationIndex].StoryData.EpicID == Epics[issueIndex].Id)
-                            break;
-                    }
-                    if (issueIndex == Epics.Count)
-                        MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
 
+                        if (MyUserAssociation.Count > 0 && MyUserAssociation.First().StoryData.EpicID == Epics[issueIndex].Id && MyUserAssociation.Count != allUserStoryAssociation.Count)
+                            MyUserAssociation.Clear();
+
+                        Epics.Remove(Epics[issueIndex]);
+                        issueIndex--;
+                    }
                 }
-            }
-        }
-        else
-        {
-            Epics.Clear();
-            List<IssueData> epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
-            foreach (var item in epics)
-            {
-                Epics.Add(item);
-            }
-        }
+
+                if (MyUserAssociation.Count == allUserStoryAssociation.Count)
+                {
+                    for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
+                    {
+                        int issueIndex;
+                        for (issueIndex = 0; issueIndex < Epics.Count; issueIndex++)
+                        {
+                            if (MyUserAssociation[userStoryAssociationIndex].StoryData.EpicID == Epics[issueIndex].Id)
+                                break;
+                        }
+                        if (issueIndex == Epics.Count)
+                        {
+                            MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
+                            userStoryAssociationIndex--;
+                        }
+
+                    }
+                }
+                break;
+
+
+        };
 
     }
 
@@ -545,10 +570,9 @@ public sealed partial class BalancingViewModel : ObservableObject
         currentEpicId = id;
         GetStories = true;
 
-        if (BusinessCaseString != string.Empty)
-        { FilterByBusinessCase(BusinessCaseString); }
 
-        FilterByPlaceHolder();
+
+        Filter();
 
         CalculateCoverage();
         
@@ -561,6 +585,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         allUserStoryAssociation.Clear();
         ShowAllStories();
+        CalculateCoverage();
     }
 
     [RelayCommand]
@@ -580,10 +605,8 @@ public sealed partial class BalancingViewModel : ObservableObject
         GetStories = true;
         currentEpicId = -1;
 
-        if (BusinessCaseString != string.Empty)
-        { FilterByBusinessCase(BusinessCaseString); }
-
-        FilterByPlaceHolder();
+        Filter();
+        
     }
 
     public void RefreshStories()
