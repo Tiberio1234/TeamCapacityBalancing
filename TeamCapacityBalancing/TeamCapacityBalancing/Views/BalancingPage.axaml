@@ -17,14 +17,11 @@
 	</UserControl.DataContext>
 
 	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"/>
-		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="8*"/>
 		</Grid.RowDefinitions>
-		<StackPanel Grid.Row="0" Orientation="Horizontal" Grid.Column="0">
+		<StackPanel Grid.Row="0" Orientation="Horizontal">
 			<ComboBox Width="300" Margin="5" SelectedItem="{Binding SelectedUser}" Items="{Binding AllUsers}" PlaceholderText="Choose a team leader">
 				<ComboBox.ItemTemplate>
 					<DataTemplate x:DataType="models:User">
@@ -66,7 +63,7 @@
 						  >
 			</ToggleButton>
 
-			<Button  Height="40" VerticalContentAlignment="Center"  Command="{Binding DeleteLocalFilesCommand}" Background="Red" Content="Delete Local Files">
+			<Button  Height="40" VerticalContentAlignment="Center"  Command="{Binding DeleteLocalFilesCommand}" Background="Red" Foreground="White" Content="Delete Local Files">
 			</Button>
 
 
