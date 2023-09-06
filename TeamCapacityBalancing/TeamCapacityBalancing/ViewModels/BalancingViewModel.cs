@@ -394,6 +394,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         if (SelectedUser != null)
         {
+            IsBalancing = false;
             _navigationService!.CurrentPageType = typeof(SprintSelectionPage);
         }
     }
