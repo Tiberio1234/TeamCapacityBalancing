@@ -47,7 +47,7 @@
 			<Button  Width="40" Height="40" Background="Transparent" Command="{Binding CalculateCoverageCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Percent"/>
 			</Button>
-			<ToggleButton  Width="40" Height="40" Background="Transparent" IsChecked="{Binding IsBalancing}">
+			<ToggleButton  Width="40" Height="40" Background="Transparent" IsChecked="{Binding IsBalancing}" Command="{Binding CalculateTotalsCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="ChartBar"/>
 			</ToggleButton>
 			<Button  Width="40" Height="40" Background="Transparent" Command="{Binding OpenReleaseCalendarCommand}">

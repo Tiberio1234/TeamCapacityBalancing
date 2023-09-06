@@ -9,14 +9,12 @@ namespace TeamCapacityBalancing.Models
     public class OpenTasksUserAssociation
     {
 
-        public int UserId { get; set; }
-        public string UserName { get; set; }
+        public User User { get; set; }
         public float Remaining { get; set; }
 
-        public OpenTasksUserAssociation(int id, string username, float remaining)
+        public OpenTasksUserAssociation(User user, float remaining)
         {
-            UserId= id;
-            UserName = username;
+            User = user;
             Remaining= remaining;
         }
     }
