@@ -269,7 +269,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn Header="Coverage" Width="0.30*">
+						<DataGridTemplateColumn Header="Coverage" Width="100">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<StackPanel Orientation="Horizontal"   Background="{Binding ColorBackgroundList[0]}"  VerticalAlignment="Stretch">
@@ -416,7 +416,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn Header="Coverage" Width="0.3*">
+						<DataGridTemplateColumn Header="Coverage" Width="100">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<StackPanel Orientation="Horizontal" Background="{Binding ColorBackgroundList[0]}"  VerticalAlignment="Stretch">
@@ -563,7 +563,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn Header="Coverage" Width="0.3*">
+						<DataGridTemplateColumn Header="Coverage" Width="100">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock IsVisible="False" Text="{Binding Coverage.Value}"/>
@@ -706,7 +706,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn Header="Coverage" Width="0.3*">
+						<DataGridTemplateColumn Header="Coverage" Width="100">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock IsVisible="False" Text="{Binding Coverage.Value}"/>
