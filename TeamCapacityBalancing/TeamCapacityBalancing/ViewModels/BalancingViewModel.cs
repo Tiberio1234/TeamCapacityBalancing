@@ -110,6 +110,9 @@ public sealed partial class BalancingViewModel : ObservableObject
                     FinalBalancing = false;
                     MyUserAssociation.Clear();
                     allUserStoryAssociation.Clear();
+                    BusinessCase.Clear();
+                    BusinessCaseString = string.Empty;
+                    businessCaseSet.Clear();
                     List<IssueData> epics;
                     epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
                     allStories = _queriesForDataBase.GetAllStoriesByTeamLeader(SelectedUser);

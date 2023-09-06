@@ -105,7 +105,15 @@
 						<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Stretch">
 							<CheckBox Content="Filter by" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}" ToolTip.Tip="Choose BusinessCase" IsChecked="{Binding ByBusinessCase}"
 									  Command="{Binding FilterByBusinessCaseCommand}"/>
-							<TextBox Margin="10" Text ="{Binding BusinessCaseString}" Height="10"/>
+							<ComboBox Width="100" Margin="5" SelectedItem="{Binding BusinessCaseString}" Items="{Binding BusinessCase}" >
+								<ComboBox.ItemTemplate>
+									<DataTemplate x:DataType="vm:BalancingViewModel">
+										<StackPanel  Orientation="Horizontal">
+											<TextBlock Text="{Binding }"/>
+										</StackPanel>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
 						</StackPanel>
 					</StackPanel>
 				</Grid>
