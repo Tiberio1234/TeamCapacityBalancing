@@ -63,7 +63,9 @@
 						  >
 			</ToggleButton>
 
-			<Button Content="Delete Local Files" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Command="{Binding DeleteLocalFilesCommand}"></Button>
+			<Button  Height="40" VerticalContentAlignment="Center" Command="{Binding DeleteLocalFilesCommand}" Content="Delete Local Files">
+			</Button>
+
 		</StackPanel>
 		<SplitView Grid.Row="1" OpenPaneLength="200" CompactPaneLength="35" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="{Binding Mode}">
 			<SplitView.Pane>
@@ -128,7 +130,7 @@
 						<DataGridTemplateColumn Width="1.5*" CanUserResize="True" Header="Story" >
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<TextBlock  Text="{Binding StoryData.Name}" HorizontalAlignment="Center"/>
+									<TextBlock  Text="{Binding StoryData.Name}" Margin="10,0,0,0"  ToolTip.Tip="{Binding StoryData.Name}"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
