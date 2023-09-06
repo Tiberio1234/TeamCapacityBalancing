@@ -9,8 +9,8 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
 
         private const string Host = "localhost";
         private const string User = "postgres";
-        private const string DBname = "jira1";
-        private const string Password = "123456";
+        private const string DBname = "jira";
+        private const string Password = "31071980";
 
         private const string Port = "5432";
 

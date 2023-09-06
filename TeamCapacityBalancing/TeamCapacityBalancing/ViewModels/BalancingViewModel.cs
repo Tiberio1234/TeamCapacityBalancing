@@ -131,17 +131,13 @@ public sealed partial class BalancingViewModel : ObservableObject
                     {
                         GetTeamUsers();
                     }
+                    GetOpenTasks();
                     GetBusinessCaseForEpics();
                     ShowAllStories();
                 }
 
-                GetOpenTasks();
-
-                OrderTeamAndStoryInfo();
-
-                //CalculateWork();
                 //OrderTeamAndStoryInfo();
-                //InitializeTotals();
+
                 OnPropertyChanged(nameof(SelectedUser));
             }
         }
@@ -233,8 +229,6 @@ public sealed partial class BalancingViewModel : ObservableObject
             allUserStoryAssociation.Add(new UserStoryAssociation(ser.Story, ser.ShortTerm, ser.Remaining, capacityList, MaxNumberOfUsers));
             MyUserAssociation.Add(allUserStoryAssociation.Last());
         }
-        CalculateCoverage();
-        
     }
 
     private void GetTeamUsers()
@@ -425,6 +419,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         if (SelectedUser != null)
         {
+
             _navigationService!.CurrentPageType = typeof(SprintSelectionPage);
         }
     }
@@ -600,6 +595,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         if (File.Exists(JsonSerialization.UserStoryFilePath + SelectedUser.Username))
         {
             GetSerializedData();
+            CalculateCoverage();
         }
         else
         {
@@ -647,15 +643,24 @@ public sealed partial class BalancingViewModel : ObservableObject
         OrderTeamAndStoryInfo();
     }
 
-    [RelayCommand]
     public void CalculateCoverage()
     {
+
         for (int i = 0; i < MyUserAssociation.Count; i++)
         {
             MyUserAssociation[i].CalculateCoverage();
         }
+
         ChangeColorOnCovorage();
     }
+
+    [RelayCommand]
+    public void CalculateCoverageButton()
+    {
+        CalculateCoverage();
+        CalculateTotals();
+    }
+
 
     [RelayCommand]
     public void ShowShortTermStoryes()
@@ -669,10 +674,10 @@ public sealed partial class BalancingViewModel : ObservableObject
                 ShortTermStoryes.Add(MyUserAssociation[i]);
             }
         }
-
     }
+
     [RelayCommand]
-    public void CalculateTotals()
+    public void CalculateTotalsButton()
     {
         if (SelectedUser == null)
         {
@@ -685,11 +690,23 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             if (((SprintSelectionViewModel)vm).Sprints.Count == 0)
             {
+                var mainWindow = _serviceCollection.GetService(typeof(Window));
+                var dialog = new SaveSuccessfulWindow("Define your sprints first!");
+                dialog.Title = "Info";
+                dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                dialog.ShowDialog((MainWindow)mainWindow);
+
                 IsBalancing = false;
                 return;
             }
         }
 
+        CalculateTotals();
+    }
+
+    public void CalculateTotals()
+    {
+        
         CalculateWork(IsShortTermVisible);
         OrderTeamAndStoryInfo();
         CalculateBalancing(IsShortTermVisible);
@@ -832,7 +849,14 @@ public sealed partial class BalancingViewModel : ObservableObject
         var vm = _serviceCollection.GetService(typeof(SprintSelectionViewModel));
         if (vm != null)
         {
-            numberOfWorkingDays = ((SprintSelectionViewModel)vm).RemainingDays(shortTerm);
+            if (shortTerm)
+            {
+                numberOfWorkingDays = ((SprintSelectionViewModel)vm).GetWorkingDays();
+            }
+            else {
+
+                numberOfWorkingDays = ((SprintSelectionViewModel)vm).RemainingDays();
+                    }
         }
         foreach (var item in TeamMembers)
         {
