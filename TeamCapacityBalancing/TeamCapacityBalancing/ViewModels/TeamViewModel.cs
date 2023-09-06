@@ -249,6 +249,7 @@ public sealed partial class TeamViewModel : ObservableObject
             if (vm != null)
             {
                 ((BalancingViewModel)vm).SyncTeamWithBalancingPageData();
+                ((BalancingViewModel)vm).IsBalancing = false;
             }
         }
 
