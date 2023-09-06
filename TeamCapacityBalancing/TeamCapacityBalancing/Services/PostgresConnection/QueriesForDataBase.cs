@@ -10,6 +10,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
     {
         private const string JiraissueTable = "jiraissue";
         private const string IssuelinkTable = "issuelink";
+        private const string CustomFieldTable = "Customfieldvalue";
         private const string UserTable = "cwd_user";
         private const string StoryIssueType = "10001";
         private const string EpicStoryLinkType = "10201";
@@ -110,52 +111,6 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             return users;
         }
 
-        public List<IssueData> GetStoriesByEpic(int epicId)  //After sebi does what he does it may die
-        {
-            List<IssueData> stories = new List<IssueData>();
-
-            try
-            {
-                using (var connection = new NpgsqlConnection(DataBaseConnection.GetInstance().GetConnectionString()))
-                {
-                    connection.Open();
-
-                    var cmd = new NpgsqlCommand($"SELECT {JiraissueTable}.id, {JiraissueTable}.assignee, {JiraissueTable}.issuenum, {JiraissueTable}.project, {JiraissueTable}.summary " +
-                        $"FROM {JiraissueTable} " +
-                        $"JOIN {IssuelinkTable} " +
-                        $"ON {JiraissueTable}.id = {IssuelinkTable}.destination " +
-                        $"WHERE {IssuelinkTable}.linktype = {EpicStoryLinkType} " +
-                        $"AND {IssuelinkTable}.source = {epicId}", connection);
-
-                    var reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        int id = reader.GetInt32(reader.GetOrdinal("id"));
-                        string name = reader.GetString(reader.GetOrdinal("summary"));
-                        string assignee = reader.GetString(reader.GetOrdinal("assignee"));
-                        int issueNumber = reader.GetInt32(reader.GetOrdinal("issuenum"));
-                        int projectId = reader.GetInt32(reader.GetOrdinal("project"));
-
-                        //calculate only the first to decimals for a float
-                        float result = ((CalculateRemainingTimeForStory(id) / 60) / 60) / 24; //from seconds to days
-                        float onlydecimals = (float)(result - (int)result);
-                        int first2DecimalsInt = (int)(onlydecimals * 100);
-                        float firstTwoDecimalsFloat = (float)first2DecimalsInt / 100;
-                        float remaining = firstTwoDecimalsFloat + (int)result;
-                        stories.Add(new IssueData(id, name, assignee, remaining));
-
-                        //stories.Add(new IssueData(id, name, IssueData.IssueType.Story, assignee, issueNumber, projectId));
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            return stories;
-        }
 
         public List<IssueData> GetAllStoriesByTeamLeader(User teamLeader)
         {
@@ -184,14 +139,14 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                         int projectId = reader.GetInt32(reader.GetOrdinal("project"));
                         int epicId = GetEpicIdFromStory(id);
 
-                        //calculate only the first to decimals for a float
-                        float result = ((CalculateRemainingTimeForStory(id) / 60) / 60) / 24; //from seconds to days
-                        float onlydecimals = (float)(result - (int)result);
-                        int first2DecimalsInt = (int)(onlydecimals * 100);
-                        float firstTwoDecimalsFloat = (float)first2DecimalsInt / 100;
-                        float remaining = firstTwoDecimalsFloat + (int)result;
+                        float remaining = ((CalculateRemainingTimeForStory(id) / 60) / 60) / 8; //from seconds to days
+                        Math.Round(remaining, 2);
 
-                        stories.Add(new IssueData(id,name, assignee, remaining,epicId));
+                        if (remaining > 0)
+                        {
+                            stories.Add(new IssueData(id, name, assignee, remaining, epicId));
+                        }
+
                     }
                 }
             }
@@ -214,8 +169,9 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                     connection.Open();
 
                     var cmd = new NpgsqlCommand($@"
-                        SELECT {JiraissueTable}.id, {JiraissueTable}.assignee, {JiraissueTable}.issuenum, {JiraissueTable}.project, {JiraissueTable}.summary, {JiraissueTable}.description
+                        SELECT {JiraissueTable}.id, {JiraissueTable}.assignee, {JiraissueTable}.issuenum, {JiraissueTable}.project, {JiraissueTable}.summary, {CustomFieldTable}.textvalue
                         FROM {JiraissueTable}
+                        JOIN {CustomFieldTable} ON {CustomFieldTable}.issue = {JiraissueTable}.id
                         WHERE {JiraissueTable}.id IN
                         (SELECT {IssuelinkTable}.source
                         FROM {IssuelinkTable}
@@ -225,6 +181,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                         WHERE {JiraissueTable}.assignee = 'JIRAUSER{teamLeader.Id}'
                         AND {JiraissueTable}.issuetype = '{StoryIssueType}'
                         AND {JiraissueTable}.summary LIKE '%#%'
+                        AND {CustomFieldTable}.textvalue is not null
 )
                         
         )", connection);
@@ -237,8 +194,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
                         string name = reader.GetString(reader.GetOrdinal("summary"));
                         int issueNumber = reader.GetInt32(reader.GetOrdinal("issuenum"));
                         int projectId = reader.GetInt32(reader.GetOrdinal("project"));
-                        //string businesscase = reader.GetString(reader.GetOrdinal("description"));
-                        string businesscase = "VVA";
+                        string businesscase = reader.GetString(reader.GetOrdinal("textvalue"));
                         epics.Add(new IssueData(id, name,businesscase));
                     }
                 }
