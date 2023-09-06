@@ -616,7 +616,7 @@ public sealed partial class BalancingViewModel : ObservableObject
             }
         }
         
-        CalculateWork();
+        CalculateWork(IsShortTermVisible);
         OrderTeamAndStoryInfo();
         CalculateBalancing(IsShortTermVisible);
         InitializeTotals();
