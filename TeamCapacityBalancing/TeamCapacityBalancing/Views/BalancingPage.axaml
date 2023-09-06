@@ -63,7 +63,7 @@
 						  >
 			</ToggleButton>
 
-
+			<Button Content="Delete Local Files" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Command="{Binding DeleteLocalFilesCommand}"></Button>
 		</StackPanel>
 		<SplitView Grid.Row="1" OpenPaneLength="200" CompactPaneLength="35" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="{Binding Mode}">
 			<SplitView.Pane>

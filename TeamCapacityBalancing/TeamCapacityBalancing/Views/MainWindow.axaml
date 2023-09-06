@@ -7,9 +7,10 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TeamCapacityBalancing.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+
         Icon="/Assets/siemens.ico"
 		WindowState="Maximized"
-        Title="TeamCapacityBalancing">
+        Title="Team Capacity Balancing">
 
 	<UserControl Content="{Binding Content}"></UserControl>
 	
