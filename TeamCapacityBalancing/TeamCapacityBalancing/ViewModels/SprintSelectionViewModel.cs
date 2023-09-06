@@ -86,6 +86,9 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
     public DateTimeOffset? _finishDate;
 
     [ObservableProperty]
+    public DateTimeOffset? _startDate=DateTimeOffset.Now;
+
+    [ObservableProperty]
     public bool _selecteSprintForShortTerm = false;
 
     [RelayCommand]
@@ -103,10 +106,10 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
     {
         float totalWeeks = 0;
 
-        DateTime dueStart=DateTime.Now;
+        DateTime dueStart=StartDate.Value.DateTime;
         while(dueStart.DayOfWeek!=DayOfWeek.Monday)
         {
-            dueStart=dueStart.AddDays(1);
+            dueStart=dueStart.AddDays(-1);
         }
         for (int i = 0; i < Sprints.Count; i++) 
         {

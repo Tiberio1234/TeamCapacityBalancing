@@ -36,6 +36,7 @@
 		<StackPanel Grid.Row="1" Orientation="Horizontal">
 			<ToggleSwitch Content="Calendar or Short-Term" IsChecked="{Binding SelecteSprintForShortTerm}" Command="{Binding UncheckSprintCommand}"/>
 			<NumericUpDown Width="50" Height="10" Margin="5 5 5 5" Watermark="Number of sprints" Value="{Binding NumberOfSprints}" ShowButtonSpinner="False"/>
+			<DatePicker Width="700" Height="40" SelectedDate="{Binding StartDate}"/>
 			<Separator Width="20"/>
 			<Button Content="Select" Command="{Binding GenerateSprintsCommand}"/>
 			<Separator Width="20"/>
