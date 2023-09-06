@@ -29,6 +29,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     private List<UserStoryAssociation> allUserStoryAssociation = new List<UserStoryAssociation>();
     private int currentEpicId = 0;
     private List<Tuple<User, float>> totalWork;
+    private HashSet<string> businessCaseSet = new();
 
     //services
     private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
@@ -38,7 +39,10 @@ public sealed partial class BalancingViewModel : ObservableObject
     public List<User> _allUsers;
     [ObservableProperty]
     public List<OpenTasksUserAssociation> _openTasks;
-    public ObservableCollection<IssueData> Epics { get; set; } = new ObservableCollection<IssueData>();
+    public ObservableCollection<IssueData> Epics { get; set; } = new();
+
+    public ObservableCollection<string> BusinessCase { get; set; } = new();
+
     public List<float> remaining = new();
     public BalancingViewModel()
     {
@@ -118,10 +122,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                     {
                         GetTeamUsers();
                     }
-                    else
-                    {
-                        PopulateDefaultTeamUsers();
-                    }
+                    GetBusinessCaseForEpics();
                     ShowAllStories();
                 }
 
@@ -176,6 +177,21 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     public float TotalWorkInShortTerm { get; set; }
 
+    private void GetBusinessCaseForEpics() 
+    {
+        foreach(var epic in Epics)
+        {
+            if (epic.BusinessCase != null)
+            {
+                businessCaseSet.Add(epic.BusinessCase);
+            }
+        }
+
+        foreach(var businessCase in businessCaseSet)
+        {
+            BusinessCase.Add(businessCase);
+        }
+    }
     private void GetSerializedData()
     {
 
