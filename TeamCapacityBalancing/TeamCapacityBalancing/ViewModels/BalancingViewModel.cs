@@ -394,6 +394,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         if (SelectedUser != null)
         {
+
             _navigationService!.CurrentPageType = typeof(SprintSelectionPage);
         }
     }
@@ -637,6 +638,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         CalculateTotals();
     }
 
+
     [RelayCommand]
     public void ShowShortTermStoryes()
     {
@@ -649,9 +651,6 @@ public sealed partial class BalancingViewModel : ObservableObject
                 ShortTermStoryes.Add(MyUserAssociation[i]);
             }
         }
-
-        //CalculateTotals();
-
     }
 
     [RelayCommand]
