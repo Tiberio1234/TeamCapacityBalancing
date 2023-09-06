@@ -249,6 +249,8 @@ public sealed partial class TeamViewModel : ObservableObject
             if (vm != null)
             {
                 ((BalancingViewModel)vm).SyncTeamWithBalancingPageData();
+                ((BalancingViewModel)vm).GetOpenTasks();
+               ((BalancingViewModel)vm).IsBalancing = false;
             }
         }
 
