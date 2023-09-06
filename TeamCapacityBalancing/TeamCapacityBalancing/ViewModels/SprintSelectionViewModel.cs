@@ -18,6 +18,12 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
 {
     private readonly NavigationService? _navigationService;
     private readonly ServiceCollection? _serviceCollection;
+    private int workingDays;
+
+    public int GetWorkingDays()
+    {
+        return workingDays;
+    }
 
     private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
     public SprintSelectionViewModel()
@@ -30,49 +36,44 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
         _serviceCollection = serviceCollection;
 
         var vm = _serviceCollection.GetService(typeof(BalancingViewModel));
-            if (vm != null)
-            {
-                string filePath = ((BalancingViewModel)vm).SelectedUser.Username;
-                Sprints = new ObservableCollection<Sprint> (_jsonSerialization.DeserializeSprint(filePath));
-            }
+        if (vm != null)
+        {
+            string filePath = ((BalancingViewModel)vm).SelectedUser.Username;
+            Sprints = new ObservableCollection<Sprint>(_jsonSerialization.DeserializeSprint(filePath));
+        }
+        NumberOfSprints = Sprints.Count;
     }
-    [ObservableProperty]
-    private int _isShortTermVisible = 0;
 
     [ObservableProperty]
     private int _numberOfSprints = 0;
+
+    [ObservableProperty]
+    public bool _selectByEndDate=false;
+
+    [ObservableProperty]
+    public bool _selectByNrSprints=false;
 
     public ObservableCollection<Sprint> Sprints { get; set; } = new ObservableCollection<Sprint>()
     { };
     private int CalculcateWorkingDays(DateTime start, DateTime end)
     {
         int workingDays = 0;
-       //check if the start and end are the same dates
-       while(start.Date<=end.Date)
+        //check if the start and end are the same dates
+        while (start.Date <= end.Date)
         {
-            if(start.DayOfWeek!=DayOfWeek.Saturday && start.DayOfWeek!=DayOfWeek.Sunday)
+            if (start.DayOfWeek != DayOfWeek.Saturday && start.DayOfWeek != DayOfWeek.Sunday)
             {
                 workingDays++;
             }
-            start=start.AddDays(1);
+            start = start.AddDays(1);
         }
         return workingDays;
     }
-    public int RemainingDays(bool isShortTerm)
+    public int RemainingDays()
     {
-        DateTime today= DateTime.Now;
+        DateTime today = DateTime.Now;
         DateTime beginingOfSprint = DateTime.Parse(Sprints[0].StartDate);
         DateTime lastDate = DateTime.Parse(Sprints[Sprints.Count - 1].EndDate);
-        if(isShortTerm==true)
-        {
-            foreach(var item in Sprints)
-            {
-                if(item.IsInShortTerm)
-                {
-                    lastDate = DateTime.Parse(item.EndDate);
-                }
-            }
-        }
         if (today > beginingOfSprint)
         {
             return CalculcateWorkingDays(today, lastDate);
@@ -84,6 +85,34 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
     }
     [ObservableProperty]
     public DateTimeOffset? _finishDate;
+
+    private int _nrSprints=0;
+ 
+    public int NrSprints 
+    {
+        get => _nrSprints;
+        set 
+        {
+            _nrSprints = value;
+            OnPropertyChanged();
+            for (int i = 0; i < Sprints.Count; i++)
+            {
+                if (DateTime.Parse(Sprints[i].EndDate) >= DateTime.Now && DateTime.Parse(Sprints[i].StartDate) <= DateTime.Now)
+                {
+                    if (i + NrSprints >= Sprints.Count)
+                    {
+                        FinishDate = DateTime.Parse(Sprints[Sprints.Count - 1].EndDate);
+                        //workingDays = CalculcateWorkingDays(DateTime.Now, FinishDate.GetValueOrDefault().DateTime);
+                    }
+                    else
+                    {
+                        FinishDate = DateTime.Parse(Sprints[(NrSprints + i) - 1].EndDate);
+                        //workingDays = CalculcateWorkingDays(DateTime.Now, FinishDate.GetValueOrDefault().DateTime);
+                    }
+                }
+            }
+        }
+    }
 
     [ObservableProperty]
     public DateTimeOffset? _startDate=DateTimeOffset.Now;
@@ -97,10 +126,10 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
         Sprints.Clear();
         for (int i = 0; i < NumberOfSprints; i++)
         {
-            Sprints.Add(new Sprint($"Sprint {i + 1}", 0, false));
+            Sprints.Add(new Sprint($"Sprint {i + 1}", 3, false));
         }
     }
-  
+
     [RelayCommand]
     public void OpenBalancigPage()
     {
@@ -111,10 +140,10 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
         {
             dueStart=dueStart.AddDays(-1);
         }
-        for (int i = 0; i < Sprints.Count; i++) 
+        for (int i = 0; i < Sprints.Count; i++)
         {
             Sprints[i].StartDate = dueStart.ToString("MM-dd-yyyy");
-            dueStart = dueStart.AddDays(Sprints[i].NumberOfWeeks*7);
+            dueStart = dueStart.AddDays(Sprints[i].NumberOfWeeks * 7);
             while (dueStart.DayOfWeek != DayOfWeek.Friday)
             {
                 dueStart = dueStart.AddDays(-1);
@@ -147,26 +176,56 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
                     //((BalancingViewModel)vm).finishDate = DateOnly.FromDateTime(FinishDate.Value.Date);
                 }
             }
-            if (vm != null) 
+            if (vm != null)
             {
-            
+
                 List<Sprint> serializeSprint = new List<Sprint>(Sprints);
                 _jsonSerialization.SerializeSprintData(serializeSprint, ((BalancingViewModel)vm).SelectedUser.Username);
 
             }
+
+            if (SelectByEndDate)
+            {
+                DateTime dateTime = FinishDate.GetValueOrDefault().DateTime;
+                workingDays = CalculcateWorkingDays(DateTime.Now, dateTime);
+                SelectByNrSprints = false;
+            }
+            else if(SelectByNrSprints)
+            {
+                SelectByEndDate = false;
+                for (int i = 0; i < Sprints.Count; i++)
+                {
+                    if (DateTime.Parse(Sprints[i].EndDate) >= DateTime.Now && DateTime.Parse(Sprints[i].StartDate) <= DateTime.Now)
+                    {
+                        if (i + NrSprints >= Sprints.Count)
+                        {
+                            FinishDate = DateTime.Parse(Sprints[Sprints.Count - 1].EndDate);
+                            workingDays= CalculcateWorkingDays(DateTime.Now, FinishDate.GetValueOrDefault().DateTime);
+                        }
+                        else
+                        {
+                            FinishDate = DateTime.Parse(Sprints[(NrSprints + i)-1].EndDate);
+                            workingDays = CalculcateWorkingDays(DateTime.Now, FinishDate.GetValueOrDefault().DateTime);
+                        }
+                    }
+                }
+            }
+
             _navigationService!.CurrentPageType = typeof(BalancingPage);
         }
     }
 
     [RelayCommand]
-    public void UncheckSprint() 
+    public void UncheckEndDate()
     {
-        if (!SelecteSprintForShortTerm) 
-        {
-        foreach(var item in Sprints) 
-            {
-                item.IsInShortTerm=false;
-            }
-        }
+        SelectByEndDate = true;
+        SelectByNrSprints = false;
+    }
+
+    [RelayCommand]
+    public void UncheckNrSprints() 
+    {
+        SelectByEndDate = false;
+        SelectByNrSprints = true;
     }
 }

@@ -54,13 +54,13 @@
 			<Button Width="40" Height="40" Background="Transparent" Command="{Binding RefreshClickedCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Cached"/>
 			</Button>
-			<Button  Width="40" Height="40" Background="Transparent" Command="{Binding CalculateCoverageCommand}">
+			<Button  Width="40" Height="40" Background="Transparent" Command="{Binding CalculateCoverageButtonCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="Percent"/>
 			</Button>
 			<Separator Width="30" />
 
 
-			<ToggleButton  Width="40" Height="40" Background="Transparent" IsChecked="{Binding IsBalancing}" Command="{Binding CalculateTotalsCommand}">
+			<ToggleButton  Width="40" Height="40" Background="Transparent" IsChecked="{Binding IsBalancing}" Command="{Binding CalculateTotalsButtonCommand}">
 				<icons:MaterialIcon Width="40" Height="40" Kind="ChartBar"/>
 			</ToggleButton>
 			<ToggleButton Height="40"
@@ -182,7 +182,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn Header="{Binding TeamMembers[0].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[0].HasTeam}">
+						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[0].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[0].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<NumericUpDown Value="{Binding Days[0].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
