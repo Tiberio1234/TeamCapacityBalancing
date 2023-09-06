@@ -15,13 +15,21 @@ public partial class BalancingPage : UserControl
     public BalancingPage()
     {
         InitializeComponent();
-    }
-
-    private void OnDataGridPointerPressed(object sender, PointerPressedEventArgs e)
-    {
-        if(e.Source is DataGridCell)
+        dataGridZero.SelectionChanged += (sender, e) =>
         {
-            e.Handled = true;
-        }
+            dataGridZero.SelectedItems.Clear();
+        };
+        dataGridOne.SelectionChanged += (sender, e) =>
+        {
+            dataGridOne.SelectedItems.Clear();
+        };
+        dataGridTwo.SelectionChanged += (sender, e) =>
+        {
+            dataGridTwo.SelectedItems.Clear();
+        };
+        dataGridTree.SelectionChanged += (sender, e) =>
+        {
+            dataGridTree.SelectedItems.Clear();
+        };
     }
 }

@@ -7,6 +7,10 @@ namespace TeamCapacityBalancing.Views
         public SprintSelectionPage()
         {
             InitializeComponent();
+            sprintGrid.SelectionChanged += (sender, e) =>
+            {
+                sprintGrid.SelectedItems.Clear();
+            };
         }
     }
 }

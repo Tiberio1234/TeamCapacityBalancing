@@ -118,9 +118,13 @@ public sealed partial class BalancingViewModel : ObservableObject
                     {
                         GetTeamUsers();
                     }
+                    else
+                    {
+                        PopulateDefaultTeamUsers();
+                    }
                     ShowAllStories();
-                    OrderTeamAndStoryInfo();
                 }
+
                 foreach (var user in TeamMembers)
                 {
                     if (OpenTasks.FirstOrDefault(x => x.User.Id == user.Id) == null)
@@ -135,6 +139,9 @@ public sealed partial class BalancingViewModel : ObservableObject
                         Username = "default"
                     }, 0));
                 }
+
+                OrderTeamAndStoryInfo();
+
                 //CalculateWork();
                 //OrderTeamAndStoryInfo();
                 //InitializeTotals();
@@ -205,13 +212,14 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     private void PopulateDefaultTeamUsers()
     {
-        TeamMembers = new ObservableCollection<User>();
+        List<User> aux = new List<User>();
         for (int i = 0; i < MaxNumberOfUsers; i++)
         {
             User newUser = new User("default}");
             newUser.HasTeam = false;
-            TeamMembers.Add(newUser);
+            aux.Add(newUser);
         }
+        TeamMembers = new ObservableCollection<User>(aux);
     }
 
     private List<Tuple<User, float>> GenerateDefaultDays()
@@ -598,7 +606,17 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void CalculateTotals()
     {
-       // CalculateWork(IsShortTermVisible);
+        var vm = _serviceCollection.GetService(typeof(SprintSelectionViewModel));
+        if (vm != null)
+        {
+            if (((SprintSelectionViewModel)vm).Sprints.Count == 0)
+            {
+                IsBalancing = false;
+                return;
+            }
+        }
+        
+        CalculateWork();
         OrderTeamAndStoryInfo();
         CalculateBalancing(IsShortTermVisible);
         InitializeTotals();
@@ -615,6 +633,29 @@ public sealed partial class BalancingViewModel : ObservableObject
                 ShortTermStoryes.Remove(MyUserAssociation[i]);
             }
         }
+    }
+
+    [RelayCommand]
+    public void DeleteLocalFiles() 
+    {
+        if (SelectedUser == null)
+        {
+            return;
+        }
+        File.Delete(JsonSerialization.UserFilePath + SelectedUser!.Username);
+        File.Delete(JsonSerialization.UserStoryFilePath + SelectedUser.Username);
+        File.Delete(JsonSerialization.SprintPath + SelectedUser.Username);
+
+        var mainWindow = _serviceCollection.GetService(typeof(Window));
+        var dialog = new SaveSuccessfulWindow("Local files have been deleted successfully");
+        dialog.Title = "Delete Local Files";
+        dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        dialog.ShowDialog((MainWindow)mainWindow);
+
+        PopulateDefaultTeamUsers();
+
+        RefreshClicked();
+
     }
 
     [RelayCommand]

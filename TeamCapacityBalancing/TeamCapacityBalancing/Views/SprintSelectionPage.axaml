@@ -40,7 +40,7 @@
 			<Button Content="Select" Command="{Binding GenerateSprintsCommand}"/>
 			<Separator Width="20"/>
 		</StackPanel>
-		<DataGrid Grid.Row="2" ColumnWidth="*" Items="{Binding Sprints}" AutoGenerateColumns="False"
+		<DataGrid Grid.Row="2" x:Name="sprintGrid" ColumnWidth="*" Items="{Binding Sprints}" AutoGenerateColumns="False"
 		GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
 
 			<DataGrid.Columns>
