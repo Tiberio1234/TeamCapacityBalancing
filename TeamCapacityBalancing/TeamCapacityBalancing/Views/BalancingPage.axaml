@@ -109,7 +109,15 @@
 						<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Stretch">
 							<CheckBox Content="Filter by" Margin="10 0 0 0" IsVisible="{Binding #MenuToggle.IsChecked}" ToolTip.Tip="Choose BusinessCase" IsChecked="{Binding ByBusinessCase}"
 									  Command="{Binding FilterByBusinessCaseCommand}"/>
-							<TextBox Margin="10" Text ="{Binding BusinessCaseString}" Height="10"/>
+							<ComboBox Width="100" Margin="5" SelectedItem="{Binding BusinessCaseString}" Items="{Binding BusinessCase}" >
+								<ComboBox.ItemTemplate>
+									<DataTemplate x:DataType="vm:BalancingViewModel">
+										<StackPanel  Orientation="Horizontal">
+											<TextBlock Text="{Binding }"/>
+										</StackPanel>
+									</DataTemplate>
+								</ComboBox.ItemTemplate>
+							</ComboBox>
 						</StackPanel>
 					</StackPanel>
 				</Grid>
@@ -597,7 +605,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[0].DisplayName}" IsVisible="{Binding TeamMembers[0].HasTeam}">
+						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[0].DisplayName}" MaxWidth="80" IsVisible="{Binding TeamMembers[0].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding Days[0].Value, Mode=TwoWay}" Background="{Binding ColorBackgroundBalancingList[0]}"/>
@@ -607,7 +615,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[1].DisplayName}" IsVisible="{Binding TeamMembers[1].HasTeam, Mode=TwoWay}">
+						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[1].DisplayName}" MaxWidth="80" IsVisible="{Binding TeamMembers[1].HasTeam, Mode=TwoWay}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding Days[1].Value, Mode=TwoWay}" Background="{Binding ColorBackgroundBalancingList[1]}"/>
@@ -617,7 +625,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[2].DisplayName}" IsVisible="{Binding TeamMembers[2].HasTeam}">
+						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[2].DisplayName}" MaxWidth="80" IsVisible="{Binding TeamMembers[2].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding Days[2].Value, Mode=TwoWay}" Background="{Binding ColorBackgroundBalancingList[2]}"/>
@@ -626,7 +634,7 @@
 						</DataGridTemplateColumn>
 					</DataGrid.Columns>
 					<DataGrid.Columns>
-						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[3].DisplayName}" IsVisible="{Binding TeamMembers[3].HasTeam}">
+						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[3].DisplayName}" MaxWidth="80" IsVisible="{Binding TeamMembers[3].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding Days[3].Value, Mode=TwoWay}" Background="{Binding ColorBackgroundBalancingList[3]}"/>
@@ -636,7 +644,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[4].DisplayName}" IsVisible="{Binding TeamMembers[4].HasTeam}">
+						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[4].DisplayName}" MaxWidth="80" IsVisible="{Binding TeamMembers[4].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding Days[4].Value, Mode=TwoWay}" Background="{Binding ColorBackgroundBalancingList[4]}"/>
@@ -646,7 +654,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[5].DisplayName}" IsVisible="{Binding TeamMembers[5].HasTeam}">
+						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[5].DisplayName}" MaxWidth="80" IsVisible="{Binding TeamMembers[5].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding Days[5].Value, Mode=TwoWay}" Background="{Binding ColorBackgroundBalancingList[5]}"/>
@@ -656,7 +664,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[6].DisplayName}" IsVisible="{Binding TeamMembers[6].HasTeam}">
+						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[6].DisplayName}" MaxWidth="80" IsVisible="{Binding TeamMembers[6].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding Days[6].Value, Mode=TwoWay}" Background="{Binding ColorBackgroundBalancingList[6]}"/>
@@ -666,7 +674,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[7].DisplayName}" IsVisible="{Binding TeamMembers[7].HasTeam}">
+						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[7].DisplayName}" MaxWidth="80" IsVisible="{Binding TeamMembers[7].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding Days[7].Value, Mode=TwoWay}" Background="{Binding ColorBackgroundBalancingList[7]}"/>
@@ -676,7 +684,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[8].DisplayName}" IsVisible="{Binding TeamMembers[8].HasTeam}">
+						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[8].DisplayName}" MaxWidth="80" IsVisible="{Binding TeamMembers[8].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding Days[8].Value, Mode=TwoWay}" Background="{Binding ColorBackgroundBalancingList[8]}"/>
@@ -686,7 +694,7 @@
 					</DataGrid.Columns>
 
 					<DataGrid.Columns>
-						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[9].DisplayName}" IsVisible="{Binding TeamMembers[9].HasTeam}">
+						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[9].DisplayName}" MaxWidth="80" IsVisible="{Binding TeamMembers[9].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
 									<TextBlock Text="{Binding Days[9].Value, Mode=TwoWay}" Background="{Binding ColorBackgroundBalancingList[9]}"/>
