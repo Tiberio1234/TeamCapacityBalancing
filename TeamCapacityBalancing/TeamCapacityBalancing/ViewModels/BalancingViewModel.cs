@@ -675,11 +675,11 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
         ShortTermStoryes = new();
 
-        for (int i = 0; i < MyUserAssociation.Count; i++)
+        for (int i = 0; i < allUserStoryAssociation.Count; i++)
         {
-            if (MyUserAssociation[i].ShortTerm)
+            if (allUserStoryAssociation[i].ShortTerm)
             {
-                ShortTermStoryes.Add(MyUserAssociation[i]);
+                ShortTermStoryes.Add(allUserStoryAssociation[i]);
             }
         }
 
