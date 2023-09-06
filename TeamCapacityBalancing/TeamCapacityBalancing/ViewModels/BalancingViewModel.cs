@@ -1,13 +1,10 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.ComponentModel.__Internals;
 using CommunityToolkit.Mvvm.Input;
-using Npgsql.Internal.TypeMapping;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using TeamCapacityBalancing.Models;
@@ -106,6 +103,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                 {
                     currentEpicId = -1;
                     _getStories = false;
+                    IsBalancing = false;
                     IsShortTermVisible = false;
                     FinalBalancing = false;
                     MyUserAssociation.Clear();
@@ -129,20 +127,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                     ShowAllStories();
                 }
 
-                foreach (var user in TeamMembers)
-                {
-                    if (OpenTasks.FirstOrDefault(x => x.User.Id == user.Id) == null)
-                    {
-                        OpenTasks.Add(new OpenTasksUserAssociation(user, 0));
-                    }
-                }
-                while (OpenTasks.Count < MaxNumberOfUsers)
-                {
-                    OpenTasks.Add(new OpenTasksUserAssociation(new User
-                    {
-                        Username = "default"
-                    }, 0));
-                }
+                GetOpenTasks();
 
                 OrderTeamAndStoryInfo();
 
@@ -152,6 +137,31 @@ public sealed partial class BalancingViewModel : ObservableObject
                 OnPropertyChanged(nameof(SelectedUser));
             }
         }
+    }
+
+    private void GetOpenTasks()
+    {
+        List<OpenTasksUserAssociation> aux = new List<OpenTasksUserAssociation>();
+        foreach (var user in TeamMembers)
+        {
+            OpenTasksUserAssociation oT = OpenTasks.FirstOrDefault(x => x.User.Id == user.Id);
+            if (oT != null)
+            {
+                aux.Add(new OpenTasksUserAssociation(user, oT.Remaining));
+            }
+            else
+            {
+                aux.Add(new OpenTasksUserAssociation(user, 0));
+            }
+        }
+        while (aux.Count < MaxNumberOfUsers)
+        {
+            aux.Add(new OpenTasksUserAssociation(new User
+            {
+                Username = "default"
+            }, 0));
+        }
+        OpenTasks = aux;
     }
 
     [ObservableProperty]
@@ -180,9 +190,9 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     public float TotalWorkInShortTerm { get; set; }
 
-    private void GetBusinessCaseForEpics() 
+    private void GetBusinessCaseForEpics()
     {
-        foreach(var epic in Epics)
+        foreach (var epic in Epics)
         {
             if (epic.BusinessCase != null)
             {
@@ -190,7 +200,7 @@ public sealed partial class BalancingViewModel : ObservableObject
             }
         }
 
-        foreach(var businessCase in businessCaseSet)
+        foreach (var businessCase in businessCaseSet)
         {
             BusinessCase.Add(businessCase);
         }
@@ -293,14 +303,14 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
         else
         {
-            
+
             MyUserAssociation.Clear();
             foreach (UserStoryAssociation userStoryAssociation in allUserStoryAssociation)
             {
                 MyUserAssociation.Add(userStoryAssociation);
             }
 
-            if(currentEpicId != -1)
+            if (currentEpicId != -1)
             {
                 for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
                 {
@@ -319,14 +329,14 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         if (ByBusinessCase)
         {
-            for(int issueIndex=0; issueIndex < Epics.Count; issueIndex++)
+            for (int issueIndex = 0; issueIndex < Epics.Count; issueIndex++)
             {
                 if (Epics[issueIndex].BusinessCase != businessCase)
                 {
-                   
-                    if(MyUserAssociation.First().StoryData.EpicID == Epics[issueIndex].Id && MyUserAssociation.Count != allUserStoryAssociation.Count)
-                    MyUserAssociation.Clear();
-                
+
+                    if (MyUserAssociation.First().StoryData.EpicID == Epics[issueIndex].Id && MyUserAssociation.Count != allUserStoryAssociation.Count)
+                        MyUserAssociation.Clear();
+
                     Epics.Remove(Epics[issueIndex]);
                     issueIndex--;
                 }
@@ -402,15 +412,15 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         List<UserStoryDataSerialization> userStoryDataSerializations = new List<UserStoryDataSerialization>();
 
-            for (int j = 0; j < allUserStoryAssociation.Count; j++)
+        for (int j = 0; j < allUserStoryAssociation.Count; j++)
+        {
+            List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
+            for (int i = 0; i < MaxNumberOfUsers; i++)
             {
-                List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
-                for (int i = 0; i < MaxNumberOfUsers; i++)
-                {
-                    capacityList.Add(new Tuple<User, float>(TeamMembers[i], allUserStoryAssociation[j].Days[i].Value));
-                }
-                userStoryDataSerializations.Add(new UserStoryDataSerialization(allUserStoryAssociation[j].StoryData, allUserStoryAssociation[j].ShortTerm, allUserStoryAssociation[j].Remaining, capacityList));
+                capacityList.Add(new Tuple<User, float>(TeamMembers[i], allUserStoryAssociation[j].Days[i].Value));
             }
+            userStoryDataSerializations.Add(new UserStoryDataSerialization(allUserStoryAssociation[j].StoryData, allUserStoryAssociation[j].ShortTerm, allUserStoryAssociation[j].Remaining, capacityList));
+        }
 
         _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
     }
@@ -514,11 +524,6 @@ public sealed partial class BalancingViewModel : ObservableObject
         return calcBusinessDays;
     }
 
-    public void CalculateTotalWorkOpenStory()
-    {
-
-    }
-
     [RelayCommand]
     public void EpicClicked(int id)
     {
@@ -565,9 +570,9 @@ public sealed partial class BalancingViewModel : ObservableObject
         GetStories = true;
         currentEpicId = -1;
 
-        if(BusinessCaseString != string.Empty) 
+        if (BusinessCaseString != string.Empty)
         { FilterByBusinessCase(BusinessCaseString); }
-        
+
         FilterByPlaceHolder();
     }
 
@@ -632,6 +637,12 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void CalculateTotals()
     {
+        if (SelectedUser == null)
+        {
+            IsBalancing = false;
+            return;
+        }
+
         var vm = _serviceCollection.GetService(typeof(SprintSelectionViewModel));
         if (vm != null)
         {
@@ -641,7 +652,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                 return;
             }
         }
-        
+
         CalculateWork(IsShortTermVisible);
         OrderTeamAndStoryInfo();
         CalculateBalancing(IsShortTermVisible);
@@ -662,7 +673,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void DeleteLocalFiles() 
+    public void DeleteLocalFiles()
     {
         if (SelectedUser == null)
         {
@@ -698,14 +709,14 @@ public sealed partial class BalancingViewModel : ObservableObject
             _navigationService.CurrentPageType = typeof(ReleaseCalendarPage);
         }
     }
-    public List<Tuple<User,float>> CalculateBalancing(bool shortTerm)
+    public List<Tuple<User, float>> CalculateBalancing(bool shortTerm)
     {
-        List<Tuple<User,float>> balance= new List<Tuple<User,float>>();
+        List<Tuple<User, float>> balance = new List<Tuple<User, float>>();
         var work = CalculateWork(shortTerm);
         var totalWork = GetTotalWork(shortTerm);
-        for(int i=0;i<work.Count;i++) 
+        for (int i = 0; i < work.Count; i++)
         {
-            balance.Add(Tuple.Create(work[i].Item1, (float)Math.Round((work[i].Item2 - totalWork[i].Item2),2)));
+            balance.Add(Tuple.Create(work[i].Item1, (float)Math.Round((work[i].Item2 - totalWork[i].Item2), 2)));
         }
         Balancing[0] = new UserStoryAssociation(
                  new IssueData("Balancing", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
@@ -722,9 +733,9 @@ public sealed partial class BalancingViewModel : ObservableObject
         List<Tuple<User, float>> workOpenStory = new List<Tuple<User, float>>();
         foreach (var item in OpenTasks)
         {
-            workOpenStory.Add(Tuple.Create(item.User, (float)Math.Round(item.Remaining,2)));
+            workOpenStory.Add(Tuple.Create(item.User, (float)Math.Round(item.Remaining, 2)));
         }
-        workOpenStory.OrderBy(x=>x.Item1.Username).ToList();
+        workOpenStory.OrderBy(x => x.Item1.Username).ToList();
         return workOpenStory;
     }
     public List<Tuple<User, float>> CalculateWorkOpenstories(bool shortTerm)
@@ -767,17 +778,17 @@ public sealed partial class BalancingViewModel : ObservableObject
 
         return openstories;
     }
-    public List<Tuple<User,float>> GetTotalWork(bool shortTerm)
+    public List<Tuple<User, float>> GetTotalWork(bool shortTerm)
     {
-        List<Tuple<User,float>> totalWork= new List<Tuple<User,float>>();
+        List<Tuple<User, float>> totalWork = new List<Tuple<User, float>>();
         List<Tuple<User, float>> work = CalculateWorkOpenstories(shortTerm);
         List<Tuple<User, float>> openStories = CalculateOpenTasks();
-        for (int i=0;i<work.Count;i++)
+        for (int i = 0; i < work.Count; i++)
         {
-            totalWork.Add(Tuple.Create(openStories[i].Item1,(float)Math.Round(work[i].Item2 + openStories[i].Item2,2)));
+            totalWork.Add(Tuple.Create(openStories[i].Item1, (float)Math.Round(work[i].Item2 + openStories[i].Item2, 2)));
         }
         return totalWork;
-        
+
     }
     public List<Tuple<User, float>> CalculateWork(bool shortTerm)
     {
@@ -798,39 +809,65 @@ public sealed partial class BalancingViewModel : ObservableObject
         totalWork = totalWork.OrderBy(x => x.Item1.Username).ToList();
         return totalWork;
     }
-    
+
     private void InitializeTotals()
     {
 
         totalWork = new List<Tuple<User, float>>(MaxNumberOfUsers);
-        UserStoryAssociation a = new UserStoryAssociation(
+
+        Totals[0] = new UserStoryAssociation(
+                 new IssueData("Open tasks", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+                 true,
+                 3.0f,
+                 OpenTasks.Select(obj => Tuple.Create(obj.User, obj.Remaining)).ToList(),
+                 MaxNumberOfUsers
+             );
+
+        Totals[1] = new UserStoryAssociation(
               new IssueData("Total work open story", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
               true,
               3.0f,
               CalculateWorkOpenstories(IsShortTermVisible),
               MaxNumberOfUsers
           );
-        Totals[0] = a;
-        Totals[1] = new UserStoryAssociation(
+
+        Totals[2] = new UserStoryAssociation(
                   new IssueData("Total work", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                  true,
                  3.0f,
                  //we need a float list 
                  GetTotalWork(IsShortTermVisible),
                  MaxNumberOfUsers
-             ) ;
-        Totals[2] = new UserStoryAssociation(
+             );
+
+        Totals[3] = new UserStoryAssociation(
                  new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                  true,
                  3.0f,
                  CalculateWork(IsShortTermVisible),
                  MaxNumberOfUsers
              );
+
+        //Totals[4] = new UserStoryAssociation(
+        //            new IssueData("Balancing", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+        //            true,
+        //            3.0f,
+        //           CalculateBalancing(IsShortTermVisible),
+        //           MaxNumberOfUsers
+        //                                                                                                );
     }
     [ObservableProperty]
     private ObservableCollection<User> _teamMembers;
     public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>()
     {
+        new UserStoryAssociation(
+                 new IssueData("Open tasks", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+                 true,
+                 3.0f,
+                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                 MaxNumberOfUsers
+             ),
+
         new UserStoryAssociation(
                  new IssueData("Total work open story", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                  true,
@@ -839,7 +876,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                  MaxNumberOfUsers
              ),
           new UserStoryAssociation(
-                 new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+                 new IssueData("Total work", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                  true,
                  3.0f,
                  new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -852,6 +889,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                  new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                  MaxNumberOfUsers
              ),
+
     };
 };
 
