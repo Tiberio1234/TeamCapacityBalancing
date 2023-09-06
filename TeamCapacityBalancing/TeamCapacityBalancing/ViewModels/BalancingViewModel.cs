@@ -222,6 +222,7 @@ public sealed partial class BalancingViewModel : ObservableObject
             MyUserAssociation.Add(allUserStoryAssociation.Last());
         }
         CalculateCoverage();
+        
     }
 
     private void GetTeamUsers()
@@ -278,12 +279,25 @@ public sealed partial class BalancingViewModel : ObservableObject
         for (int dayIndex = 0; dayIndex < Balancing[0].Days.Count; dayIndex++)
         {
             if (Balancing[0].Days[dayIndex].Value < 0)
-                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.LightCoral);
+                Balancing[0].ColorBackgroundList[dayIndex] = new SolidColorBrush(Colors.LightCoral);
             else if (Balancing[0].Days[dayIndex].Value < 4)
-                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.Yellow);
+                Balancing[0].ColorBackgroundList[dayIndex] = new SolidColorBrush(Colors.Yellow);
             else
-                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.LightGreen);
+                Balancing[0].ColorBackgroundList[dayIndex] = new SolidColorBrush(Colors.LightGreen);
 
+        }
+    }
+
+    private void ChangeColorOnCovorage()
+    {
+        for(int asocIndex=0; asocIndex < MyUserAssociation.Count; asocIndex++)
+        {
+            if (allUserStoryAssociation[asocIndex].Coverage.Value == 0)
+                allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightCoral);
+            else if (allUserStoryAssociation[asocIndex].Coverage.Value == 100)
+                MyUserAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightGreen);
+            else
+                MyUserAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.Yellow);
         }
     }
 
@@ -485,6 +499,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         SerializeStoryData();
 
         CalculateCoverage();
+        
     }
 
     private void SyncronizeDisplayedAsocListWithAllStoriesList()
@@ -543,7 +558,9 @@ public sealed partial class BalancingViewModel : ObservableObject
         FilterByPlaceHolder();
 
         CalculateCoverage();
+        
         OrderTeamAndStoryInfo();
+        
     }
 
     [RelayCommand]
@@ -617,7 +634,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             MyUserAssociation[i].CalculateCoverage();
         }
-
+        ChangeColorOnCovorage();
     }
 
     [RelayCommand]

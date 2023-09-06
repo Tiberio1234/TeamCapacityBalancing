@@ -33,7 +33,7 @@ public class UnitTest1
     {
         var userStory = new UserStoryAssociation(new IssueData("Story", 5.0f, "Release", "Sprint", true, IssueData.IssueType.Story), true, 10.0f, new List<Tuple<User, float>>(), 5);
 
-        foreach (var brush in userStory.ColorBackgroundBalancingList)
+        foreach (var brush in userStory.ColorBackgroundList)
         {
             Assert.IsInstanceOfType(brush, typeof(SolidColorBrush));
             Assert.AreEqual(Colors.White, ((SolidColorBrush)brush).Color);

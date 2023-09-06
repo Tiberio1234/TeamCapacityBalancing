@@ -41,13 +41,13 @@ public partial class UserStoryAssociation : ObservableObject
     public Wrapper<float> Coverage { get; set; }
 
 
-    ObservableCollection<Avalonia.Media.Brush> _colorBackgroundBalancingList;
-    public ObservableCollection<Avalonia.Media.Brush> ColorBackgroundBalancingList
+    ObservableCollection<Avalonia.Media.Brush> _colorBackgroundList;
+    public ObservableCollection<Avalonia.Media.Brush> ColorBackgroundList
     {
-        get => _colorBackgroundBalancingList;
+        get => _colorBackgroundList;
         set
         {
-            _colorBackgroundBalancingList = value;
+            _colorBackgroundList = value;
             OnPropertyChanged();
         }
     }
@@ -75,7 +75,7 @@ public partial class UserStoryAssociation : ObservableObject
         ShortTerm = shortTerm;
         Remaining = remaining;
         _days = new(days.Select(x => new Wrapper<float>() { Value = x.Item2, UserName = x.Item1.Username }));
-        _colorBackgroundBalancingList = new ObservableCollection<Avalonia.Media.Brush>(Enumerable.Repeat(new SolidColorBrush(Colors.White), maxNumberOfUsers).ToList());
+        _colorBackgroundList = new ObservableCollection<Avalonia.Media.Brush>(Enumerable.Repeat(new SolidColorBrush(Colors.White), maxNumberOfUsers).ToList());
         Coverage = new Wrapper<float>() { Value = 0 };
     }
 
@@ -85,7 +85,7 @@ public partial class UserStoryAssociation : ObservableObject
         ShortTerm = shortTerm;
         Remaining = remaining;
         _days = new(days.Select(x => new Wrapper<float>() { Value = x, UserName = "default" }));
-        _colorBackgroundBalancingList = new ObservableCollection<Avalonia.Media.Brush>(Enumerable.Repeat(new SolidColorBrush(Colors.White), maxNumberOfUsers).ToList());
+        _colorBackgroundList = new ObservableCollection<Avalonia.Media.Brush>(Enumerable.Repeat(new SolidColorBrush(Colors.White), maxNumberOfUsers).ToList());
         Coverage = new Wrapper<float>() { Value = 0 };
     }
 
