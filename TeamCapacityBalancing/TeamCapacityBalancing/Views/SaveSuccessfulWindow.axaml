@@ -10,9 +10,14 @@
         Title="SaveSuccessfulWindow"
 		x:CompileBindings="True" >
 
-	<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-		<TextBlock Name="message"/>
-		<Button Content="OK" Margin="40 10 0 0" Click="Close"/>
-	</StackPanel>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<TextBlock Name="message" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+		<Button Content="OK" Click="Close" HorizontalAlignment="Center" Grid.Row="1"/>
+	</Grid>
 
 </Window>
