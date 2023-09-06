@@ -701,11 +701,11 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             if (((SprintSelectionViewModel)vm).Sprints.Count == 0)
             {
-                var mainWindow = _serviceCollection.GetService(typeof(Window));
-                var dialog = new SaveSuccessfulWindow("Define your sprints first!");
-                dialog.Title = "Info";
-                dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                dialog.ShowDialog((MainWindow)mainWindow);
+                //var mainWindow = _serviceCollection.GetService(typeof(Window));
+                //var dialog = new SaveSuccessfulWindow("Define your sprints first!");
+                //dialog.Title = "Info";
+                //dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                //dialog.ShowDialog((MainWindow)mainWindow);
 
                 IsBalancing = false;
                 return;
