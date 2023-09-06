@@ -28,6 +28,10 @@ public class Wrapper<T> : Utility
     public Wrapper()
     {
     }
+    public T? GetValue()
+    {
+        return Value;
+    }
 }
 
 public partial class UserStoryAssociation : ObservableObject

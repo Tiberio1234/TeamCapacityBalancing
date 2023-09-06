@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,13 @@ public partial class BalancingPage : UserControl
     public BalancingPage()
     {
         InitializeComponent();
-        
+    }
+
+    private void OnDataGridPointerPressed(object sender, PointerPressedEventArgs e)
+    {
+        if(e.Source is DataGridCell)
+        {
+            e.Handled = true;
+        }
     }
 }
