@@ -85,7 +85,7 @@
 							<ItemsRepeater.ItemTemplate>
 								<DataTemplate>
 									<Border Margin="0,10,0,0">
-										<Button Content="{Binding Name}" IsVisible="{Binding #MenuToggle.IsChecked}" Background="Transparent"/>
+										<Button Content="{Binding Name}" IsVisible="{Binding #MenuToggle.IsChecked}" Background="Transparent" Command="{ReflectionBinding #BalancingPageControl.DataContext.EpicClickedCommand}" CommandParameter="{Binding Id}"/>
 									</Border>
 								</DataTemplate>
 							</ItemsRepeater.ItemTemplate>
