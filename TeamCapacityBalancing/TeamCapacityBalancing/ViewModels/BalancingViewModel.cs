@@ -634,14 +634,22 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void CalculateCoverageButton()
     {
-        CalculateCoverage();
-        CalculateTotals();
+        if (SelectedUser != null)
+        {
+            CalculateCoverage();
+            CalculateTotals();
+        }
     }
 
 
     [RelayCommand]
     public void ShowShortTermStoryes()
     {
+        if (SelectedUser == null)
+        {
+            IsShortTermVisible = false;
+            return;
+        }
         ShortTermStoryes = new();
 
         for (int i = 0; i < MyUserAssociation.Count; i++)
@@ -651,6 +659,9 @@ public sealed partial class BalancingViewModel : ObservableObject
                 ShortTermStoryes.Add(MyUserAssociation[i]);
             }
         }
+
+        CalculateTotalsButton();
+        IsBalancing = true;
     }
 
     [RelayCommand]
