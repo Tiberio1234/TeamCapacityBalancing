@@ -237,7 +237,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
     }
 
-    private void PopulateDefaultTeamUsers()
+    public void PopulateDefaultTeamUsers()
     {
         List<User> aux = new List<User>();
         for (int i = 0; i < MaxNumberOfUsers; i++)
@@ -408,7 +408,9 @@ public sealed partial class BalancingViewModel : ObservableObject
     public void SerializeOnSave()
     {
         if (SelectedUser == null)
-        { return; }
+        { 
+            return; 
+        }
 
         SerializeStoryData();
 
@@ -691,19 +693,14 @@ public sealed partial class BalancingViewModel : ObservableObject
         {
             return;
         }
-        File.Delete(JsonSerialization.UserFilePath + SelectedUser!.Username);
-        File.Delete(JsonSerialization.UserStoryFilePath + SelectedUser.Username);
-        File.Delete(JsonSerialization.SprintPath + SelectedUser.Username);
-
+     
         var mainWindow = _serviceCollection.GetService(typeof(Window));
-        var dialog = new SaveSuccessfulWindow("Local files have been deleted successfully");
+        var dialog = new DeleteLocalFilesWindow("Do you want to delete local files?");
+        dialog.SelectedUser = SelectedUser;
+        dialog.serviceCollection = _serviceCollection;
         dialog.Title = "Delete Local Files";
         dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
         dialog.ShowDialog((MainWindow)mainWindow);
-
-        PopulateDefaultTeamUsers();
-
-        RefreshClicked();
 
     }
 
