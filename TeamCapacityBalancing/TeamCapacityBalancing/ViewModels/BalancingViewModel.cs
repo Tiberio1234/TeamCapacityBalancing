@@ -542,6 +542,13 @@ public sealed partial class BalancingViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public void AllEpicsClicked()
+    {
+        allUserStoryAssociation.Clear();
+        ShowAllStories();
+    }
+
+    [RelayCommand]
     public void ShowAllStories()
     {
         MyUserAssociation.Clear();
