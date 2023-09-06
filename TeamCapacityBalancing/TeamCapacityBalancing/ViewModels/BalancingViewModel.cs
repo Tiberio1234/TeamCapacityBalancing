@@ -3,6 +3,7 @@ using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel.__Internals;
 using CommunityToolkit.Mvvm.Input;
+using Npgsql.Internal.TypeMapping;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -157,7 +158,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                 new IssueData("Balancing", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                 true,
                 3.0f,
-                new List<float> { 10, -5, 0, 0, -5,  0, 0, 0, 0,0 },
+                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                 MaxNumberOfUsers
             ),
     };
@@ -241,11 +242,11 @@ public sealed partial class BalancingViewModel : ObservableObject
         for (int dayIndex = 0; dayIndex < Balancing[0].Days.Count; dayIndex++)
         {
             if (Balancing[0].Days[dayIndex].Value < 0)
-                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.Red);
+                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.LightCoral);
             else if (Balancing[0].Days[dayIndex].Value < 4)
-                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.Yellow);
+                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.LightYellow);
             else
-                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.Green);
+                Balancing[0].ColorBackgroundBalancingList[dayIndex] = new SolidColorBrush(Colors.LightGreen);
 
         }
     }
@@ -600,6 +601,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     {
         CalculateWork();
         OrderTeamAndStoryInfo();
+        CalculateBalancing();
         InitializeTotals();
     }
 
@@ -630,14 +632,31 @@ public sealed partial class BalancingViewModel : ObservableObject
             _navigationService.CurrentPageType = typeof(ReleaseCalendarPage);
         }
     }
-
-
+    public List<Tuple<User,float>> CalculateBalancing()
+    {
+        List<Tuple<User,float>> balance= new List<Tuple<User,float>>();
+        var work = CalculateWork();
+        var totalWork = GetTotalWork();
+        for(int i=0;i<work.Count;i++) 
+        {
+            balance.Add(Tuple.Create(work[i].Item1, (float)Math.Round((work[i].Item2 - totalWork[i].Item2),2)));
+        }
+        Balancing[0] = new UserStoryAssociation(
+                 new IssueData("Balancing", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+                 true,
+                 3.0f,
+                 balance,
+                 MaxNumberOfUsers
+             );
+        ChangeColorByNumberOfDays();
+        return balance;
+    }
     public List<Tuple<User, float>> CalculateOpenTasks()
     {
         List<Tuple<User, float>> workOpenStory = new List<Tuple<User, float>>();
         foreach (var item in OpenTasks)
         {
-            workOpenStory.Add(Tuple.Create(item.User, item.Remaining));
+            workOpenStory.Add(Tuple.Create(item.User, (float)Math.Round(item.Remaining,2)));
         }
         workOpenStory.OrderBy(x=>x.Item1.Username).ToList();
         return workOpenStory;
@@ -657,7 +676,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                     totalSum += day.Value * item.Remaining; 
                 }
             }
-            openstories.Add(Tuple.Create(member, (float)totalSum/100));
+            openstories.Add(Tuple.Create(member,(float)Math.Round(totalSum/100,2)));
         }
 
         return openstories;
@@ -669,9 +688,10 @@ public sealed partial class BalancingViewModel : ObservableObject
         List<Tuple<User, float>> openStories = CalculateOpenTasks();
         for (int i=0;i<work.Count;i++)
         {
-            totalWork.Add(Tuple.Create(openStories[i].Item1, work[i].Item2 + openStories[i].Item2));
+            totalWork.Add(Tuple.Create(openStories[i].Item1,(float)Math.Round(work[i].Item2 + openStories[i].Item2,2)));
         }
         return totalWork;
+        
     }
     public List<Tuple<User, float>> CalculateWork()
     {
@@ -692,6 +712,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         totalWork = totalWork.OrderBy(x => x.Item1.Username).ToList();
         return totalWork;
     }
+    
     private void InitializeTotals()
     {
 
@@ -711,7 +732,7 @@ public sealed partial class BalancingViewModel : ObservableObject
                  //we need a float list 
                  GetTotalWork(),
                  MaxNumberOfUsers
-             );
+             ) ;
         Totals[2] = new UserStoryAssociation(
                  new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
                  true,

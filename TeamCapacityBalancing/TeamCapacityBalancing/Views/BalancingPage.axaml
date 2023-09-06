@@ -122,6 +122,7 @@
 				</StackPanel>
 
 				<DataGrid Grid.Row="0" x:Name="dataGridZero" CanUserResizeColumns="True"  ColumnWidth="*" Items="{Binding MyUserAssociation}" AutoGenerateColumns="False" IsVisible="{Binding GetStories}"
+
 					   GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
 
 					<DataGrid.Columns>
