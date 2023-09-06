@@ -54,7 +54,7 @@ public sealed partial class BalancingViewModel : ObservableObject
         PopulateDefaultTeamUsers();
         ShowShortTermStoryes();
         AllUsers = _queriesForDataBase.GetAllTeamLeaders();
-        OpenTasks = _queriesForDataBase.GetRemainingForUser();
+        //OpenTasks = _queriesForDataBase.GetRemainingForUser();
 
     }
 
@@ -81,10 +81,6 @@ public sealed partial class BalancingViewModel : ObservableObject
     [ObservableProperty]
     private bool _ByBusinessCase = false;
 
-
-    [ObservableProperty]
-    private bool _finalBalancing = false;
-
     [ObservableProperty]
     private bool _getStories = false;
 
@@ -105,7 +101,6 @@ public sealed partial class BalancingViewModel : ObservableObject
                     _getStories = false;
                     IsBalancing = false;
                     IsShortTermVisible = false;
-                    FinalBalancing = false;
                     MyUserAssociation.Clear();
                     allUserStoryAssociation.Clear();
                     BusinessCase.Clear();
@@ -139,8 +134,10 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
     }
 
-    private void GetOpenTasks()
+    public void GetOpenTasks()
     {
+        OpenTasks = _queriesForDataBase.GetRemainingForUser();
+
         List<OpenTasksUserAssociation> aux = new List<OpenTasksUserAssociation>();
         foreach (var user in TeamMembers)
         {
@@ -549,7 +546,6 @@ public sealed partial class BalancingViewModel : ObservableObject
         //get stories with same epicID and display them
 
         currentEpicId = id;
-        FinalBalancing = true;
         GetStories = true;
 
         if (BusinessCaseString != string.Empty)
@@ -583,7 +579,6 @@ public sealed partial class BalancingViewModel : ObservableObject
             PopulateByDefault();
         }
         ShowShortTermStoryes();
-        FinalBalancing = true;
         GetStories = true;
         currentEpicId = -1;
 
@@ -864,14 +859,6 @@ public sealed partial class BalancingViewModel : ObservableObject
                  CalculateWork(IsShortTermVisible),
                  MaxNumberOfUsers
              );
-
-        //Totals[4] = new UserStoryAssociation(
-        //            new IssueData("Balancing", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
-        //            true,
-        //            3.0f,
-        //           CalculateBalancing(IsShortTermVisible),
-        //           MaxNumberOfUsers
-        //                                                                                                );
     }
     [ObservableProperty]
     private ObservableCollection<User> _teamMembers;

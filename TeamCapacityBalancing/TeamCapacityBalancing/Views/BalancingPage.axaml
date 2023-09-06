@@ -572,7 +572,7 @@
 						</DataGridTemplateColumn>
 					</DataGrid.Columns>
 				</DataGrid>
-				<DataGrid Grid.Row="3" x:Name="dataGridTree" ColumnWidth="*" Items="{Binding Balancing}" AutoGenerateColumns="False" IsVisible="{Binding FinalBalancing}"
+				<DataGrid Grid.Row="3" x:Name="dataGridTree" ColumnWidth="*" Items="{Binding Balancing}" AutoGenerateColumns="False" IsVisible="{Binding IsBalancing}"
 			  GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray"
 			  HeadersVisibility="None">
 
