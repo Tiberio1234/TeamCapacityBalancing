@@ -13,9 +13,10 @@ namespace TeamCapacityBalancing.Services.LocalDataSerialization
 {
     public class JsonSerialization : IDataSerialization
     {
-        public const string UserStoryFilePath = "../../../LocalFiles/UserStoryData/";
-        public const string UserFilePath = "../../../LocalFiles/TeamData/";
-        public const string SprintPath = "../../../LocalFiles/SprintData/";
+        public const string BasePath = "../../../LocalFiles/";
+        public const string UserStoryFilePath = BasePath + "UserStoryData/";
+        public const string UserFilePath = BasePath + "TeamData/";
+        public const string SprintPath = BasePath + "SprintData/";
 
         public List<Sprint> DeserializeSprint(string filename)
         {

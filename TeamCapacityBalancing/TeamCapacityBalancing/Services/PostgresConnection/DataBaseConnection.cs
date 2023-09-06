@@ -9,8 +9,8 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
 
         private const string Host = "localhost";
         private const string User = "postgres";
-        private const string DBname = "postgres";
-        private const string Password = "123456";
+        private const string DBname = "Jira";
+        private const string Password = "ciocanitoarea";
 
         private const string Port = "5432";
 
