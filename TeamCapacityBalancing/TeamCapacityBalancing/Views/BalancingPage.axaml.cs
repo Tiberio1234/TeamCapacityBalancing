@@ -14,6 +14,21 @@ public partial class BalancingPage : UserControl
     public BalancingPage()
     {
         InitializeComponent();
-        
+        dataGridZero.SelectionChanged += (sender, e) =>
+        {
+            dataGridZero.SelectedItems.Clear();
+        };
+        dataGridOne.SelectionChanged += (sender, e) =>
+        {
+            dataGridOne.SelectedItems.Clear();
+        };
+        dataGridTwo.SelectionChanged += (sender, e) =>
+        {
+            dataGridTwo.SelectedItems.Clear();
+        };
+        dataGridTree.SelectionChanged += (sender, e) =>
+        {
+            dataGridTree.SelectedItems.Clear();
+        };
     }
 }
