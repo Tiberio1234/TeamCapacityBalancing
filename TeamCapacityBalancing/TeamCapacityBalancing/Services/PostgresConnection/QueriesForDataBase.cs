@@ -31,10 +31,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
 
                     var cmd = new NpgsqlCommand($"SELECT {JiraissueTable}.timeestimate, {JiraissueTable}.timespent " +
                         $"FROM {JiraissueTable} " +
-                        $"JOIN {IssuelinkTable} " +
-                        $"ON {JiraissueTable}.id = {IssuelinkTable}.destination " +
-                        $"WHERE {IssuelinkTable}.linktype = {StoryTaskLinkType} " +
-                        $"AND {IssuelinkTable}.source = {storyId}", connection);
+                        $"WHERE {JiraissueTable}.id = {storyId} ", connection);
                     var reader = cmd.ExecuteReader();
 
                     while (reader.Read())
@@ -48,7 +45,7 @@ namespace TeamCapacityBalancing.Services.Postgres_connection
             {
                 Console.WriteLine(e.Message);
             }
-            return timeEstimate - timeSpent;
+            return (timeEstimate +timeSpent)-timeSpent;
         }
 
         private int GetEpicIdFromStory(int storyId)
