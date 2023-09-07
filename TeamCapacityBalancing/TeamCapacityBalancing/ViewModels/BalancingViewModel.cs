@@ -18,29 +18,150 @@ namespace TeamCapacityBalancing.ViewModels;
 
 public sealed partial class BalancingViewModel : ObservableObject
 {
+    //private variables
     private readonly PageService? _pageService;
     private readonly NavigationService? _navigationService;
     private readonly ServiceCollection _serviceCollection;
     private const int MaxNumberOfUsers = 10;
-    private List<IssueData> allStories = new List<IssueData>();
-    private List<UserStoryAssociation> allUserStoryAssociation = new List<UserStoryAssociation>();
+    private List<IssueData> allStories = new();
+    private List<UserStoryAssociation> allUserStoryAssociation = new();
     private int currentEpicId = 0;
     private List<Tuple<User, float>> totalWork;
     private HashSet<string> businessCaseSet = new();
+    public DateTime finishDate;
 
     //services
     private readonly IDataProvider _queriesForDataBase = new QueriesForDataBase();
     private readonly IDataSerialization _jsonSerialization = new JsonSerialization();
 
+
+    //Observable properties
     [ObservableProperty]
     public List<User> _allUsers;
+
     [ObservableProperty]
     public List<OpenTasksUserAssociation> _openTasks;
+
+    [ObservableProperty]
+    private bool _isShortTermVisible = false;
+
+    [ObservableProperty]
+    private bool _isBalancing = false;
+
+    [ObservableProperty]
+    private bool _isPaneOpen = true;
+
+    [ObservableProperty]
+    private bool _getStories = false;
+
+    [ObservableProperty]
+    private bool _miniMessage = true;
+
+    [ObservableProperty]
+    private SplitViewDisplayMode _mode = SplitViewDisplayMode.CompactInline;
+
+    [ObservableProperty]
+    public ObservableCollection<UserStoryAssociation> _myUserAssociation = new ();
+
+    [ObservableProperty]
+    public ObservableCollection<UserStoryAssociation> _shortTermStoryes;
+
+    [ObservableProperty]
+    private ObservableCollection<User> _teamMembers;
+
+
+    //Properties
     public ObservableCollection<IssueData> Epics { get; set; } = new();
 
     public ObservableCollection<string> BusinessCase { get; set; } = new();
 
     public List<float> remaining = new();
+
+    public ObservableCollection<UserStoryAssociation> Balancing { get; set; } = new ObservableCollection<UserStoryAssociation>
+    {
+           new UserStoryAssociation(
+                new IssueData("Balancing", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+                true,
+                3.0f,
+                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                MaxNumberOfUsers
+            ),
+    };
+
+    private string _filterString;
+    public string FilterString
+    {
+        get
+        {
+            return _filterString;
+        }
+
+        set
+        {
+            _filterString = value;
+            Filter();
+            OnPropertyChanged(nameof(SelectedUser));
+        }
+    }
+
+    private User? _selectedUser;
+    public User? SelectedUser
+    {
+        get { return _selectedUser; }
+        set
+        {
+            if (_selectedUser != value)
+            {
+                MiniMessage = false;
+                _selectedUser = value;
+
+                if (value != null)
+                {
+                    OnSelectedUser();
+                }
+
+                //OrderTeamAndStoryInfo();
+
+                OnPropertyChanged(nameof(SelectedUser));
+            }
+        }
+    }
+
+    public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>()
+    {
+        new UserStoryAssociation(
+                 new IssueData("Open tasks", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+                 true,
+                 3.0f,
+                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                 MaxNumberOfUsers
+             ),
+
+        new UserStoryAssociation(
+                 new IssueData("Total work open story", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+                 true,
+                 3.0f,
+                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                 MaxNumberOfUsers
+             ),
+          new UserStoryAssociation(
+                 new IssueData("Total work", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+                 true,
+                 3.0f,
+                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                 MaxNumberOfUsers
+             ),
+          new UserStoryAssociation(
+                 new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
+                 true,
+                 3.0f,
+                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                 MaxNumberOfUsers
+             ),
+
+    };
+
+    //Constructors
     public BalancingViewModel()
     {
 
@@ -58,99 +179,131 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     }
 
-    [ObservableProperty]
-    private bool _miniMessage = true;
 
-    private string _filterString;
-    public string FilterString
+
+    //Private methods
+    private void OnSelectedUser()
     {
-        get
-        { 
-            return _filterString; 
-        }
-
-        set
+        currentEpicId = -1;
+        GetStories = false;
+        IsBalancing = false;
+        IsShortTermVisible = false;
+        MyUserAssociation.Clear();
+        allUserStoryAssociation.Clear();
+        BusinessCase.Clear();
+        FilterString = "None";
+        businessCaseSet.Clear();
+        List<IssueData> epics;
+        epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
+        allStories = _queriesForDataBase.GetAllStoriesByTeamLeader(SelectedUser);
+        if (epics != null)
         {
-            _filterString = value;
-            Filter();
-            OnPropertyChanged(nameof(SelectedUser));
+            Epics = new ObservableCollection<IssueData>(epics);
+            OnPropertyChanged("Epics");
+        }
+        if (File.Exists(JsonSerialization.UserFilePath + SelectedUser.Username))
+        {
+            GetTeamUsers();
+        }
+        GetOpenTasks();
+        GetBusinessCaseForEpics();
+        ShowAllStories();
+    }
+
+    private void GetTeamUsers()
+    {
+        if(SelectedUser == null) return;
+        var aux = new ObservableCollection<User>(_jsonSerialization.DeserializeTeamData(SelectedUser.Username));
+        for (int i = aux.Count; i < MaxNumberOfUsers; i++)
+        {
+            User newUser = new User("default");
+            newUser.HasTeam = false;
+            aux.Add(newUser);
+        }
+        for (int i = 0; i < MaxNumberOfUsers; i++)
+        {
+            TeamMembers[i] = aux[i];
         }
     }
 
-    [ObservableProperty]
-    private bool _isShortTermVisible = false;
-
-    [ObservableProperty]
-    private bool _isBalancing = false;
-
-    [ObservableProperty]
-    private bool _isPaneOpen = true;
-
-    //[ObservableProperty]
-    //private bool _sumsOpen = true;
-    [ObservableProperty]
-    private bool _ByPlaceHolder = false;
-
-    [ObservableProperty]
-    private bool _ByBusinessCase = false;
-
-    [ObservableProperty]
-    private bool _getStories = false;
-
-    private User? _selectedUser;
-    public User? SelectedUser
+    public void PopulateDefaultTeamUsers()
     {
-        get { return _selectedUser; }
-        set
+        List<User> aux = new();
+        for (int i = 0; i < MaxNumberOfUsers; i++)
         {
-            if (_selectedUser != value)
-            {
-                MiniMessage = false;
-                _selectedUser = value;
-
-                if (value != null)
-                {
-                    currentEpicId = -1;
-                    _getStories = false;
-                    IsBalancing = false;
-                    IsShortTermVisible = false;
-                    MyUserAssociation.Clear();
-                    allUserStoryAssociation.Clear();
-                    BusinessCase.Clear();
-                    FilterString = "None";
-                    businessCaseSet.Clear();
-                    List<IssueData> epics;
-                    epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
-                    allStories = _queriesForDataBase.GetAllStoriesByTeamLeader(SelectedUser);
-                    if (epics != null)
-                    {
-                        Epics = new ObservableCollection<IssueData>(epics);
-                        OnPropertyChanged("Epics");
-                    }
-                    if (File.Exists(JsonSerialization.UserFilePath + SelectedUser.Username))
-                    {
-                        GetTeamUsers();
-                    }
-                    GetOpenTasks();
-                    GetBusinessCaseForEpics();
-                    ShowAllStories();
-                }
-
-                //OrderTeamAndStoryInfo();
-
-                OnPropertyChanged(nameof(SelectedUser));
-            }
+            User newUser = new User("default}");
+            newUser.HasTeam = false;
+            aux.Add(newUser);
         }
+        TeamMembers = new ObservableCollection<User>(aux);
+    }
+
+    private void SerializeStoryData()
+    {
+        List<UserStoryDataSerialization> userStoryDataSerializations = new();
+
+        for (int j = 0; j < allUserStoryAssociation.Count; j++)
+        {
+            List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
+            for (int i = 0; i < MaxNumberOfUsers; i++)
+            {
+                capacityList.Add(new Tuple<User, float>(TeamMembers[i], allUserStoryAssociation[j].Days[i].Value));
+            }
+            userStoryDataSerializations.Add(new UserStoryDataSerialization(allUserStoryAssociation[j].StoryData, allUserStoryAssociation[j].ShortTerm, allUserStoryAssociation[j].Remaining, capacityList));
+        }
+        if(SelectedUser!= null) 
+        _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
+    }
+
+    private void GetSerializedData()
+    {
+
+        List<UserStoryDataSerialization> userStoryDataSerializations = new();
+        userStoryDataSerializations = _jsonSerialization.DeserializeUserStoryData(SelectedUser.Username);
+        foreach (UserStoryDataSerialization ser in userStoryDataSerializations)
+        {
+            List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
+            for (int i = 0; i < ser.UsersCapacity.Count; i++)
+            {
+                capacityList.Add(new(ser.UsersCapacity[i].Item1, ser.UsersCapacity[i].Item2));
+            }
+
+            allUserStoryAssociation.Add(new UserStoryAssociation(ser.Story, ser.ShortTerm, ser.Remaining, capacityList, MaxNumberOfUsers));
+            MyUserAssociation.Add(allUserStoryAssociation.Last());
+        }
+    }
+
+    private void PopulateByDefault()
+    {
+        List<Tuple<User, float>> capacityList = GenerateDefaultDays();
+
+        foreach (IssueData story in allStories)
+        {
+            allUserStoryAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList, MaxNumberOfUsers));
+            MyUserAssociation.Add(allUserStoryAssociation.Last());
+        }
+
+    }
+
+    private void OrderTeamAndStoryInfo()
+    {
+        TeamMembers = new ObservableCollection<User>(TeamMembers.OrderBy(m => m.Username));
+        foreach (UserStoryAssociation userStoryAssociation in MyUserAssociation)
+        {
+            userStoryAssociation.Days = new ObservableCollection<Wrapper<float>>(userStoryAssociation.Days.OrderBy(m => m.UserName));
+        }
+        OpenTasks = OpenTasks.OrderBy(x => x.User.Username).ToList();
+
     }
 
     public void GetOpenTasks()
     {
         OpenTasks = _queriesForDataBase.GetRemainingForUser();
 
-        List<OpenTasksUserAssociation> aux = new List<OpenTasksUserAssociation>();
+        List<OpenTasksUserAssociation> aux = new();
         foreach (var user in TeamMembers)
         {
-            OpenTasksUserAssociation oT = OpenTasks.FirstOrDefault(x => x.User.Id == user.Id);
+            OpenTasksUserAssociation? oT = OpenTasks.FirstOrDefault(x => x.User.Id == user.Id);
             if (oT != null)
             {
                 aux.Add(new OpenTasksUserAssociation(user, oT.Remaining));
@@ -170,305 +323,6 @@ public sealed partial class BalancingViewModel : ObservableObject
         OpenTasks = aux;
     }
 
-    [ObservableProperty]
-    private SplitViewDisplayMode _mode = SplitViewDisplayMode.CompactInline;
-
-
-    public ObservableCollection<UserStoryAssociation> MyUserAssociation { get; set; } = new ObservableCollection<UserStoryAssociation>();
-
-    [ObservableProperty]
-    public ObservableCollection<UserStoryAssociation> _shortTermStoryes;
-
-    public ObservableCollection<UserStoryAssociation> Balancing { get; set; } = new ObservableCollection<UserStoryAssociation>
-    {
-           new UserStoryAssociation(
-                new IssueData("Balancing", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
-                true,
-                3.0f,
-                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                MaxNumberOfUsers
-            ),
-    };
-
-
-    public DateTime finishDate;
-
-
-    public float TotalWorkInShortTerm { get; set; }
-
-    private void GetBusinessCaseForEpics()
-    {
-        foreach (var epic in Epics)
-        {
-            if (epic.BusinessCase != null)
-            {
-                businessCaseSet.Add(epic.BusinessCase);
-            }
-        }
-
-        foreach (var businessCase in businessCaseSet)
-        {
-            BusinessCase.Add(businessCase);
-        }
-        BusinessCase.Add("PlaceHolder");
-        BusinessCase.Add("None");
-    }
-    private void GetSerializedData()
-    {
-
-        List<UserStoryDataSerialization> userStoryDataSerializations = new();
-        userStoryDataSerializations = _jsonSerialization.DeserializeUserStoryData(SelectedUser.Username);
-        foreach (UserStoryDataSerialization ser in userStoryDataSerializations)
-        {
-            List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
-            for (int i = 0; i < ser.UsersCapacity.Count; i++)
-            {
-                capacityList.Add(new(ser.UsersCapacity[i].Item1, ser.UsersCapacity[i].Item2));
-            }
-
-            allUserStoryAssociation.Add(new UserStoryAssociation(ser.Story, ser.ShortTerm, ser.Remaining, capacityList, MaxNumberOfUsers));
-            MyUserAssociation.Add(allUserStoryAssociation.Last());
-        }
-    }
-
-    private void GetTeamUsers()
-    {
-        var aux = new ObservableCollection<User>(_jsonSerialization.DeserializeTeamData(SelectedUser.Username));
-        for (int i = aux.Count; i < MaxNumberOfUsers; i++)
-        {
-            User newUser = new User("default");
-            newUser.HasTeam = false;
-            aux.Add(newUser);
-        }
-        for (int i = 0; i < MaxNumberOfUsers; i++)
-        {
-            TeamMembers[i] = aux[i];
-        }
-    }
-
-    public void PopulateDefaultTeamUsers()
-    {
-        List<User> aux = new List<User>();
-        for (int i = 0; i < MaxNumberOfUsers; i++)
-        {
-            User newUser = new User("default}");
-            newUser.HasTeam = false;
-            aux.Add(newUser);
-        }
-        TeamMembers = new ObservableCollection<User>(aux);
-    }
-
-    private List<Tuple<User, float>> GenerateDefaultDays()
-    {
-        List<Tuple<User, float>> capacityList = new();
-        for (int i = 0; i < MaxNumberOfUsers; i++)
-        {
-            capacityList.Add(Tuple.Create(new User { Username = TeamMembers[i].Username, HasTeam = false }, 0f));
-        }
-        return capacityList;
-    }
-
-    private void PopulateByDefault()
-    {
-        List<Tuple<User, float>> capacityList = GenerateDefaultDays();
-
-        foreach (IssueData story in allStories)
-        {
-
-            allUserStoryAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList, MaxNumberOfUsers));
-            MyUserAssociation.Add(allUserStoryAssociation.Last());
-        }
-
-    }
-    private void ChangeColorByNumberOfDays()
-    {
-        for (int dayIndex = 0; dayIndex < Balancing[0].Days.Count; dayIndex++)
-        {
-            if (Balancing[0].Days[dayIndex].Value < 0)
-                Balancing[0].ColorBackgroundList[dayIndex] = new SolidColorBrush(Colors.LightCoral);
-            else if (Balancing[0].Days[dayIndex].Value < 4)
-                Balancing[0].ColorBackgroundList[dayIndex] = new SolidColorBrush(Colors.Yellow);
-            else
-                Balancing[0].ColorBackgroundList[dayIndex] = new SolidColorBrush(Colors.LightGreen);
-
-        }
-    }
-
-    private void ChangeColorOnCovorage()
-    {
-        for(int asocIndex=0; asocIndex < allUserStoryAssociation.Count; asocIndex++)
-        {
-            if (allUserStoryAssociation[asocIndex].Coverage.Value == 0)
-                allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightCoral);
-            else if (allUserStoryAssociation[asocIndex].Coverage.Value == 100)
-                allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightGreen);
-            else
-                allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.Yellow);
-        }
-    }
-
-    
-
-    private void RepopulateEpics()
-    {
-        Epics.Clear();
-        List<IssueData> epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
-        foreach (var item in epics)
-        {
-            Epics.Add(item);
-        }
-    }
-    
-    private void Filter()
-    {
-        if (FilterString == string.Empty) return;
-
-        switch (FilterString)
-        {
-
-            case "None":
-                RepopulateEpics();
-                MyUserAssociation.Clear();
-                foreach (UserStoryAssociation userStoryAssociation in allUserStoryAssociation)
-                {
-                    MyUserAssociation.Add(userStoryAssociation);
-                }
-                if (currentEpicId != -1)
-                {
-                    for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
-                    {
-                        if (MyUserAssociation[userStoryAssociationIndex].StoryData.EpicID != currentEpicId)
-                        {
-                            MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
-                            userStoryAssociationIndex--;
-                        }
-                    }
-                }
-
-                break;
-
-            case "Placeholders":
-                for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
-                {
-                    if (!MyUserAssociation[userStoryAssociationIndex].StoryData.Name.Contains("#"))
-                    {
-                        MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
-                        userStoryAssociationIndex--;
-                    }
-                }
-                break;
-            
-
-            default:
-                RepopulateEpics();
-                for (int issueIndex = 0; issueIndex < Epics.Count; issueIndex++)
-                {
-                    if (Epics[issueIndex].BusinessCase != FilterString)
-                    {
-
-                        if (MyUserAssociation.Count > 0 && MyUserAssociation.First().StoryData.EpicID == Epics[issueIndex].Id && MyUserAssociation.Count != allUserStoryAssociation.Count)
-                            MyUserAssociation.Clear();
-
-                        Epics.Remove(Epics[issueIndex]);
-                        issueIndex--;
-                    }
-                }
-
-                if (MyUserAssociation.Count == allUserStoryAssociation.Count)
-                {
-                    for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
-                    {
-                        int issueIndex;
-                        for (issueIndex = 0; issueIndex < Epics.Count; issueIndex++)
-                        {
-                            if (MyUserAssociation[userStoryAssociationIndex].StoryData.EpicID == Epics[issueIndex].Id)
-                                break;
-                        }
-                        if (issueIndex == Epics.Count)
-                        {
-                            MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
-                            userStoryAssociationIndex--;
-                        }
-
-                    }
-                }
-                break;
-
-
-        };
-
-    }
-
-    [RelayCommand]
-    public void OpenTeamPage()
-    {
-        if (SelectedUser != null)
-        {
-            var vm = _serviceCollection.GetService(typeof(TeamViewModel));
-            if (vm != null)
-            {
-                ((TeamViewModel)vm).PopulateUsersLists(SelectedUser.Username);
-            }
-            _navigationService.CurrentPageType = typeof(TeamPage);
-        }
-
-    }
-
-    [RelayCommand]
-    public void OpenSprintSelectionPage()
-    {
-        if (SelectedUser != null)
-        {
-            IsBalancing = false;
-            _navigationService!.CurrentPageType = typeof(SprintSelectionPage);
-        }
-    }
-
-    [RelayCommand]
-    public void SerializeOnSave()
-    {
-        if (SelectedUser == null)
-        { 
-            return; 
-        }
-
-        SerializeStoryData();
-
-
-        var mainWindow = _serviceCollection.GetService(typeof(Window));
-        var dialog = new SaveSuccessfulWindow("Saved succesfully!");
-        dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        dialog.ShowDialog((MainWindow)mainWindow);
-    }
-
-    private void SerializeStoryData()
-    {
-        List<UserStoryDataSerialization> userStoryDataSerializations = new List<UserStoryDataSerialization>();
-
-        for (int j = 0; j < allUserStoryAssociation.Count; j++)
-        {
-            List<Tuple<User, float>> capacityList = new List<Tuple<User, float>>();
-            for (int i = 0; i < MaxNumberOfUsers; i++)
-            {
-                capacityList.Add(new Tuple<User, float>(TeamMembers[i], allUserStoryAssociation[j].Days[i].Value));
-            }
-            userStoryDataSerializations.Add(new UserStoryDataSerialization(allUserStoryAssociation[j].StoryData, allUserStoryAssociation[j].ShortTerm, allUserStoryAssociation[j].Remaining, capacityList));
-        }
-
-        _jsonSerialization.SerializeUserStoryData(userStoryDataSerializations, SelectedUser.Username);
-    }
-
-    private void OrderTeamAndStoryInfo()
-    {
-        TeamMembers = new ObservableCollection<User>(TeamMembers.OrderBy(m => m.Username));
-        foreach (UserStoryAssociation userStoryAssociation in MyUserAssociation)
-        {
-            userStoryAssociation.Days = new ObservableCollection<Wrapper<float>>(userStoryAssociation.Days.OrderBy(m => m.UserName));
-        }
-        OpenTasks = OpenTasks.OrderBy(x => x.User.Username).ToList();
-
-    }
-
     public void CreateDefaultListWithDays
         (List<Wrapper<float>> defaultList)
     {
@@ -481,19 +335,18 @@ public sealed partial class BalancingViewModel : ObservableObject
 
     public void SyncTeamWithBalancingPageData()
     {
+        if(SelectedUser == null) return;
         if (File.Exists(JsonSerialization.UserFilePath + SelectedUser.Username))
         {
             GetTeamUsers();
         }
 
         List<User> teamMembers = TeamMembers.Where(user => user.Username != "default").ToList();
-
         List<Wrapper<float>> defaultList = new();
 
 
         foreach (UserStoryAssociation userStoryAssociation in MyUserAssociation)
         {
-
             CreateDefaultListWithDays(defaultList);
 
             for (int i = 0; i < teamMembers.Count; i++)
@@ -518,23 +371,48 @@ public sealed partial class BalancingViewModel : ObservableObject
         SerializeStoryData();
 
         CalculateCoverage();
-        
+
     }
 
-    private void SyncronizeDisplayedAsocListWithAllStoriesList()
+    private void GetBusinessCaseForEpics()
     {
-        for (int myUserAsocIndex = 0; myUserAsocIndex < MyUserAssociation.Count; myUserAsocIndex++)
+        foreach (var epic in Epics)
         {
-            for (int allUserAsocIndex = 0; allUserAsocIndex < allUserStoryAssociation.Count; allUserAsocIndex++)
+            if (epic.BusinessCase != null)
             {
-                if (allUserStoryAssociation[allUserAsocIndex].StoryData.Name == MyUserAssociation[myUserAsocIndex].StoryData.Name)
-                {
-                    allUserStoryAssociation[allUserAsocIndex] = MyUserAssociation[myUserAsocIndex];
-                    break;
-                }
+                businessCaseSet.Add(epic.BusinessCase);
             }
         }
 
+        foreach (var businessCase in businessCaseSet)
+        {
+            BusinessCase.Add(businessCase);
+        }
+        BusinessCase.Add("PlaceHolder");
+        BusinessCase.Add("None");
+    }
+
+    private List<Tuple<User, float>> GenerateDefaultDays()
+    {
+        List<Tuple<User, float>> capacityList = new();
+        for (int i = 0; i < MaxNumberOfUsers; i++)
+        {
+            capacityList.Add(Tuple.Create(new User { Username = TeamMembers[i].Username, HasTeam = false }, 0f));
+        }
+        return capacityList;
+    }
+
+    private void ChangeColorByNumberOfDays()
+    {
+        for (int dayIndex = 0; dayIndex < Balancing[0].Days.Count; dayIndex++)
+        {
+            if (Balancing[0].Days[dayIndex].Value < 0)
+                Balancing[0].ColorBackgroundList[dayIndex] = new SolidColorBrush(Colors.LightCoral);
+            else if (Balancing[0].Days[dayIndex].Value < 4)
+                Balancing[0].ColorBackgroundList[dayIndex] = new SolidColorBrush(Colors.Yellow);
+            else
+                Balancing[0].ColorBackgroundList[dayIndex] = new SolidColorBrush(Colors.LightGreen);
+        }
     }
 
     private void DisplayStoriesFromAnEpic(int epicId)
@@ -547,228 +425,6 @@ public sealed partial class BalancingViewModel : ObservableObject
         }
     }
 
-    public static double GetBusinessDays(DateTime startD, DateTime endD)
-    {
-        double calcBusinessDays =
-            1 + ((endD - startD).TotalDays * 5 -
-            (startD.DayOfWeek - endD.DayOfWeek) * 2) / 7;
-
-        if (endD.DayOfWeek == DayOfWeek.Saturday) calcBusinessDays--;
-        if (startD.DayOfWeek == DayOfWeek.Sunday) calcBusinessDays--;
-        return calcBusinessDays;
-    }
-
-    [RelayCommand]
-    public void EpicClicked(int id)
-    {
-
-        //SyncronizeDisplayedAsocListWithAllStoriesList();
-        DisplayStoriesFromAnEpic(id);
-        ShowShortTermStoryes();
-        //get stories with same epicID and display them
-
-        currentEpicId = id;
-        GetStories = true;
-
-
-
-        Filter();
-
-        CalculateCoverage();
-        
-        OrderTeamAndStoryInfo();
-        
-    }
-
-    [RelayCommand]
-    public void AllEpicsClicked()
-    {
-        allUserStoryAssociation.Clear();
-        ShowAllStories();
-        CalculateCoverage();
-    }
-
-    [RelayCommand]
-    public void ShowAllStories()
-    {
-        MyUserAssociation.Clear();
-        if (File.Exists(JsonSerialization.UserStoryFilePath + SelectedUser.Username))
-        {
-            GetSerializedData();
-            CalculateCoverage();
-        }
-        else
-        {
-            PopulateByDefault();
-        }
-        ShowShortTermStoryes();
-        GetStories = true;
-        currentEpicId = -1;
-
-        Filter();
-        
-    }
-
-    public void RefreshStories()
-    {
-        List<Tuple<User, float>> capacityList = GenerateDefaultDays();
-
-        foreach (var story in allStories)
-        {
-            if (allUserStoryAssociation.FirstOrDefault(u => u.StoryData.Id == story.Id) == null)
-            {
-                allUserStoryAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList, MaxNumberOfUsers));
-                MyUserAssociation.Add(allUserStoryAssociation.Last());
-            }
-        }
-    }
-
-    [RelayCommand]
-    public void RefreshClicked()
-    {
-        if (SelectedUser == null)
-        {
-            return;
-        }
-        MyUserAssociation.Clear();
-
-        allUserStoryAssociation.Clear();
-
-        allStories = _queriesForDataBase.GetAllStoriesByTeamLeader(SelectedUser);
-
-        ShowAllStories();
-
-        RefreshStories();
-
-        OrderTeamAndStoryInfo();
-    }
-
-    public void CalculateCoverage()
-    {
-
-        for (int i = 0; i < MyUserAssociation.Count; i++)
-        {
-            MyUserAssociation[i].CalculateCoverage();
-        }
-
-        ChangeColorOnCovorage();
-    }
-
-    [RelayCommand]
-    public void CalculateCoverageButton()
-    {
-        if (SelectedUser != null)
-        {
-            CalculateCoverage();
-            CalculateTotals();
-        }
-    }
-
-
-    [RelayCommand]
-    public void ShowShortTermStoryes()
-    {
-        if (SelectedUser == null)
-        {
-            IsShortTermVisible = false;
-            return;
-        }
-        ShortTermStoryes = new();
-
-        for (int i = 0; i < allUserStoryAssociation.Count; i++)
-        {
-            if (allUserStoryAssociation[i].ShortTerm)
-            {
-                ShortTermStoryes.Add(allUserStoryAssociation[i]);
-            }
-        }
-
-        CalculateTotalsButton();
-        IsBalancing = true;
-    }
-
-    [RelayCommand]
-    public void CalculateTotalsButton()
-    {
-        if (SelectedUser == null)
-        {
-            IsBalancing = false;
-            return;
-        }
-
-        var vm = _serviceCollection.GetService(typeof(SprintSelectionViewModel));
-        if (vm != null)
-        {
-            if (((SprintSelectionViewModel)vm).Sprints.Count == 0)
-            {
-                //var mainWindow = _serviceCollection.GetService(typeof(Window));
-                //var dialog = new SaveSuccessfulWindow("Define your sprints first!");
-                //dialog.Title = "Info";
-                //dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                //dialog.ShowDialog((MainWindow)mainWindow);
-
-                IsBalancing = false;
-                return;
-            }
-        }
-
-        CalculateTotals();
-    }
-
-    public void CalculateTotals()
-    {
-        
-        CalculateWork(IsShortTermVisible);
-        OrderTeamAndStoryInfo();
-        CalculateBalancing(IsShortTermVisible);
-        InitializeTotals();
-    }
-
-    [RelayCommand]
-    public void UncheckShortTermStory(string id)
-    {
-        for (int i = 0; i < MyUserAssociation.Count; i++)
-        {
-            if (MyUserAssociation[i].StoryData.Name == id)
-            {
-                MyUserAssociation[i].ShortTerm = false;
-                ShortTermStoryes.Remove(MyUserAssociation[i]);
-            }
-        }
-    }
-
-    [RelayCommand]
-    public void DeleteLocalFiles()
-    {
-        if (SelectedUser == null)
-        {
-            return;
-        }
-     
-        var mainWindow = _serviceCollection.GetService(typeof(Window));
-        var dialog = new DeleteLocalFilesWindow("Do you want to delete local files?");
-        dialog.SelectedUser = SelectedUser;
-        dialog.serviceCollection = _serviceCollection;
-        dialog.Title = "Delete Local Files";
-        dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        dialog.ShowDialog((MainWindow)mainWindow);
-
-    }
-
-    [RelayCommand]
-    public void OpenReleaseCalendar()
-    {
-        if (SelectedUser != null)
-        {
-            var vm = _serviceCollection.GetService(typeof(ReleaseCalendarViewModel));
-            if (vm != null)
-            {
-                ((ReleaseCalendarViewModel)vm).GetSprintsFromSprintSelection();
-            }
-
-            _navigationService.CurrentPageType = typeof(ReleaseCalendarPage);
-        }
-    }
     public List<Tuple<User, float>> CalculateBalancing(bool shortTerm)
     {
         List<Tuple<User, float>> balance = new List<Tuple<User, float>>();
@@ -864,10 +520,11 @@ public sealed partial class BalancingViewModel : ObservableObject
             {
                 numberOfWorkingDays = ((SprintSelectionViewModel)vm).GetWorkingDays();
             }
-            else {
+            else
+            {
 
                 numberOfWorkingDays = ((SprintSelectionViewModel)vm).RemainingDays();
-                    }
+            }
         }
         foreach (var item in TeamMembers)
         {
@@ -915,41 +572,373 @@ public sealed partial class BalancingViewModel : ObservableObject
                  MaxNumberOfUsers
              );
     }
-    [ObservableProperty]
-    private ObservableCollection<User> _teamMembers;
-    public ObservableCollection<UserStoryAssociation> Totals { get; set; } = new ObservableCollection<UserStoryAssociation>()
+
+    /*public static double GetBusinessDays(DateTime startD, DateTime endD)
     {
-        new UserStoryAssociation(
-                 new IssueData("Open tasks", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
-                 true,
-                 3.0f,
-                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                 MaxNumberOfUsers
-             ),
+        double calcBusinessDays =
+            1 + ((endD - startD).TotalDays * 5 -
+            (startD.DayOfWeek - endD.DayOfWeek) * 2) / 7;
 
-        new UserStoryAssociation(
-                 new IssueData("Total work open story", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
-                 true,
-                 3.0f,
-                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                 MaxNumberOfUsers
-             ),
-          new UserStoryAssociation(
-                 new IssueData("Total work", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
-                 true,
-                 3.0f,
-                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                 MaxNumberOfUsers
-             ),
-          new UserStoryAssociation(
-                 new IssueData("Total capacity", 5.0f, "Release 1", "Sprint 1", true, IssueData.IssueType.Story),
-                 true,
-                 3.0f,
-                 new List<float> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-                 MaxNumberOfUsers
-             ),
+        if (endD.DayOfWeek == DayOfWeek.Saturday) calcBusinessDays--;
+        if (startD.DayOfWeek == DayOfWeek.Sunday) calcBusinessDays--;
+        return calcBusinessDays;
+    }*/
 
-    };
+    private void ChangeColorOnCovorage()
+    {
+        for(int asocIndex=0; asocIndex < allUserStoryAssociation.Count; asocIndex++)
+        {
+            if (allUserStoryAssociation[asocIndex].Coverage.Value == 0)
+                allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightCoral);
+            else if (allUserStoryAssociation[asocIndex].Coverage.Value == 100)
+                allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightGreen);
+            else
+                allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.Yellow);
+        }
+    }
+
+    private void RepopulateEpics()
+    {
+        Epics.Clear();
+        List<IssueData> epics = _queriesForDataBase.GetAllEpicsByTeamLeader(SelectedUser);
+        foreach (var item in epics)
+        {
+            Epics.Add(item);
+        }
+    }
+    
+    private void Filter()
+    {
+        if (FilterString == string.Empty) return;
+
+        switch (FilterString)
+        {
+
+            case "None":
+                RepopulateEpics();
+                MyUserAssociation.Clear();
+                foreach (UserStoryAssociation userStoryAssociation in allUserStoryAssociation)
+                {
+                    MyUserAssociation.Add(userStoryAssociation);
+                }
+                if (currentEpicId != -1)
+                {
+                    for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
+                    {
+                        if (MyUserAssociation[userStoryAssociationIndex].StoryData.EpicID != currentEpicId)
+                        {
+                            MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
+                            userStoryAssociationIndex--;
+                        }
+                    }
+                }
+
+                break;
+
+            case "Placeholders":
+                for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
+                {
+                    if (!MyUserAssociation[userStoryAssociationIndex].StoryData.Name.Contains("#"))
+                    {
+                        MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
+                        userStoryAssociationIndex--;
+                    }
+                }
+                break;
+            
+
+            default:
+                RepopulateEpics();
+                for (int issueIndex = 0; issueIndex < Epics.Count; issueIndex++)
+                {
+                    if (Epics[issueIndex].BusinessCase != FilterString)
+                    {
+
+                        if (MyUserAssociation.Count > 0 && MyUserAssociation.First().StoryData.EpicID == Epics[issueIndex].Id && MyUserAssociation.Count != allUserStoryAssociation.Count)
+                            MyUserAssociation.Clear();
+
+                        Epics.Remove(Epics[issueIndex]);
+                        issueIndex--;
+                    }
+                }
+
+                if (MyUserAssociation.Count == allUserStoryAssociation.Count)
+                {
+                    for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
+                    {
+                        int issueIndex;
+                        for (issueIndex = 0; issueIndex < Epics.Count; issueIndex++)
+                        {
+                            if (MyUserAssociation[userStoryAssociationIndex].StoryData.EpicID == Epics[issueIndex].Id)
+                                break;
+                        }
+                        if (issueIndex == Epics.Count)
+                        {
+                            MyUserAssociation.Remove(MyUserAssociation[userStoryAssociationIndex]);
+                            userStoryAssociationIndex--;
+                        }
+
+                    }
+                }
+                break;
+
+
+        };
+
+    }
+
+    public void RefreshStories()
+    {
+        List<Tuple<User, float>> capacityList = GenerateDefaultDays();
+
+        foreach (var story in allStories)
+        {
+            if (allUserStoryAssociation.FirstOrDefault(u => u.StoryData.Id == story.Id) == null)
+            {
+                allUserStoryAssociation.Add(new UserStoryAssociation(story, false, story.Remaining, capacityList, MaxNumberOfUsers));
+                MyUserAssociation.Add(allUserStoryAssociation.Last());
+            }
+        }
+    }
+    public void CalculateCoverage()
+    {
+
+        for (int i = 0; i < MyUserAssociation.Count; i++)
+        {
+            MyUserAssociation[i].CalculateCoverage();
+        }
+
+        ChangeColorOnCovorage();
+    }
+
+    public void CalculateTotals()
+    {
+
+        CalculateWork(IsShortTermVisible);
+        OrderTeamAndStoryInfo();
+        CalculateBalancing(IsShortTermVisible);
+        InitializeTotals();
+    }
+
+
+    //RelayCommands
+    [RelayCommand]
+    public void OpenTeamPage()
+    {
+        if (SelectedUser != null)
+        {
+            var vm = _serviceCollection.GetService(typeof(TeamViewModel));
+            if (vm != null)
+            {
+                ((TeamViewModel)vm).PopulateUsersLists(SelectedUser.Username);
+            }
+            _navigationService.CurrentPageType = typeof(TeamPage);
+        }
+
+    }
+
+    [RelayCommand]
+    public void OpenSprintSelectionPage()
+    {
+        if (SelectedUser != null)
+        {
+            IsBalancing = false;
+            _navigationService!.CurrentPageType = typeof(SprintSelectionPage);
+        }
+    }
+
+    [RelayCommand]
+    public void SerializeOnSave()
+    {
+        if (SelectedUser == null)
+        {
+            return;
+        }
+
+        SerializeStoryData();
+
+
+        var mainWindow = _serviceCollection.GetService(typeof(Window));
+        var dialog = new SaveSuccessfulWindow("Saved succesfully!");
+        dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        dialog.ShowDialog((MainWindow)mainWindow);
+    }
+
+    [RelayCommand]
+    public void EpicClicked(int id)
+    {
+        DisplayStoriesFromAnEpic(id);
+        ShowShortTermStoryes();
+
+        currentEpicId = id;
+        GetStories = true;
+
+        Filter();
+
+        CalculateCoverage();
+        
+        OrderTeamAndStoryInfo();
+        
+    }
+
+    [RelayCommand]
+    public void AllEpicsClicked()
+    {
+        allUserStoryAssociation.Clear();
+        ShowAllStories();
+        CalculateCoverage();
+    }
+
+    [RelayCommand]
+    public void ShowAllStories()
+    {
+        MyUserAssociation.Clear();
+        if (File.Exists(JsonSerialization.UserStoryFilePath + SelectedUser.Username))
+        {
+            GetSerializedData();
+            CalculateCoverage();
+        }
+        else
+        {
+            PopulateByDefault();
+        }
+        ShowShortTermStoryes();
+        GetStories = true;
+        currentEpicId = -1;
+
+        Filter();
+        
+    }
+
+    [RelayCommand]
+    public void RefreshClicked()
+    {
+        if (SelectedUser == null)
+        {
+            return;
+        }
+        MyUserAssociation.Clear();
+
+        allUserStoryAssociation.Clear();
+
+        allStories = _queriesForDataBase.GetAllStoriesByTeamLeader(SelectedUser);
+
+        ShowAllStories();
+
+        RefreshStories();
+
+        OrderTeamAndStoryInfo();
+    }
+
+    [RelayCommand]
+    public void CalculateCoverageButton()
+    {
+        if (SelectedUser != null)
+        {
+            CalculateCoverage();
+            CalculateTotals();
+        }
+    }
+
+
+    [RelayCommand]
+    public void ShowShortTermStoryes()
+    {
+        if (SelectedUser == null)
+        {
+            IsShortTermVisible = false;
+            return;
+        }
+        ShortTermStoryes = new();
+
+        for (int i = 0; i < allUserStoryAssociation.Count; i++)
+        {
+            if (allUserStoryAssociation[i].ShortTerm)
+            {
+                ShortTermStoryes.Add(allUserStoryAssociation[i]);
+            }
+        }
+
+        CalculateTotalsButton();
+        IsBalancing = true;
+    }
+
+    [RelayCommand]
+    public void CalculateTotalsButton()
+    {
+        if (SelectedUser == null)
+        {
+            IsBalancing = false;
+            return;
+        }
+
+        var vm = _serviceCollection.GetService(typeof(SprintSelectionViewModel));
+        if (vm != null)
+        {
+            if (((SprintSelectionViewModel)vm).Sprints.Count == 0)
+            {
+                //var mainWindow = _serviceCollection.GetService(typeof(Window));
+                //var dialog = new SaveSuccessfulWindow("Define your sprints first!");
+                //dialog.Title = "Info";
+                //dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                //dialog.ShowDialog((MainWindow)mainWindow);
+
+                IsBalancing = false;
+                return;
+            }
+        }
+
+        CalculateTotals();
+    }
+
+    [RelayCommand]
+    public void UncheckShortTermStory(string id)
+    {
+        for (int i = 0; i < MyUserAssociation.Count; i++)
+        {
+            if (MyUserAssociation[i].StoryData.Name == id)
+            {
+                MyUserAssociation[i].ShortTerm = false;
+                ShortTermStoryes.Remove(MyUserAssociation[i]);
+            }
+        }
+    }
+
+    [RelayCommand]
+    public void DeleteLocalFiles()
+    {
+        if (SelectedUser == null)
+        {
+            return;
+        }
+     
+        var mainWindow = _serviceCollection.GetService(typeof(Window));
+        var dialog = new DeleteLocalFilesWindow("Do you want to delete local files?");
+        dialog.SelectedUser = SelectedUser;
+        dialog.serviceCollection = _serviceCollection;
+        dialog.Title = "Delete Local Files";
+        dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        dialog.ShowDialog((MainWindow)mainWindow);
+
+    }
+
+    [RelayCommand]
+    public void OpenReleaseCalendar()
+    {
+        if (SelectedUser != null)
+        {
+            var vm = _serviceCollection.GetService(typeof(ReleaseCalendarViewModel));
+            if (vm != null)
+            {
+                ((ReleaseCalendarViewModel)vm).GetSprintsFromSprintSelection();
+            }
+
+            _navigationService.CurrentPageType = typeof(ReleaseCalendarPage);
+        }
+    }
+    
+    
+    
 };
 
 
