@@ -37,6 +37,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="LocalFiles\SelectionShortTerm\" />
+		<Folder Include="LocalFiles\SelectionShortTerm\" />
+		<Folder Include="LocalFiles\SprintData\" />
 		<Folder Include="LocalFiles\TeamData\" />
 		<Folder Include="LocalFiles\UserStoryData\" />
 	</ItemGroup>

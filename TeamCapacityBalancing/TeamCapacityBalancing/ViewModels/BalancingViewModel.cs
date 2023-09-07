@@ -587,8 +587,8 @@ public sealed partial class BalancingViewModel : ObservableObject
     private void ChangeColorOnCovorage()
     {
         for(int asocIndex=0; asocIndex < allUserStoryAssociation.Count; asocIndex++)
-        {
-            if (allUserStoryAssociation[asocIndex].Coverage.Value == 0)
+        { 
+            if (allUserStoryAssociation[asocIndex].Coverage.Value == 0 || allUserStoryAssociation[asocIndex].Coverage.Value >100)
                 allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightCoral);
             else if (allUserStoryAssociation[asocIndex].Coverage.Value == 100)
                 allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightGreen);
@@ -635,7 +635,7 @@ public sealed partial class BalancingViewModel : ObservableObject
 
                 break;
 
-            case "Placeholders":
+            case "PlaceHolder":
                 for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
                 {
                     if (!MyUserAssociation[userStoryAssociationIndex].StoryData.Name.Contains("#"))
@@ -740,9 +740,15 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void OpenSprintSelectionPage()
     {
+
         if (SelectedUser != null)
         {
             IsBalancing = false;
+            var vm= _serviceCollection.GetService(typeof(SprintSelectionViewModel));
+            if (vm != null) 
+            {
+                ((SprintSelectionViewModel)vm).UpdateSprintShortTermInfo();
+            }
             _navigationService!.CurrentPageType = typeof(SprintSelectionPage);
         }
     }
@@ -767,6 +773,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void EpicClicked(int id)
     {
+     
         DisplayStoriesFromAnEpic(id);
         ShowShortTermStoryes();
 
