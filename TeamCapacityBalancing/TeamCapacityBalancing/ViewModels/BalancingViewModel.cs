@@ -297,8 +297,8 @@ public sealed partial class BalancingViewModel : ObservableObject
     private void ChangeColorOnCovorage()
     {
         for(int asocIndex=0; asocIndex < allUserStoryAssociation.Count; asocIndex++)
-        {
-            if (allUserStoryAssociation[asocIndex].Coverage.Value == 0)
+        { 
+            if (allUserStoryAssociation[asocIndex].Coverage.Value == 0 || allUserStoryAssociation[asocIndex].Coverage.Value >100)
                 allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightCoral);
             else if (allUserStoryAssociation[asocIndex].Coverage.Value == 100)
                 allUserStoryAssociation[asocIndex].ColorBackgroundList[0] = new SolidColorBrush(Colors.LightGreen);

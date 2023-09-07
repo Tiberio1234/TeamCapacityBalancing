@@ -114,9 +114,9 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
                         FinishDate = DateTime.Parse(Sprints[Sprints.Count -1].EndDate);
                         //workingDays = CalculcateWorkingDays(DateTime.Now, FinishDate.GetValueOrDefault().DateTime);
                     }
-                    else
+                    else if(NrSprints != 0)
                     {
-                        FinishDate = DateTime.Parse(Sprints[(NrSprints + i)-1].EndDate);
+                        FinishDate = DateTime.Parse(Sprints[(NrSprints + i) - 1].EndDate);
                         //workingDays = CalculcateWorkingDays(DateTime.Now, FinishDate.GetValueOrDefault().DateTime);
                     }
                 }
@@ -188,7 +188,7 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
                             FinishDate = DateTime.Parse(Sprints[Sprints.Count - 1].EndDate);
                             workingDays = CalculcateWorkingDays(DateTime.Now, FinishDate.GetValueOrDefault().DateTime);
                         }
-                        else
+                        else if (NrSprints != 0)
                         {
                             FinishDate = DateTime.Parse(Sprints[(NrSprints + i) - 1].EndDate);
                             workingDays = CalculcateWorkingDays(DateTime.Now, FinishDate.GetValueOrDefault().DateTime);
