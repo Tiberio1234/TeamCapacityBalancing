@@ -522,7 +522,6 @@ public sealed partial class BalancingViewModel : ObservableObject
             }
             else
             {
-
                 numberOfWorkingDays = ((SprintSelectionViewModel)vm).RemainingDays();
             }
         }
@@ -572,17 +571,6 @@ public sealed partial class BalancingViewModel : ObservableObject
                  MaxNumberOfUsers
              );
     }
-
-    /*public static double GetBusinessDays(DateTime startD, DateTime endD)
-    {
-        double calcBusinessDays =
-            1 + ((endD - startD).TotalDays * 5 -
-            (startD.DayOfWeek - endD.DayOfWeek) * 2) / 7;
-
-        if (endD.DayOfWeek == DayOfWeek.Saturday) calcBusinessDays--;
-        if (startD.DayOfWeek == DayOfWeek.Sunday) calcBusinessDays--;
-        return calcBusinessDays;
-    }*/
 
     private void ChangeColorOnCovorage()
     {
@@ -636,6 +624,12 @@ public sealed partial class BalancingViewModel : ObservableObject
                 break;
 
             case "PlaceHolder":
+                RepopulateEpics();
+                MyUserAssociation.Clear();
+                foreach (UserStoryAssociation userStoryAssociation in allUserStoryAssociation)
+                {
+                    MyUserAssociation.Add(userStoryAssociation);
+                }
                 for (int userStoryAssociationIndex = 0; userStoryAssociationIndex < MyUserAssociation.Count; ++userStoryAssociationIndex)
                 {
                     if (!MyUserAssociation[userStoryAssociationIndex].StoryData.Name.Contains("#"))
@@ -659,6 +653,14 @@ public sealed partial class BalancingViewModel : ObservableObject
 
                         Epics.Remove(Epics[issueIndex]);
                         issueIndex--;
+                    }
+
+                    if(MyUserAssociation.Count == 0)
+                    {
+                        foreach(var asoc in allUserStoryAssociation)
+                        {
+                            MyUserAssociation.Add(asoc);
+                        }
                     }
                 }
 
@@ -773,14 +775,13 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void EpicClicked(int id)
     {
-     
+        SerializeStoryData();
         DisplayStoriesFromAnEpic(id);
         ShowShortTermStoryes();
 
         currentEpicId = id;
         GetStories = true;
 
-        Filter();
 
         CalculateCoverage();
         
@@ -791,6 +792,7 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void AllEpicsClicked()
     {
+        SerializeStoryData();
         allUserStoryAssociation.Clear();
         ShowAllStories();
         CalculateCoverage();

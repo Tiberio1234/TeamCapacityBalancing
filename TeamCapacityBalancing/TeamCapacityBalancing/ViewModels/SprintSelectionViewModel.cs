@@ -75,6 +75,10 @@ public sealed partial class SprintSelectionViewModel : ObservableObject
     }
     public int RemainingDays()
     {
+        if (Sprints.Count == 0)
+        {
+            return 0;
+        }
         DateTime today = DateTime.Now;
         DateTime beginingOfSprint = DateTime.Parse(Sprints[0].StartDate);
         DateTime lastDate = DateTime.Parse(Sprints[Sprints.Count - 1].EndDate);

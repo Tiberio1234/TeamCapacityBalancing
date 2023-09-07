@@ -80,7 +80,7 @@
 
 
 		</StackPanel>
-		<SplitView Grid.Row="1" OpenPaneLength="200" CompactPaneLength="35" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="{Binding Mode}">
+		<SplitView Grid.Row="1" OpenPaneLength="250" CompactPaneLength="35" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsPaneOpen="{Binding IsPaneOpen}" DisplayMode="{Binding Mode}">
 			<SplitView.Pane>
 				<Grid>
 					<Grid.RowDefinitions>
@@ -294,7 +294,7 @@
 					</DataGrid.Columns>
 
 				</DataGrid>
-				<DataGrid Grid.Row="1" x:Name="dataGridOne" Height="150" ColumnWidth="*" IsVisible="{Binding IsShortTermVisible}" Items="{Binding ShortTermStoryes}"
+				<DataGrid Grid.Row="1" x:Name="dataGridOne" Height="250" ColumnWidth="*" IsVisible="{Binding IsShortTermVisible}" Items="{Binding ShortTermStoryes}"
 						 AutoGenerateColumns="False" GridLinesVisibility="All" BorderThickness="1" BorderBrush="Gray">
 
 					<DataGrid.Columns>
