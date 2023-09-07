@@ -392,9 +392,14 @@ public sealed partial class BalancingViewModel : ObservableObject
     [RelayCommand]
     public void OpenSprintSelectionPage()
     {
+
         if (SelectedUser != null)
         {
-
+            var vm= _serviceCollection.GetService(typeof(SprintSelectionViewModel));
+            if (vm != null) 
+            {
+                ((SprintSelectionViewModel)vm).UpdateSprintShortTermInfo();
+            }
             _navigationService!.CurrentPageType = typeof(SprintSelectionPage);
         }
     }
