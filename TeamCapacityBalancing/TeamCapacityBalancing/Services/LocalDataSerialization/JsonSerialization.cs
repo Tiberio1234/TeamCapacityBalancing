@@ -17,6 +17,16 @@ namespace TeamCapacityBalancing.Services.LocalDataSerialization
         public const string UserStoryFilePath = BasePath + "UserStoryData/";
         public const string UserFilePath = BasePath + "TeamData/";
         public const string SprintPath = BasePath + "SprintData/";
+        public const string SelectionShortTermPath = BasePath + "SelectionShortTerm/";
+
+        public SprintSelectionShortTerm DeserializeSelectionShortTerm(string filename)
+        {
+            if (File.Exists(SelectionShortTermPath+ filename))
+            {
+                return JsonConvert.DeserializeObject<SprintSelectionShortTerm>(File.ReadAllText(SelectionShortTermPath + filename));
+            }
+            return new SprintSelectionShortTerm();
+        }
 
         public List<Sprint> DeserializeSprint(string filename)
         {
@@ -59,6 +69,11 @@ namespace TeamCapacityBalancing.Services.LocalDataSerialization
         public void SerializeUserStoryData(List<UserStoryDataSerialization> userStoryDataSerializations,string filename)
         {
             File.WriteAllText(UserStoryFilePath + filename, JsonConvert.SerializeObject(userStoryDataSerializations));
+        }
+
+        public void SerializeSelectionShortTermInfo(SprintSelectionShortTerm SelectShortTermInfoSerializations, string filename)
+        {
+            File.WriteAllText(SelectionShortTermPath + filename, JsonConvert.SerializeObject(SelectShortTermInfoSerializations));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia.Interactivity;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.VisualBasic;
 using System;
 
@@ -31,4 +32,10 @@ public partial class Sprint:ObservableObject
         StartDate = startDate;
         EndDate = endDate;
     }
+
+    public void TextBoxLostFocus(object sender, RoutedEventArgs e)
+    {
+        // Your logic here
+    }
+
 }

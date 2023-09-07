@@ -20,5 +20,9 @@ namespace TeamCapacityBalancing.Services.ServicesAbstractions
 
         public List<Sprint> DeserializeSprint(string filename);
 
+        public void SerializeSelectionShortTermInfo(SprintSelectionShortTerm SelectShortTermInfoSerializations, string filename);
+
+        public SprintSelectionShortTerm DeserializeSelectionShortTerm(string filename);
+
     }
 }
