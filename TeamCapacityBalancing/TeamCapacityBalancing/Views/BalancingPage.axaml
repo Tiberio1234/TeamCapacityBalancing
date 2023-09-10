@@ -184,7 +184,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[0].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[0].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[0].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[0].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100" />
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -194,7 +194,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[1].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[1].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[1].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[1].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -204,7 +204,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[2].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[2].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[2].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[2].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -213,7 +213,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[3].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[3].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[3].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[3].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -223,7 +223,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[4].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[4].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[4].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[4].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -233,7 +233,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[5].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[5].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[5].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[5].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -243,7 +243,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[6].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[6].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[6].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[6].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -253,7 +253,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[7].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[7].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[7].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[7].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -263,7 +263,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[8].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[8].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[8].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[8].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -273,7 +273,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[9].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[9].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[9].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[9].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -331,7 +331,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[0].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[0].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[0].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[0].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -341,7 +341,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[1].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[1].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[1].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[1].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -351,7 +351,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[2].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[2].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[2].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[2].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -360,7 +360,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[3].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[3].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[3].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[3].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100" />
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -370,7 +370,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[4].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[4].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[4].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[4].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100" />
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -380,7 +380,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[5].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[5].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[5].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[5].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100" />
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -390,7 +390,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[6].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[6].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[6].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[6].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100" />
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -400,7 +400,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[7].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[7].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[7].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[7].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100" />
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -410,7 +410,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[8].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[8].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[8].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[8].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
@@ -420,7 +420,7 @@
 						<DataGridTemplateColumn MinWidth="60" Header="{Binding TeamMembers[9].DisplayName}" Width="80" IsVisible="{Binding TeamMembers[9].HasTeam}">
 							<DataGridTemplateColumn.CellTemplate>
 								<DataTemplate x:DataType="models:UserStoryAssociation">
-									<NumericUpDown Value="{Binding Days[9].Value, Mode=TwoWay}" ShowButtonSpinner="False"/>
+									<NumericUpDown Value="{Binding Days[9].Value, Mode=TwoWay}" ShowButtonSpinner="False" Minimum="0" Maximum="100"/>
 								</DataTemplate>
 							</DataGridTemplateColumn.CellTemplate>
 						</DataGridTemplateColumn>
